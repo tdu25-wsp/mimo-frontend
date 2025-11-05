@@ -1,3 +1,5 @@
+import Text from "@/components/ui/Text";
+
 export default function DevPage() {
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
@@ -117,7 +119,29 @@ export default function DevPage() {
         </div>
       </section>
 
-            {/* ボタン */}
+      {/* Textコンポーネント */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4 text-primary-text">Textコンポーネント</h2>
+        <div className="bg-background border border-border rounded p-6 space-y-4">
+          <Text style="body">これはbodyスタイルのテキストです。メモの内容などに使用します。</Text>
+          <Text style="body-bold">これはbody-boldスタイルのテキストです。強調したい本文に使用します。</Text>
+          <Text style="caption">これはcaptionスタイルのテキストです。補足説明に使用します。</Text>
+          <Text style="caption-muted">これはcaption-mutedスタイルのテキストです。控えめな補足テキストに使用します。</Text>
+          <Text style="label">これはlabelスタイルのテキストです。フォームのラベルに使用します。</Text>
+          <Text style="small">これはsmallスタイルのテキストです。注釈、タイムスタンプなどに使用します。</Text>
+          <Text style="small-muted">これはsmall-mutedスタイルのテキストです。日時などに使用します。</Text>
+
+          {/* alignの例 */}
+          <Text style="body" align="left">左揃えのテキストです。</Text>
+          <Text style="body" align="center">中央揃えのテキストです。</Text>
+          <Text style="body" align="right">右揃えのテキストです。</Text>
+
+          {/* spanの使い方 */}
+          <Text style="body">お値段なんと<Text style="body-bold" as="span" className="font-mono text-xl font-bold">800</Text>円</Text>
+        </div>
+      </section>
+
+      {/* ボタン */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">ボタン</h2>
       </section>
