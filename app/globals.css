@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
 :root {
+  /* 背景色 */
   --background: #ffffff;
   --foreground: #171717;
+  --gray-background: #F9F9F9;
+
+  /* プライマリカラー */
+  --color-primary: #FFCE00;
+  --color-primary-hover: #E6B900;
+  --color-secondary: #FFF3C3;
+  --color-accent: #E4572E;
+
+  /* テキストカラー */
+  --color-primary-text: #1A1A1A;
+  --color-on-primary-text: #2C2C2C;
+  --color-secondary-text: #6B6B6B;
+  --color-muted-text: #9B9B9B;
+
+  /* ステータスカラー */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-gray-background: var(--gray-background);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+
+  --color-primary-text: var(--color-primary-text);
+  --color-on-primary-text: var(--color-on-primary-text);
+  --color-secondary-text: var(--color-secondary-text);
+  --color-muted-text: var(--color-muted-text);
+
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+  --color-warning: var(--color-warning);
+  --color-info: var(--color-info);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
