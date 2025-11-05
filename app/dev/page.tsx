@@ -1,10 +1,11 @@
+import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
 
 export default function DevPage() {
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-primary-text">Mimo - デザインシステム</h1>
-      
+
       {/* カラーパレット */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">カラーパレット</h2>
@@ -138,6 +139,26 @@ export default function DevPage() {
 
           {/* spanの使い方 */}
           <Text style="body">お値段なんと<Text style="body-bold" as="span" className="font-mono text-xl font-bold">800</Text>円</Text>
+        </div>
+      </section>
+
+      {/* Headingコンポーネント */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4 text-primary-text">Headingコンポーネント</h2>
+        <div className="bg-background border border-border rounded p-6 space-y-4">
+          {/* シンプルな使い方 */}
+          <Heading level="h1">h1: ページタイトル</Heading>
+          <Heading level="h2">h2: セクションタイトル</Heading>
+          <Heading level="h3">h3: サブセクション</Heading>
+
+          {/* デフォルトはh2 */}
+          <Heading>見出し（デフォルトはh2）</Heading>
+
+          {/* 配置を変更 */}
+          <Heading level="h1" align="center">中央寄せタイトル</Heading>
+
+          {/* カスタムクラスを追加 */}
+          <Heading level="h1" align="right" className="text-lg text-primary">右寄せアクセント見出し</Heading>
         </div>
       </section>
 
