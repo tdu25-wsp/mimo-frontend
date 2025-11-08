@@ -9,7 +9,7 @@ type ActionLargeButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const ActionLargeButton = ({
   label,
   className,
-  ...props // 3. onClick を含む残りの props を ...props で受け取る
+  ...props
 }: ActionLargeButtonProps) => {
 
   const finalClassName = twMerge(
@@ -26,7 +26,7 @@ const ActionLargeButton = ({
   return (
     <button
       className={finalClassName}
-      {...props} // 4. <button> タグに ...props を渡す (onClick がここに適用されます)
+      {...props}
     >
       {label}
     </button>
