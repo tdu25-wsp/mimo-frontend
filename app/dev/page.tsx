@@ -3,6 +3,7 @@ import Text from "@/components/ui/Text";
 import ActionLargeButton from "@/components/ui/ActionLargeButton";
 import { IconButton } from "@/components/ui/IconButton";
 import { Trash2, ChevronLeft } from "lucide-react";
+import LinkButton from "@/components/ui/LinkButton";
 
 export default function DevPage() {
   return (
@@ -169,10 +170,12 @@ export default function DevPage() {
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">ボタン</h2>
         <div className="bg-background border border-border rounded p-6 space-y-4">
-          <div className="w-full max-w-md space-y-4">
+          <div className="w-full max-w-md flex flex-col items-start gap-4">
+
             <ActionLargeButton
               label="ActionLargeButton"
             />
+
             <p>Delete</p>
             <IconButton
               icon={Trash2}
@@ -183,6 +186,14 @@ export default function DevPage() {
               icon={ChevronLeft}
               size="large"
             />
+            
+            <LinkButton href="/signup">
+              新規登録はこちら
+            </LinkButton>
+
+            <LinkButton href="/forgot-password">
+              パスワードを忘れた
+            </LinkButton>
           </div>
         </div>
       </section>
