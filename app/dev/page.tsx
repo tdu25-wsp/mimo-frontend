@@ -176,12 +176,12 @@ export default function DevPage() {
             <p>Delete</p>
             <IconButton
               icon={Trash2}
-              size="delete"
+              size="small"
             />
             <p>Back</p>
             <IconButton
               icon={ChevronLeft}
-              size="back"
+              size="large"
             />
           </div>
         </div>
