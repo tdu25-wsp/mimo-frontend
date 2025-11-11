@@ -176,22 +176,17 @@ export default function DevPage() {
               label="ActionLargeButton"
             />
 
-            <div className="flex flex-col items-start gap-1">
-              <p>Delete</p>
-              <IconButton
-                icon={Trash2}
-                size="delete"
-              />
-            </div>
-
-            <div className="flex flex-col items-start gap-1"> 
-              <p>Back</p>
-              <IconButton
-                icon={ChevronLeft}
-                size="back"
-              />
-            </div>
-
+            <p>Delete</p>
+            <IconButton
+              icon={Trash2}
+              size="small"
+            />
+            <p>Back</p>
+            <IconButton
+              icon={ChevronLeft}
+              size="large"
+            />
+            
             <LinkButton href="/signup">
               新規登録はこちら
             </LinkButton>
@@ -199,7 +194,6 @@ export default function DevPage() {
             <LinkButton href="/forgot-password">
               パスワードを忘れた
             </LinkButton>
-
           </div>
         </div>
       </section>

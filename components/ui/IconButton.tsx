@@ -16,9 +16,9 @@ const iconButtonVariants = cva(
             },
             // 「サイズ」のバリアント（ボタンのパディングを制御）
             size: {
-                delete: "h-6 w-6", // 1.5rem = 24x24px
+                small: "h-6 w-6", // 1.5rem = 24x24px
                 default: "h-10 w-10", // 2.5rem = 40x40px
-                back: "h-12 w-12", // 3rem = 48x48px
+                large: "h-12 w-12", // 3rem = 48x48px
             },
             // 「シャドウ」のバリアント
             shadow: {
@@ -36,10 +36,10 @@ const iconButtonVariants = cva(
 );
 
 // 2. Lucideアイコンのサイズをボタンの 'size' prop に連動させるためのマップ
-const iconSizeMap: Record<"delete" | "default" | "back", number> = {
-    delete: 16, // 24pxボタン用
+const iconSizeMap: Record<"small" | "default" | "large", number> = {
+    small: 16, // 24pxボタン用
     default: 24, // 40pxボタン用
-    back: 32, // 48pxボタン用
+    large: 32, // 48pxボタン用
 };
 
 // 3. コンポーネントのPropsを定義
