@@ -14,9 +14,9 @@ const ActionLargeButton = ({
 
   const finalClassName = twMerge(
     clsx(
-      'w-[365px]', 'h-[44px]', 'px-4', 'text-lg', 'font-bold',
-      'text-white', 'bg-[#FFCE00]', 'rounded-lg', 'shadow-md',
-      'transition-colors', 'hover:bg-[#FFF3C3]', 'focus:outline-none',
+      'w-full', 'h-[40px]', 'px-4', 'text-lg', 'font-bold',
+      'text-white', 'bg-primary', 'rounded-lg',
+      'transition-colors', 'hover:bg-primary-hover', 'focus:outline-none',
       'focus:ring-2', 'focus:ring-blue-500', 'focus:ring-opacity-50',
       
       className 
