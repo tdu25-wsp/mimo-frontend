@@ -1,9 +1,9 @@
 import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
-import ActionLargeButton from "@/components/ui/ActionLargeButton";
-import { IconButton } from "@/components/ui/IconButton";
+import ActionLargeButton from "@/components/features/ActionLargeButton";
+import { IconButton } from "@/components/features/IconButton";
 import { Trash2, ChevronLeft } from "lucide-react";
-import LinkButton from "@/components/ui/LinkButton";
+import LinkButton from "@/components/features/LinkButton";
 
 export default function DevPage() {
   return (
