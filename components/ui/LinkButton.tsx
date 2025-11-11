@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+
 
 // コンポーネントが受け取るProps（プロパティ）の型を定義します
 type LinkButtonProps = {
@@ -32,9 +34,11 @@ const LinkButton: React.FC<LinkButtonProps> = ({
   const combinedClasses = `${baseClasses} ${className}`.trim().replace(/\s+/g, ' ');
 
   return (
-    <a href={href} className={combinedClasses}>
+    // <a> タグの代わりに <Link> コンポーネントを使う
+    // スタイル(className)も <Link> に直接渡せる
+    <Link href={href} className={combinedClasses}>
       {children}
-    </a>
+    </Link>
   );
 };
 
