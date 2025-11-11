@@ -1,5 +1,6 @@
 import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
+import ActionLargeButton from "@/components/ui/ActionLargeButton";
 
 export default function DevPage() {
   return (
@@ -165,6 +166,13 @@ export default function DevPage() {
       {/* ボタン */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">ボタン</h2>
+        <div className="bg-background border border-border rounded p-6 space-y-4">
+          <div className="w-full max-w-md space-y-4">
+            <ActionLargeButton
+              label="ActionLargeButton"
+            />
+          </div>
+        </div>
       </section>
 
       {/* インプット */}
