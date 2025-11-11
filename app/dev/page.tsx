@@ -1,6 +1,8 @@
 import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
 import ActionLargeButton from "@/components/ui/ActionLargeButton";
+import { IconButton } from "@/components/ui/IconButton";
+import { Trash2, ChevronLeft } from "lucide-react";
 
 export default function DevPage() {
   return (
@@ -170,6 +172,16 @@ export default function DevPage() {
           <div className="w-full max-w-md space-y-4">
             <ActionLargeButton
               label="ActionLargeButton"
+            />
+            <p>Delete</p>
+            <IconButton
+              icon={Trash2}
+              size="small"
+            />
+            <p>Back</p>
+            <IconButton
+              icon={ChevronLeft}
+              size="large"
             />
           </div>
         </div>
