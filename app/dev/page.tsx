@@ -1,11 +1,15 @@
+"use client";
+import * as React from "react";
 import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { IconButton } from "@/components/features/IconButton";
-import { Trash2, ChevronLeft } from "lucide-react";
+import { Trash2, ChevronLeft, Search, X } from "lucide-react";
 import LinkButton from "@/components/features/LinkButton";
+import { Input } from "@/components/ui/Input";
 
 export default function DevPage() {
+  const [password, setPassword] = React.useState("")
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-primary-text">Mimo - デザインシステム</h1>
@@ -186,7 +190,7 @@ export default function DevPage() {
               icon={ChevronLeft}
               size="large"
             />
-            
+
             <LinkButton href="/signup">
               新規登録はこちら
             </LinkButton>
@@ -201,6 +205,75 @@ export default function DevPage() {
       {/* インプット */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">インプット</h2>
+         <div className="bg-background border border-border rounded p-6 space-y-6 max-w-md ">  {/* 1. メールアドレス（ラベル付き） */}
+          <div className="grid w-full items-center gap-1.5">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-secondary-text"
+            >
+              メールアドレス
+            </label>
+            <Input
+              type="email"
+              id="email"
+              placeholder="user@example.com"
+            />
+          </div>
+
+          {/* 2. パスワード（×ボタン付き） */}
+          <div className="grid w-full items-center gap-1.5">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-secondary-text"
+            >
+              パスワード
+            </label>
+            <div className="relative">
+              <Input
+                type="password"
+                id="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pr-10"
+              />
+              {password.length > 0 && (
+                <button
+                  type="button"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7
+                             inline-flex items-center justify-center rounded-md
+                             text-muted-text hover:text-secondary-text"
+                  onClick={() => setPassword("")}
+                >
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">パスワードをクリア</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* 3. 検索フィールド（アイコン付き） */}
+          <div className="grid w-full items-center gap-1.5">
+            <label
+              htmlFor="search"
+              className="text-sm font-medium text-secondary-text"
+            >
+              検索
+            </label>
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-text">
+                <Search className="h-full w-full" />
+              </div>
+              <Input
+                type="search"
+                id="search"
+                placeholder="メモを検索..."
+                className="pl-10"
+              />
+            </div>
+          </div>
+
+        </div>
       </section>
 
       {/* カード */}
