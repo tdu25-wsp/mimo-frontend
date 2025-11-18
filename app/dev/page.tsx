@@ -215,10 +215,10 @@ export default function DevPage() {
         <h2 className="text-2xl font-bold mb-4 text-primary-text">タグ（カテゴリ）</h2>
         <div className="bg-background border border-border rounded p-6 space-y-4">
           <TagSelector label="タグ">
-              <Tag label="勉強" borderColorClass="border-red-500" />
-              <Tag label="プログラミング" borderColorClass="border-black" />
-              <Tag label="仕事" borderColorClass="border-blue-500" />
-              <Tag label="趣味" borderColorClass="border-green-500" />
+              <Tag label="勉強" className="border-red-500" />
+              <Tag label="プログラミング" className="border-black" />
+              <Tag label="仕事" className="border-blue-500" />
+              <Tag label="趣味" className="border-green-500" />
           </TagSelector>
         </div>
       </section>

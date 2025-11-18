@@ -2,19 +2,17 @@ import { X } from "lucide-react";
 
 type TagProps = {
   label: string;
-  borderColorClass: string;
   onRemove?: () => void;
   className?: string;
 };
 
-export const Tag = ({ label, borderColorClass, onRemove, className = "" }: TagProps) => {
+export const Tag = ({ label, onRemove, className = "" }: TagProps) => {
   return (
     <span
       className={`
         inline-flex items-center justify-center gap-1 px-4 py-1
         rounded-full border-2
         bg-background text-primary-text font-bold text-sm
-        ${borderColorClass}
         ${className}
       `}
     >
