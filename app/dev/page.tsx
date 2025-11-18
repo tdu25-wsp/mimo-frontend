@@ -4,6 +4,8 @@ import ActionLargeButton from "@/components/ui/ActionLargeButton";
 import { IconButton } from "@/components/ui/IconButton";
 import { Trash2, ChevronLeft } from "lucide-react";
 import LinkButton from "@/components/ui/LinkButton";
+import { Tag } from "@/components/ui/Tag";
+import { TagSelector } from "@/components/features/TagSelector";
 
 export default function DevPage() {
   return (
@@ -186,7 +188,7 @@ export default function DevPage() {
               icon={ChevronLeft}
               size="large"
             />
-            
+
             <LinkButton href="/signup">
               新規登録はこちら
             </LinkButton>
@@ -211,6 +213,14 @@ export default function DevPage() {
       {/* タグ */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">タグ（カテゴリ）</h2>
+        <div className="bg-background border border-border rounded p-6 space-y-4">
+          <TagSelector label="タグ">
+              <Tag label="勉強" borderColorClass="border-red-500" />
+              <Tag label="プログラミング" borderColorClass="border-black" />
+              <Tag label="仕事" borderColorClass="border-blue-500" />
+              <Tag label="趣味" borderColorClass="border-green-500" />
+          </TagSelector>
+        </div>
       </section>
 
       {/* ステータスメッセージ */}
