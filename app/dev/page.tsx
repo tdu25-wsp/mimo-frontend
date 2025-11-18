@@ -2,10 +2,10 @@
 import * as React from "react";
 import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
-import ActionLargeButton from "@/components/ui/ActionLargeButton";
-import { IconButton } from "@/components/ui/IconButton";
+import ActionLargeButton from "@/components/features/ActionLargeButton";
+import { IconButton, Search, X } from "@/components/features/IconButton";
 import { Trash2, ChevronLeft } from "lucide-react";
-import LinkButton from "@/components/ui/LinkButton";
+import LinkButton from "@/components/features/LinkButton";
 import { Input } from "@/components/ui/Input";
 import { Tag } from "@/components/ui/Tag";
 import { TagSelector } from "@/components/features/TagSelector";
