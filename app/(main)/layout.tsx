@@ -6,12 +6,12 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-background">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-background">
       {/* タブバー */}
       <TabBar />
 
       {/* メインコンテンツ */}
-      <main className="md:ml-60 pb-16 md:pb-0">
+      <main className="md:ml-56 pb-16 md:pb-0 flex-1">
         {children}
       </main>
     </div>

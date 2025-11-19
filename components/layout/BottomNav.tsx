@@ -13,8 +13,9 @@ export function BottomNav({ links }: { links: NavLink[] }) {
             <div className="flex items-center justify-around h-full px-2">
                 {links.map((link) => {
                     const Icon = link.icon;
-                    const isActive = pathname === link.href;
-
+                    const isActive = pathname === link.href ||
+                        (link.href !== "/" && pathname.startsWith(link.href));
+                        
                     return (
                         <Link
                             key={link.href}

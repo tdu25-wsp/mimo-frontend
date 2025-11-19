@@ -1,0 +1,59 @@
+{
+  "memos": [
+    {
+      "MemoID": "memo-1",
+      "UserID(FK)": "user-1",
+      "TagID(FK)": "tag-1",
+      "content": "# プロジェクトAキックオフミーティング\nプロジェクトAのキックオフミーティングの議事録。\n主要な決定事項と次のアクションアイテムをまとめる。\n\n参加者:\n- 田中\n- 佐藤\n- 鈴木\n\n次回ミーティング: 2025-11-20",
+      "autoTagID": null,
+      "manualTagID": "tag-1",
+      "shareUrlToken": "share-token-memo-1-xyz",
+      "createdDate": "2025-11-15T12:10:00Z",
+      "updatedDate": "2025-11-15T12:15:00Z"
+    },
+    {
+      "MemoID": "memo-2",
+      "UserID(FK)": "user-1",
+      "TagID(FK)": "tag-2",
+      "content": "# Next.jsルーティング調査\nNext.jsのApp RouterとPages Routerの違いについて調査。\nパフォーマンスとルーティングの柔軟性に注目。\n\nApp Routerの特徴:\n- サーバーコンポーネントがデフォルト\n- ファイルベースのルーティング\n- より直感的なレイアウト管理\n\n結論: プロジェクトにはApp Routerを採用する方向で検討",
+      "autoTagID": "tag-2",
+      "manualTagID": "tag-2",
+      "shareUrlToken": null,
+      "createdDate": "2025-11-15T12:30:00Z",
+      "updatedDate": "2025-11-15T12:30:00Z"
+    },
+    {
+      "MemoID": "memo-3",
+      "UserID(FK)": "user-1",
+      "TagID(FK)": "tag-3",
+      "content": "# メモアプリUIデザイン案\n新しいメモアプリのUIアイデア。\nGlassmorphismを取り入れたデザインを検討する。\n\nデザインコンセプト:\n- 透明感のある背景\n- ぼかし効果の活用\n- シンプルで洗練されたUI\n\nカラーパレット:\n- プライマリ: #667EEA\n- セカンダリ: #764BA2\n- アクセント: #F093FB",
+      "autoTagID": "tag-3",
+      "manualTagID": "tag-3",
+      "shareUrlToken": null,
+      "createdDate": "2025-11-15T13:00:00Z",
+      "updatedDate": "2025-11-15T13:00:00Z"
+    },
+    {
+      "MemoID": "memo-4",
+      "UserID(FK)": "user-2",
+      "TagID(FK)": "tag-1",
+      "content": "# 長文テストメモ（512文字）\nこれは長文テストのためのメモです。\n実際のユースケースでは、ユーザーが長い文章を入力することも想定されます。\n\n第一段落:\nテキストテキストテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキストテキストテキスト。\n\n第二段落:\nテキストテキストテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキストテキストテキスト。\n\n第三段落:\nテキストテキストテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキストテキストテキスト。\n\nまとめ:\n長文メモの表示とスクロール動作のテストに使用できます。",
+      "autoTagID": null,
+      "manualTagID": "tag-1",
+      "shareUrlToken": null,
+      "createdDate": "2025-11-10T10:00:00Z",
+      "updatedDate": "2025-11-10T10:05:00Z"
+    },
+    {
+      "MemoID": "memo-5",
+      "UserID(FK)": "user-3",
+      "TagID(FK)": "tag-2",
+      "content": "# 中文テストメモ（256文字）\nこれは中程度の長さのメモです。\n\n内容:\nテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキスト。\n\n詳細:\nテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキスト。\n\n備考:\nテキストテキストテキストテキストテキストテキスト。",
+      "autoTagID": "tag-2",
+      "manualTagID": null,
+      "shareUrlToken": null,
+      "createdDate": "2025-11-12T14:20:00Z",
+      "updatedDate": "2025-11-12T14:25:00Z"
+    }
+  ]
+}

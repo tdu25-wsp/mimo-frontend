@@ -10,13 +10,14 @@ export function Sidebar({ links }: { links: NavLink[] }) {
     const pathname = usePathname();
 
     return (
-        <aside className="hidden md:block fixed left-0 top-0 h-full w-56 bg-background">
+        <aside className="hidden md:block fixed left-0 top-0 h-full w-56 bg-background border-r border-secondary-text/10">
             <div className="p-8">
                 <Heading level="h1" className="pb-8">Mimo</Heading>
                 <nav className="space-y-2">
                     {links.map((link) => {
                         const Icon = link.icon;
-                        const isActive = pathname === link.href;
+                        const isActive = pathname === link.href ||
+                            (link.href !== "/" && pathname.startsWith(link.href));
 
                         return (
                             <Link
