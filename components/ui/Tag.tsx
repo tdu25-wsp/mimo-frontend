@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-type TagProps = {
+interface TagProps {
   label: string;
   onRemove?: () => void;
   className?: string;
