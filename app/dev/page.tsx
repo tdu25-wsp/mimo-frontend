@@ -7,6 +7,8 @@ import { IconButton } from "@/components/features/IconButton";
 import { Trash2, ChevronLeft, Search, X } from "lucide-react";
 import LinkButton from "@/components/features/LinkButton";
 import { Input } from "@/components/ui/Input";
+import { Tag } from "@/components/ui/Tag";
+import { TagSelector } from "@/components/features/TagSelector";
 
 export default function DevPage() {
   const [password, setPassword] = React.useState("")
@@ -284,6 +286,14 @@ export default function DevPage() {
       {/* タグ */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">タグ（カテゴリ）</h2>
+        <div className="bg-background border border-border rounded p-6 space-y-4">
+          <TagSelector label="タグ">
+              <Tag label="勉強" className="border-red-500" />
+              <Tag label="プログラミング" className="border-black" />
+              <Tag label="仕事" className="border-blue-500" />
+              <Tag label="趣味" className="border-green-500" />
+          </TagSelector>
+        </div>
       </section>
 
       {/* ステータスメッセージ */}
