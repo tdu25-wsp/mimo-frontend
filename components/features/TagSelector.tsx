@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Plus } from "lucide-react";
 import Text from "@/components/ui/Text";
 
-type TagSelectorProps = {
+interface TagSelectorProps {
     label?: string;
     children?: ReactNode;
     onAddClick?: () => void;
