@@ -13,6 +13,7 @@ import {
     Plus,
     type LucideProps
 } from "lucide-react";
+import Heading from "../ui/Heading";
 
 const iconMap: Record<string, React.ComponentType<LucideProps>> = {
     Folder: Folder,
@@ -23,9 +24,9 @@ const iconMap: Record<string, React.ComponentType<LucideProps>> = {
     Plus: Plus,
 };
 
-export function ListNavigation({ sections }: { sections: NavigationSection[] }) {
+export function ListNavigation({navTitle = null, sections }: {navTitle?: String | null; sections: NavigationSection[] }) {
     const pathname = usePathname();
-    const isListRoot = pathname === "/list" || pathname === "/setting";
+    const isRoot = pathname === "/list" || pathname === "/setting";
 
     const handleActionClick = (sectionTitle: string) => {
         console.log(`${sectionTitle} のアクションボタンが押されました`);
@@ -36,7 +37,11 @@ export function ListNavigation({ sections }: { sections: NavigationSection[] }) 
     };
 
     return (
-        <aside className={`w-full md:w-56 md:h-full flex flex-col space-y-4 pb-4 md:pt-22 overflow-y-auto md:bg-background ${isListRoot ? "block" : "hidden"} md:block`}>
+        <aside className={`w-full md:w-56 md:h-full flex flex-col space-y-4 pb-4 md:pt-22 overflow-y-auto md:bg-background ${isRoot ? "block" : "hidden"} md:block`}>
+            {(navTitle && isRoot) && (
+                <Heading className="block md:hidden p-4">{navTitle}</Heading>
+            )}
+
             {sections.map((section) => {
                 const ActionIcon = section.actionIcon ? iconMap[section.actionIcon] : null;
 

@@ -1,5 +1,4 @@
 import { ListNavigation } from "@/components/layout/ListNavigation";
-import Heading from "@/components/ui/Heading";
 import { NavigationSection } from "@/types/navigation.types";
 
 // 仮のリストセクションデータ
@@ -42,10 +41,7 @@ export default function ListLayout({
 }) {
     return (
         <div className="flex flex-col md:flex-row h-full bg-gray-background">
-
-            <Heading className="block md:hidden p-4">リスト</Heading>
-
-            <ListNavigation sections={listSections} />
+            <ListNavigation navTitle={"リスト"} sections={listSections} />
 
             <main className="flex-1 overflow-auto md:block">
                 {children}
