@@ -1,4 +1,6 @@
+import { Header } from "@/components/layout/Header";
 import { getMockMemos } from "@/lib/converters";
+import { Share } from "lucide-react";
 
 export default function AllMemosPage() {
 
@@ -6,6 +8,17 @@ export default function AllMemosPage() {
 
   return (
     <div>
+      <Header
+        title="すべて"
+        showBackButton={true}
+        rightContent={
+          <>
+            <button className="p-2 hover:bg-gray-100 rounded-full"><Share size={20} /></button>
+            <button className="p-2 hover:bg-gray-100 rounded-full"><p>選択</p></button>
+          </>
+        }
+      />
+
       <h1>AllMemosView</h1>
 
       {/* 仮でモックメモデータを表示 */}
