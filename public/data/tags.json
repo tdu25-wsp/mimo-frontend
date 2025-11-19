@@ -1,0 +1,28 @@
+{
+  "tags": [
+    {
+      "TagID": "tag-1",
+      "UserID(FK)": "user-1",
+      "Name": "プロジェクトA",
+      "colorCode": "#4A90E2",
+      "createdDate": "2025-11-15T12:01:00Z",
+      "updatedDate": "2025-11-15T12:01:00Z"
+    },
+    {
+      "TagID": "tag-2",
+      "UserID(FK)": "user-1",
+      "Name": "技術メモ",
+      "colorCode": "#F5A623",
+      "createdDate": "2025-11-15T12:02:00Z",
+      "updatedDate": "2025-11-15T12:02:00Z"
+    },
+    {
+      "TagID": "tag-3",
+      "UserID(FK)": "user-1",
+      "Name": "アイデア",
+      "colorCode": "#7ED321",
+      "createdDate": "2025-11-15T12:03:00Z",
+      "updatedDate": "2025-11-15T12:03:00Z"
+    }
+  ]
+}
