@@ -11,6 +11,7 @@ import {
     Tag,
     CircleUser,
     Plus,
+    Search,
     type LucideProps
 } from "lucide-react";
 import Heading from "../ui/Heading";
@@ -22,6 +23,7 @@ const iconMap: Record<string, React.ComponentType<LucideProps>> = {
     Tag: Tag,
     CircleUser: CircleUser,
     Plus: Plus,
+    Search: Search,
 };
 
 export function ListNavigation({navTitle = null, sections }: {navTitle?: String | null; sections: NavigationSection[] }) {

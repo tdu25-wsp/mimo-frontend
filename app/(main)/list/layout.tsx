@@ -6,6 +6,7 @@ const listSections: NavigationSection[] = [
     {
         title: "",
         items: [
+            { href: "/list/search", name: "検索", icon: "Search", color: "text-primary" },
             { href: "/list/all", name: "すべて", icon: "Folder", color: "text-primary" },
             { href: "/list/summary", name: "要約", icon: "WandSparkles", color: "text-primary" },
             { href: "/list/journaling-summary", name: "ジャーナリング要約", icon: "BookHeart", color: "text-primary" },
