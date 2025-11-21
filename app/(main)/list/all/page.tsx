@@ -1,10 +1,9 @@
 import { Header } from "@/components/layout/Header";
-import { getMockMemos } from "@/lib/converters";
+import { getMockMemos, getMockSummaries } from "@/lib/converters";
 import { Share } from "lucide-react";
 
 export default function AllMemosPage() {
-
-  const mockMemos = getMockMemos();
+  const entries = [...getMockMemos(), ...getMockSummaries()];
 
   return (
     <div>
@@ -23,19 +22,14 @@ export default function AllMemosPage() {
 
       {/* 仮でモックメモデータを表示 */}
       <ul>
-        {mockMemos.map((memo) => (
-          <li key={memo.id} className="my-16 space-y-2">
-            
-            <p>{memo.content}</p>
-            {/* createdDate */}
-
-            <p>メモ作成日時</p>
-            <p>{memo.createdAt}</p>
-            <p>メモ更新日時</p>
-            <p>{memo.updatedAt}</p>
+        {entries.map((entry) => (
+          <li key={entry.id} className="border-b border-gray-200 p-4">
+            <p className="text-sm text-gray-500 mb-1">ID: {entry.id} | Type: {entry.type}</p>
+            <p>{entry.content}</p>
           </li>
         ))}
       </ul>
+
     </div>
   );
 }

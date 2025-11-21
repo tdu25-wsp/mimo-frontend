@@ -1,17 +1,17 @@
-import { Memo } from "@/types/memo";
+import { Entry } from "@/types/entry";
 import { MemoDTO } from "@/types/server/memo-dto";
 
 /**
  * MemoDTO（JSON形式）をMemo（クライアント形式）に変換
  */
-export function convertMemoFromDTO(dto: MemoDTO): Memo {
+export function convertMemoFromDTO(dto: MemoDTO): Entry {
   return {
     id: dto.MemoID,
     userId: dto["UserID(FK)"],
-    tagId: dto["TagID(FK)"],
     content: dto.content,
-    autoTagId: dto.autoTagID,
-    manualTagId: dto.manualTagID,
+    autoTagIds: dto.autoTagID,
+    manualTagIds: dto.manualTagID,
+    type: "memo",
     shareUrlToken: dto.shareUrlToken,
     createdAt: dto.createdDate,
     updatedAt: dto.updatedDate,
@@ -21,6 +21,6 @@ export function convertMemoFromDTO(dto: MemoDTO): Memo {
 /**
  * MemoDTO配列をMemo配列に変換
  */
-export function convertMemosFromDTO(dtos: MemoDTO[]): Memo[] {
+export function convertMemosFromDTO(dtos: MemoDTO[]): Entry[] {
   return dtos.map(convertMemoFromDTO);
 }
