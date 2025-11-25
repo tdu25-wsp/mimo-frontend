@@ -8,10 +8,9 @@ import { X } from "lucide-react";
 export default function ResetPasswordPage() {
   // ⚠️注意: パスワード確認用と入力用でStateを分ける必要があります（後述）
   const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState(""); // 追加推奨
+  const [confirmPassword, setConfirmPassword] = React.useState("");
 
   return (
-    // 変更点1: 基本は白背景(bg-background)、smサイズ以上でグレー背景(sm:bg-gray-background)にする
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
 
       {/* ヘッダー */}
