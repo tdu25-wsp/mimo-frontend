@@ -82,7 +82,7 @@ export default function LoginPage() {
               </div>
 
               {/* ログインボタン*/}
-              <div className="mt-10">
+              <div className="mt-24">
                 <ActionLargeButton
                   label="ログイン"
                 />

@@ -27,7 +27,7 @@ export default function SignupPage() {
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto">
 
-              <h2 className="text-base font-bold text-primary-text mb-10">
+              <h2 className="text-2xl font-bold text-primary-text mb-10">
                 新規登録
               </h2>
 
@@ -45,7 +45,7 @@ export default function SignupPage() {
                   placeholder="user@example.com"
                 />
               </div>
-              
+
               {/* 1つ目のパスワード入力 */}
               <div className="grid w-full items-center gap-1.5 mt-5">
                 <label
@@ -77,7 +77,7 @@ export default function SignupPage() {
               </div>
 
               {/* 登録ボタン*/}
-              <div className="mt-10">
+              <div className="mt-24">
                 <ActionLargeButton
                   label="登録"
                 />

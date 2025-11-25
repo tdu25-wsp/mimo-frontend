@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
 
           <main className="flex-1 flex flex-col justify-center px-6 pb-20">
             <div className="w-full max-w-[402px] mx-auto">
-              <h2 className="text-base font-bold text-primary-text mb-10">
+              <h2 className="text-2xl font-bold text-primary-text mb-10">
                 パスワードを変更
               </h2>
 
@@ -94,7 +94,7 @@ export default function ResetPasswordPage() {
               </div>
 
               {/* 変更ボタン */}
-              <div className="mt-10">
+              <div className="mt-24">
                 <ActionLargeButton
                   label="変更"
                 />

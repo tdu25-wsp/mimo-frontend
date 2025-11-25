@@ -77,7 +77,7 @@ export default function VerifyCodePage() {
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto">
 
-              <h2 className="text-base font-bold text-primary-text mb-10">
+              <h2 className="text-2xl font-bold text-primary-text mb-10">
                 確認コードを入力
               </h2>
 
@@ -106,7 +106,7 @@ export default function VerifyCodePage() {
               </div>
 
               {/* 送信ボタン*/}
-              <div className="mt-10">
+              <div className="mt-24">
                 <ActionLargeButton
                   label="送信"
                 />
