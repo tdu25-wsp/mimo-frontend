@@ -1,64 +1,59 @@
-"use client";
-import React from "react";
+import { Header } from "@/components/layout/Header";
+import ActionLargeButton from "@/components/features/ActionLargeButton";
+import { Input } from "@/components/ui/Input";
 
 export default function ForgotPasswordPage() {
-  const containerStyle: React.CSSProperties = {
-    maxWidth: 400,
-    margin: "0 auto",
-    padding: 20,
-    height: "100vh",
-    backgroundColor: "#f9f9f9",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-     position: "relative",
-  };
 
-  const inputStyle: React.CSSProperties = {
-    width: "80%",
-    padding: "10px",
-    fontSize: "16px",
-    marginBottom: "12px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    color:"black",
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    width: "80%",
-    padding: "12px",
-    fontSize: "16px",
-    color: "white",
-    backgroundColor: "#ffce00",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  };
-
-
-   const backButtonStyle: React.CSSProperties = {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    background: "none",
-    border: "none",
-    fontSize: "24px",
-    cursor: "pointer",
-    color:"black",
-  };
-
-  const handleBack = () => {
-    window.history.back();
-  };
   return (
-    <div style={containerStyle}>
-      <h1>パスワードを変更</h1>
-      <button style={backButtonStyle} onClick={handleBack}>
-        ←
-      </button>
-      <input type="email" placeholder="メールアドレス" style={inputStyle} />
-      <button style={buttonStyle}>送信</button>
+    <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
+
+      {/* ヘッダー */}
+      <Header
+        title="Mimo"
+        showBackButton={true}
+        className="bg-background border-b shadow-sm"
+      />
+
+      {/* コンテンツエリアのラッパー */}
+      <div className="flex-1 flex justify-center w-full">
+
+        <div className="w-full sm:max-w-sm bg-background sm:border-border sm:shadow-sm flex flex-col">
+
+          <main className="flex-1 flex flex-col justify-center px-6 pb-20">
+            
+            {/* 中身の幅固定 */}
+            <div className="w-full max-w-[402px] mx-auto">
+
+              <h2 className="text-2xl font-bold text-primary-text mb-10">
+                確認コードを送信
+              </h2>
+
+              {/* メールアドレス入力欄 */}
+              <div className="grid w-full items-center gap-1.5">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-secondary-text"
+                >
+                  メールアドレス
+                </label>
+                <Input
+                  type="email"
+                  id="email"
+                  placeholder="user@example.com"
+                />
+              </div>
+
+              {/* 送信ボタン*/}
+              <div className="mt-24">
+                <ActionLargeButton
+                  label="送信"
+                />
+              </div>
+
+            </div>
+          </main>
+        </div>
+      </div>
     </div>
   );
 }
