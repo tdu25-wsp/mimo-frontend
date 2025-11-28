@@ -43,8 +43,8 @@ export default function ListLayout({
     return (
         <div className="flex flex-col md:flex-row h-full bg-gray-background">
             <ListNavigation navTitle={"リスト"} sections={listSections} />
-
-            <main className="flex-1 overflow-auto md:block">
+            
+            <main className="flex-1 flex flex-col md:overflow-auto md:block">
                 {children}
             </main>
         </div>

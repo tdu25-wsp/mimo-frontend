@@ -9,7 +9,7 @@ export function BottomNav({ links }: { links: NavLink[] }) {
     const pathname = usePathname();
 
     return (
-        <nav className="block md:hidden fixed bottom-0 left-0 right-0 h-20 bg-background">
+        <nav className="block md:hidden fixed bottom-0 left-0 right-0 h-20 bg-background z-50">
             <div className="flex items-center justify-around h-full px-2">
                 {links.map((link) => {
                     const Icon = link.icon;
