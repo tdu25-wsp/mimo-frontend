@@ -86,7 +86,7 @@ export function ListNavigation({navTitle = null, sections }: {navTitle?: String 
                                         {/* アイコン */}
                                         {
                                             Icon && (
-                                                <Icon className={twMerge("w-5 h-5", item.color)} />
+                                                <Icon className={twMerge("w-5 h-5", item.color)} style={item.color ? { color: item.color } : {}} />
                                             )
                                         }
                                         {/* テキスト */}
