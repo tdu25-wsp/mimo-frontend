@@ -3,7 +3,7 @@
     {
       "TagID": "tag-1",
       "UserID(FK)": "user-1",
-      "Name": "プロジェクトA",
+      "Name": "生活",
       "colorCode": "#4A90E2",
       "createdDate": "2025-11-15T12:01:00Z",
       "updatedDate": "2025-11-15T12:01:00Z"
@@ -11,7 +11,7 @@
     {
       "TagID": "tag-2",
       "UserID(FK)": "user-1",
-      "Name": "技術メモ",
+      "Name": "仕事",
       "colorCode": "#F5A623",
       "createdDate": "2025-11-15T12:02:00Z",
       "updatedDate": "2025-11-15T12:02:00Z"
@@ -23,6 +23,22 @@
       "colorCode": "#7ED321",
       "createdDate": "2025-11-15T12:03:00Z",
       "updatedDate": "2025-11-15T12:03:00Z"
+    },
+    {
+      "TagID": "tag-4",
+      "UserID(FK)": "user-1",
+      "Name": "予定",
+      "colorCode": "#E74C3C",
+      "createdDate": "2025-12-02T10:00:00Z",
+      "updatedDate": "2025-12-02T10:00:00Z"
+    },
+    {
+      "TagID": "tag-5",
+      "UserID(FK)": "user-1",
+      "Name": "趣味",
+      "colorCode": "#9B59B6",
+      "createdDate": "2025-12-02T10:00:00Z",
+      "updatedDate": "2025-12-02T10:00:00Z"
     }
   ]
 }

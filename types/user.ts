@@ -1,3 +1,5 @@
+import { JournalingSettings } from "./journaling-setting";
+
 export interface User {
   id: string;
   email: string;
@@ -6,4 +8,5 @@ export interface User {
   name: string;
   createdAt: string;
   updatedAt: string;
+  journalingSetting?: JournalingSettings
 }

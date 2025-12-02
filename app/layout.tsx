@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { memoRepository, summaryRepository, tagRepository } from "@/lib/repositories";
+import { StoreInitializer } from "./StoreInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,13 +19,19 @@ export const metadata: Metadata = {
   description: "手軽に記録できる、自動分類機能付きメモアプリ",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialMemos = await memoRepository.getAll();
+  const initialSummaries = await summaryRepository.getSummaries();
+  const initialEntries = [...initialMemos, ...initialSummaries];
+  const initialTags = await tagRepository.getAll();
+
   return (
     <html lang="ja">
+      <StoreInitializer entries={initialEntries} tags={initialTags} />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
