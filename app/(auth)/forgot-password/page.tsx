@@ -3,6 +3,7 @@
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
+import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface ForgotPasswordInputs {
@@ -48,9 +49,9 @@ export default function ForgotPasswordPage() {
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto">
 
-              <h2 className="text-2xl font-bold text-primary-text mb-10">
+              <Heading level="h2" className="mb-10">
                 確認コードを送信
-              </h2>
+              </Heading>
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* メールアドレス入力欄 */}
@@ -67,6 +68,14 @@ export default function ForgotPasswordPage() {
                     placeholder="user@example.com"
                     {...register("email", {
                       required: "メールアドレスは必須です",
+                      minLength: {
+                        value: 2,
+                        message: "メールアドレスは2文字以上で入力してください",
+                      },
+                      maxLength: {
+                        value: 254,
+                        message: "メールアドレスは254文字以内で入力してください",
+                      },
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         message: "正しいメールアドレス形式で入力してください",
@@ -75,7 +84,7 @@ export default function ForgotPasswordPage() {
                   />
                   {/* エラーメッセージ表示 */}
                   {errors.email && (
-                    <p className="text-red-500 text-xs">
+                    <p className="text-error text-xs">
                       {errors.email.message}
                     </p>
                   )}
