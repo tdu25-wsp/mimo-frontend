@@ -4,6 +4,7 @@ import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
 import { X } from "lucide-react";
 import LinkButton from "@/components/features/LinkButton";
+import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface LoginFormInputs {
@@ -53,15 +54,18 @@ export default function LoginPage() {
                 {/* パターンA: 画像ロゴを使いたい場合 */}
 
                 {/* パターンB: 文字ロゴを使いたい場合 */}
-                <h1 className="text-3xl font-extrabold text-primary-text tracking-tight">
+                <Heading
+                  level="h1"
+                  className="text-3xl font-extrabold tracking-tight"
+                >
                   Mimo
-                </h1>
+                </Heading>
               </div>
 
 
-              <h2 className="text-2xl font-bold text-primary-text mb-10">
+              <Heading level="h2" className="mb-10">
                 ログイン
-              </h2>
+              </Heading>
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* メールアドレス入力欄 */}
@@ -78,6 +82,14 @@ export default function LoginPage() {
                     placeholder="user@example.com"
                     {...register("email", {
                       required: "メールアドレスは必須です",
+                      minLength: {
+                        value: 2,
+                        message: "メールアドレスは2文字以上で入力してください",
+                      },
+                      maxLength: {
+                        value: 254,
+                        message: "メールアドレスは254文字以内で入力してください",
+                      },
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         message: "正しいメールアドレス形式で入力してください"
@@ -86,7 +98,7 @@ export default function LoginPage() {
                   />
                   {/* エラーメッセージ表示 */}
                   {errors.email && (
-                    <p className="text-red-500 text-xs">{errors.email.message}</p>
+                    <p className="text-error text-xs">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -104,7 +116,17 @@ export default function LoginPage() {
                       id="password"
                       placeholder="••••••••"
                       className="pr-10"
-                      {...register("password", { required: "パスワードは必須です" })}
+                      {...register("password", {
+                        required: "パスワードは必須です",
+                        minLength: {
+                          value: 8,
+                          message: "パスワードは8文字以上で入力してください",
+                        },
+                        maxLength: {
+                          value: 16,
+                          message: "パスワードは16文字以内で入力してください",
+                        },
+                      })}
                     />
 
                     {/* パスワードクリアボタンのロジック */}
@@ -120,12 +142,15 @@ export default function LoginPage() {
                       </button>
                     )}
                   </div>
+                  {errors.password && (
+                    <p className="text-error text-xs">{errors.password.message}</p>
+                  )}
                 </div>
 
                 {/* ログインボタン*/}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label="ログイン"
+                    label={isSubmitting ? "ログイン中..." : "ログイン"}
                     type="submit"
                     disabled={isSubmitting}
                   />
