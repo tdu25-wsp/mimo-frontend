@@ -31,7 +31,7 @@ export default function SignupPage() {
 
   // 送信時の処理
   const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
-    console.log("登録データ:", data);
+    //console.log("登録データ:", data);
     // ここに新規登録APIを叩く処理
   };
 

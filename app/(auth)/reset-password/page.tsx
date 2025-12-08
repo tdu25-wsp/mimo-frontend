@@ -33,7 +33,7 @@ export default function ResetPasswordPage() {
 
   // 2. 送信時の処理
   const onSubmit: SubmitHandler<ResetPasswordInputs> = (data) => {
-    console.log("変更データ:", data);
+    //console.log("変更データ:", data);
     // ここでパスワード変更APIを叩く
   };
 

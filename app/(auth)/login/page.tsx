@@ -13,7 +13,7 @@ interface LoginFormInputs {
 };
 
 export default function LoginPage() {
-  // ★ 1. useFormのセットアップ
+  // useFormのセットアップ
   const {
     register,
     handleSubmit,
@@ -27,12 +27,12 @@ export default function LoginPage() {
     },
   });
 
-  // ★ パスワードの入力有無を監視（クリアボタン表示用）
+  // パスワードの入力有無を監視（クリアボタン表示用）
   const passwordValue = watch("password");
 
-  // ★ 2. 送信時の処理
+  // 送信時の処理
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log("Form Data:", data);
+    //console.log("Form Data:", data);
     // ここにログインAPIを叩く処理を追加 (例: supabase.auth.signIn...)
   };
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto px-6">
 
-              {/* ▼▼▼ ロゴ・タイトルエリア ▼▼▼ */}
+              {/* ロゴ・タイトルエリア */}
               <div className="flex justify-center mb-8 mt-10">
                 {/* パターンA: 画像ロゴを使いたい場合 */}
 

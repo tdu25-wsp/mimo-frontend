@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
 
   // 送信時の処理
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = async (data) => {
-    console.log("送信データ:", data);
+    //console.log("送信データ:", data);
     // ここにパスワードリセットメール送信APIの呼び出しなどを記述
     // await resetPassword(data.email);
   };

@@ -87,7 +87,7 @@ export default function VerifyCodePage() {
 
   // 送信処理
   const onSubmit: SubmitHandler<VerifyCodeInputs> = (data) => {
-    console.log("確認コード送信:", data);
+    //console.log("確認コード送信:", data);
     // API呼び出し...
   };
 
