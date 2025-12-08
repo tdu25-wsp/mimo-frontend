@@ -2,13 +2,37 @@
 import * as React from "react";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
+import Heading from "@/components/ui/Heading";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface VerifyCodeInputs {
+  code: string;
+}
 
 export default function VerifyCodePage() {
-  // 4桁のコードを管理するState
-  const [code, setCode] = React.useState(["", "", "", ""]);
+  // 4桁のコードを管理するState（見た目制御用）
+  const [digits, setDigits] = React.useState(["", "", "", ""]);
+
+  // Hook Formの設定
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<VerifyCodeInputs>({
+    defaultValues: {
+      code: "",
+    },
+  });
 
   // 各input要素への参照を管理（フォーカス移動用）
   const inputRefs = React.useRef<(HTMLInputElement | null)[]>([]);
+
+  // Digitsが変更されたら、Hook Formの値を更新する
+  React.useEffect(() => {
+    const codeString = digits.join("");
+    setValue("code", codeString, { shouldValidate: true });
+  }, [digits, setValue]);
 
   // 入力時の処理
   const handleChange = (index: number, value: string) => {
@@ -19,9 +43,9 @@ export default function VerifyCodePage() {
     }
     if (!/^\d*$/.test(value)) return;
 
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
+    const newDigits = [...digits];
+    newDigits[index] = value;
+    setDigits(newDigits);
 
     // 文字が入力され、かつ最後のボックスでなければ、次のボックスへフォーカス
     if (value && index < 3) {
@@ -30,10 +54,13 @@ export default function VerifyCodePage() {
   };
 
   // キーダウン時の処理（Backspace対応）
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Backspace") {
       // 現在のボックスが空で、かつ最初のボックスでなければ、前のボックスへ戻る
-      if (!code[index] && index > 0) {
+      if (!digits[index] && index > 0) {
         inputRefs.current[index - 1]?.focus();
       }
     }
@@ -45,18 +72,26 @@ export default function VerifyCodePage() {
     const pastedData = e.clipboardData.getData("text").slice(0, 4); // 最大4文字
     if (!/^\d+$/.test(pastedData)) return; // 数字のみ許可
 
-    const digits = pastedData.split("");
-    const newCode = [...code];
+    const pastedDigits = pastedData.split("");
+    const newDigits = [...digits];
 
-    digits.forEach((digit, i) => {
-      newCode[i] = digit;
+    pastedDigits.forEach((digit, i) => {
+      newDigits[i] = digit;
     });
-    setCode(newCode);
+    setDigits(newDigits);
 
     // 入力された最後の位置、または最後のボックスにフォーカス
     const nextFocusIndex = Math.min(digits.length, 3);
     inputRefs.current[nextFocusIndex]?.focus();
   };
+
+  // 送信処理
+  const onSubmit: SubmitHandler<VerifyCodeInputs> = (data) => {
+    console.log("確認コード送信:", data);
+    // API呼び出し...
+  };
+
+
   return (
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
 
@@ -77,23 +112,38 @@ export default function VerifyCodePage() {
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto">
 
-              <h2 className="text-2xl font-bold text-primary-text mb-10">
+              <Heading level="h2" className="mb-10">
                 確認コードを入力
-              </h2>
+              </Heading>
 
-              <div className="flex justify-between gap-2 mb-10">
-                {code.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={(el) => { inputRefs.current[index] = el; }}
-                    type="text"
-                    inputMode="numeric" // スマホで数字キーパッドを表示
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleChange(index, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(index, e)}
-                    onPaste={handlePaste}
-                    className="
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {/* ★ Hook Form用の隠しフィールド（ここでバリデーションを行う） */}
+                <input
+                  type="hidden"
+                  {...register("code", {
+                    required: "確認コードを入力してください",
+                    minLength: {
+                      value: 4,
+                      message: "4桁のコードを入力してください",
+                    },
+                  })}
+                />
+
+                <div className="flex justify-between gap-2 mb-10">
+                  {digits.map((digit, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => {
+                        inputRefs.current[index] = el;
+                      }}
+                      type="text"
+                      inputMode="numeric" // スマホで数字キーパッドを表示
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(index, e)}
+                      onPaste={handlePaste}
+                      className="
                       w-14 h-14 sm:w-16 sm:h-16 
                       text-center text-2xl font-bold 
                       border-2 border-border rounded-xl 
@@ -101,17 +151,28 @@ export default function VerifyCodePage() {
                       bg-background text-primary-text
                       transition-all
                     "
+                    />
+                  ))}
+                </div>
+
+                {/* エラーメッセージ表示エリア */}
+                <div className="min-h-[20px] mb-10">
+                  {errors.code && (
+                    <p className="text-error text-xs text-center">
+                      {errors.code.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* 送信ボタン*/}
+                <div className="mt-24">
+                  <ActionLargeButton
+                    label={isSubmitting ? "送信中..." : "送信"}
+                    type="submit"
+                    disabled={isSubmitting}
                   />
-                ))}
-              </div>
-
-              {/* 送信ボタン*/}
-              <div className="mt-24">
-                <ActionLargeButton
-                  label="送信"
-                />
-              </div>
-
+                </div>
+              </form>
             </div>
           </main>
         </div>
