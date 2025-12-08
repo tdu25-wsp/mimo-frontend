@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
