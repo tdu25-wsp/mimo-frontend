@@ -62,7 +62,7 @@ export function Header({
             {/* Center */}
             <div className="flex items-center justify-center w-1/3">
                 {typeof title === "string" ? (
-                    <h1 className="text-lg font-bold truncate text-primary-text">
+                    <h1 className="text-base font-bold truncate text-primary-text">
                         {title}
                     </h1>
                 ) : (
@@ -71,7 +71,7 @@ export function Header({
             </div>
 
             {/* Right */}
-            <div className="flex items-center justify-end w-1/3 gap-2">
+            <div className="flex items-center justify-end w-1/3 gap-1">
                 {rightContent}
             </div>
         </header>
