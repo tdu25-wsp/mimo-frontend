@@ -1,0 +1,59 @@
+{
+  "memos": [
+    {
+      "MemoID": "memo-1",
+      "UserID(FK)": "user-1",
+      "TagID(FK)": "tag-1",
+      "content": "プロジェクトAのキックオフミーティングの議事録。\n主要な決定事項と次のアクションアイテムをまとめる。\n\n参加者は田中、佐藤、鈴木です。\n次回ミーティングは2025年11月20日を予定しています。\n\nプロジェクトの目標とスケジュールを確認しました。\n各メンバーの役割分担も明確になりました。",
+      "autoTagID": ["tag-1", "tag-2"],
+      "manualTagID": ["tag-1"],
+      "shareUrlToken": "share-token-memo-1-xyz",
+      "createdDate": "2025-11-15T12:10:00Z",
+      "updatedDate": "2025-11-15T12:15:00Z"
+    },
+    {
+      "MemoID": "memo-2",
+      "UserID(FK)": "user-1",
+      "TagID(FK)": "tag-2",
+      "content": "Next.jsのApp RouterとPages Routerの違いについて調査しました。\nパフォーマンスとルーティングの柔軟性に注目して比較しています。\n\nApp Routerはサーバーコンポーネントがデフォルトになっており、ファイルベースのルーティングが特徴です。\nレイアウト管理もより直感的に行えるようになっています。\n\nこれらの利点を考慮し、プロジェクトにはApp Routerを採用する方向で検討を進めます。",
+      "autoTagID": ["tag-2", "tag-3"],
+      "manualTagID": ["tag-2", "tag-3"],
+      "shareUrlToken": null,
+      "createdDate": "2025-11-15T12:30:00Z",
+      "updatedDate": "2025-11-15T12:30:00Z"
+    },
+    {
+      "MemoID": "memo-3",
+      "UserID(FK)": "user-1",
+      "TagID(FK)": "tag-3",
+      "content": "新しいメモアプリのUIアイデアをまとめています。\nGlassmorphismを取り入れたデザインを検討中です。\n\n透明感のある背景とぼかし効果を活用することで、シンプルで洗練されたUIを目指します。\n\nカラーパレットはプライマリカラーに#667EEA、セカンダリカラーに#764BA2を使用します。\nアクセントカラーとして#F093FBを採用する予定です。",
+      "autoTagID": [],
+      "manualTagID": [],
+      "shareUrlToken": null,
+      "createdDate": "2025-11-15T13:00:00Z",
+      "updatedDate": "2025-11-15T13:00:00Z"
+    },
+    {
+      "MemoID": "memo-4",
+      "UserID(FK)": "user-2",
+      "TagID(FK)": "tag-1",
+      "content": "これは長文テストのためのメモです。\n実際のユースケースでは、ユーザーが長い文章を入力することも想定されます。\n\nテキストテキストテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキストテキストテキスト。\n\nテキストテキストテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキストテキストテキスト。\n\nテキストテキストテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキストテキストテキスト。\n\n長文メモの表示とスクロール動作のテストに使用できます。",
+      "autoTagID": ["tag-1", "tag-3"],
+      "manualTagID": ["tag-1"],
+      "shareUrlToken": null,
+      "createdDate": "2025-11-10T10:00:00Z",
+      "updatedDate": "2025-11-10T10:05:00Z"
+    },
+    {
+      "MemoID": "memo-5",
+      "UserID(FK)": "user-3",
+      "TagID(FK)": "tag-2",
+      "content": "これは中程度の長さのメモです。\n\nテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキスト。\n\nテキストテキストテキストテキストテキストテキスト。\nテキストテキストテキストテキストテキストテキスト。\n\nテキストテキストテキストテキストテキストテキスト。",
+      "autoTagID": ["tag-2", "tag-3"],
+      "manualTagID": ["tag-2", "tag-3"],
+      "shareUrlToken": null,
+      "createdDate": "2025-11-12T14:20:00Z",
+      "updatedDate": "2025-11-12T14:25:00Z"
+    }
+  ]
+}

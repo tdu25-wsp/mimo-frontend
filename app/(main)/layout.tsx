@@ -1,7 +1,19 @@
+import TabBar from "@/components/layout/TabBar";
+
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <div className="flex flex-col md:flex-row h-screen bg-gray-background">
+      {/* タブバー */}
+      <TabBar />
+
+      {/* メインコンテンツ */}
+      <main className="md:ml-56 pb-16 md:pb-0 flex-1">
+        {children}
+      </main>
+    </div>
+  );
 }
