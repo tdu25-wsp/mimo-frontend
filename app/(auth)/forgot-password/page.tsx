@@ -5,10 +5,8 @@ import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
 import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface ForgotPasswordInputs {
-  email: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { forgotPasswordSchema, ForgotPasswordInput } from "@/lib/validation/auth.schema";
 
 export default function ForgotPasswordPage() {
   // useFormのセットアップ
@@ -16,14 +14,15 @@ export default function ForgotPasswordPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ForgotPasswordInputs>({
+  } = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
     },
   });
 
   // 送信時の処理
-  const onSubmit: SubmitHandler<ForgotPasswordInputs> = async (data) => {
+  const onSubmit: SubmitHandler<ForgotPasswordInput> = async (data) => {
     //console.log("送信データ:", data);
     // ここにパスワードリセットメール送信APIの呼び出しなどを記述
     // await resetPassword(data.email);
@@ -66,21 +65,7 @@ export default function ForgotPasswordPage() {
                     type="email"
                     id="email"
                     placeholder="user@example.com"
-                    {...register("email", {
-                      required: "メールアドレスは必須です",
-                      minLength: {
-                        value: 2,
-                        message: "メールアドレスは2文字以上で入力してください",
-                      },
-                      maxLength: {
-                        value: 254,
-                        message: "メールアドレスは254文字以内で入力してください",
-                      },
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "正しいメールアドレス形式で入力してください",
-                      },
-                    })}
+                    {...register("email")}
                   />
                   {/* エラーメッセージ表示 */}
                   {errors.email && (

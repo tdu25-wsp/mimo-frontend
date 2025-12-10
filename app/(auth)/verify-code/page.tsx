@@ -4,10 +4,8 @@ import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface VerifyCodeInputs {
-  code: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { verifyCodeSchema, VerifyCodeInput } from "@/lib/validation/auth.schema";
 
 export default function VerifyCodePage() {
   // 4桁のコードを管理するState（見た目制御用）
@@ -19,7 +17,8 @@ export default function VerifyCodePage() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<VerifyCodeInputs>({
+  } = useForm<VerifyCodeInput>({
+    resolver: zodResolver(verifyCodeSchema),
     defaultValues: {
       code: "",
     },
@@ -86,7 +85,7 @@ export default function VerifyCodePage() {
   };
 
   // 送信処理
-  const onSubmit: SubmitHandler<VerifyCodeInputs> = (data) => {
+  const onSubmit: SubmitHandler<VerifyCodeInput> = (data) => {
     //console.log("確認コード送信:", data);
     // API呼び出し...
   };
@@ -117,16 +116,10 @@ export default function VerifyCodePage() {
               </Heading>
 
               <form onSubmit={handleSubmit(onSubmit)}>
-                {/* ★ Hook Form用の隠しフィールド（ここでバリデーションを行う） */}
+                {/* Hook Form用の隠しフィールド（ここでバリデーションを行う） */}
                 <input
                   type="hidden"
-                  {...register("code", {
-                    required: "確認コードを入力してください",
-                    minLength: {
-                      value: 4,
-                      message: "4桁のコードを入力してください",
-                    },
-                  })}
+                  {...register("code")}
                 />
 
                 <div className="flex justify-between gap-2 mb-10">

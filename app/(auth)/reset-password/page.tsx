@@ -6,21 +6,19 @@ import { Input } from "@/components/ui/Input";
 import Heading from "@/components/ui/Heading";
 import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface ResetPasswordInputs {
-  password: string;
-  confirmPassword: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { resetPasswordSchema, ResetPasswordInput } from "@/lib/validation/auth.schema";
 
 export default function ResetPasswordPage() {
-  // 1. useFormのセットアップ
+  // useFormのセットアップ
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ResetPasswordInputs>({
+  } = useForm<ResetPasswordInput>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -31,8 +29,8 @@ export default function ResetPasswordPage() {
   const passwordValue = watch("password");
   const confirmPasswordValue = watch("confirmPassword");
 
-  // 2. 送信時の処理
-  const onSubmit: SubmitHandler<ResetPasswordInputs> = (data) => {
+  // 送信時の処理
+  const onSubmit: SubmitHandler<ResetPasswordInput> = (data) => {
     //console.log("変更データ:", data);
     // ここでパスワード変更APIを叩く
   };
@@ -74,17 +72,7 @@ export default function ResetPasswordPage() {
                       id="password"
                       placeholder="8〜16文字のパスワード"
                       className="pr-10"
-                      {...register("password", {
-                        required: "パスワードは必須です",
-                        minLength: {
-                          value: 8,
-                          message: "パスワードは8文字以上で入力してください",
-                        },
-                        maxLength: {
-                          value: 16,
-                          message: "パスワードは16文字以内で入力してください",
-                        },
-                      })}
+                      {...register("password")}
                     />
 
                     {/* クリアボタン */}
@@ -121,12 +109,7 @@ export default function ResetPasswordPage() {
                       type="password"
                       id="confirm-password"
                       className="pr-10"
-                      {...register("confirmPassword", {
-                        required: "確認用パスワードは必須です",
-                        validate: (value) =>
-                          value === passwordValue ||
-                          "パスワードが一致しません",
-                      })}
+                      {...register("confirmPassword")}
                     />
                     {confirmPasswordValue && confirmPasswordValue.length > 0 && (
                       <button
