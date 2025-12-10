@@ -6,11 +6,8 @@ import { X } from "lucide-react";
 import LinkButton from "@/components/features/LinkButton";
 import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface LoginFormInputs {
-  email: string;
-  password: string;
-};
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginInput } from "@/lib/validation/auth.schema";
 
 export default function LoginPage() {
   // useFormのセットアップ
@@ -20,7 +17,8 @@ export default function LoginPage() {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormInputs>({
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -31,7 +29,7 @@ export default function LoginPage() {
   const passwordValue = watch("password");
 
   // 送信時の処理
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<LoginInput> = (data) => {
     //console.log("Form Data:", data);
     // ここにログインAPIを叩く処理を追加 (例: supabase.auth.signIn...)
   };
@@ -80,21 +78,7 @@ export default function LoginPage() {
                     type="email"
                     id="email"
                     placeholder="user@example.com"
-                    {...register("email", {
-                      required: "メールアドレスは必須です",
-                      minLength: {
-                        value: 2,
-                        message: "メールアドレスは2文字以上で入力してください",
-                      },
-                      maxLength: {
-                        value: 254,
-                        message: "メールアドレスは254文字以内で入力してください",
-                      },
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "正しいメールアドレス形式で入力してください"
-                      }
-                    })}
+                    {...register("email")}
                   />
                   {/* エラーメッセージ表示 */}
                   {errors.email && (
@@ -116,17 +100,7 @@ export default function LoginPage() {
                       id="password"
                       placeholder="••••••••"
                       className="pr-10"
-                      {...register("password", {
-                        required: "パスワードは必須です",
-                        minLength: {
-                          value: 8,
-                          message: "パスワードは8文字以上で入力してください",
-                        },
-                        maxLength: {
-                          value: 16,
-                          message: "パスワードは16文字以内で入力してください",
-                        },
-                      })}
+                      {...register("password")}
                     />
 
                     {/* パスワードクリアボタンのロジック */}

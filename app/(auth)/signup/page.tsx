@@ -6,11 +6,8 @@ import { Input } from "@/components/ui/Input";
 import Heading from "@/components/ui/Heading";
 import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface SignupFormInputs {
-  email: string;
-  password: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupSchema, SignupInput } from "@/lib/validation/auth.schema";
 
 export default function SignupPage() {
   const {
@@ -19,7 +16,8 @@ export default function SignupPage() {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<SignupFormInputs>({
+  } = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -30,7 +28,7 @@ export default function SignupPage() {
   const passwordValue = watch("password");
 
   // 送信時の処理
-  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<SignupInput> = (data) => {
     //console.log("登録データ:", data);
     // ここに新規登録APIを叩く処理
   };
@@ -71,21 +69,7 @@ export default function SignupPage() {
                     type="email"
                     id="email"
                     placeholder="user@example.com"
-                    {...register("email", {
-                      required: "メールアドレスは必須です",
-                      minLength: {
-                        value: 2,
-                        message: "メールアドレスは2文字以上で入力してください",
-                      },
-                      maxLength: {
-                        value: 254,
-                        message: "メールアドレスは254文字以内で入力してください",
-                      },
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "正しいメールアドレス形式で入力してください",
-                      },
-                    })}
+                    {...register("email")}
                   />
                   {/* エラーメッセージ */}
                   {errors.email && (
@@ -109,17 +93,7 @@ export default function SignupPage() {
                       id="password"
                       placeholder="••••••••"
                       className="pr-10"
-                      {...register("password", {
-                        required: "パスワードは必須です",
-                        minLength: {
-                          value: 8,
-                          message: "パスワードは8文字以上で入力してください",
-                        },
-                        maxLength: {
-                          value: 16,
-                          message: "パスワードは16文字以内で入力してください",
-                        },
-                      })}
+                      {...register("password")}
                     />
                     {passwordValue && passwordValue.length > 0 && (
                       <button
