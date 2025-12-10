@@ -1,13 +1,41 @@
 "use client";
-import * as React from "react";
-import { Header } from "@/components/layout/Header";
+
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
 import { X } from "lucide-react";
 import LinkButton from "@/components/features/LinkButton";
+import Heading from "@/components/ui/Heading";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface LoginFormInputs {
+  email: string;
+  password: string;
+};
 
 export default function LoginPage() {
-  const [password, setPassword] = React.useState("");
+  // useFormのセットアップ
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormInputs>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // パスワードの入力有無を監視（クリアボタン表示用）
+  const passwordValue = watch("password");
+
+  // 送信時の処理
+  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+    //console.log("Form Data:", data);
+    // ここにログインAPIを叩く処理を追加 (例: supabase.auth.signIn...)
+  };
+
   return (
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
 
@@ -20,73 +48,114 @@ export default function LoginPage() {
 
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto px-6">
-              
-              {/* ▼▼▼ ロゴ・タイトルエリア ▼▼▼ */}
+
+              {/* ロゴ・タイトルエリア */}
               <div className="flex justify-center mb-8 mt-10">
                 {/* パターンA: 画像ロゴを使いたい場合 */}
 
                 {/* パターンB: 文字ロゴを使いたい場合 */}
-                <h1 className="text-3xl font-extrabold text-primary-text tracking-tight">
+                <Heading
+                  level="h1"
+                  className="text-3xl font-extrabold tracking-tight"
+                >
                   Mimo
-                </h1>
+                </Heading>
               </div>
 
 
-              <h2 className="text-2xl font-bold text-primary-text mb-10">
+              <Heading level="h2" className="mb-10">
                 ログイン
-              </h2>
+              </Heading>
 
-              {/* メールアドレス入力欄 */}
-              <div className="grid w-full items-center gap-1.5">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium text-secondary-text"
-                >
-                  メールアドレス
-                </label>
-                <Input
-                  type="email"
-                  id="email"
-                  placeholder="user@example.com"
-                />
-              </div>
-
-              {/* 1つ目のパスワード入力 */}
-              <div className="grid w-full items-center gap-1.5 mt-5">
-                <label
-                  htmlFor="password"
-                  className="text-sm font-medium text-secondary-text"
-                >
-                  パスワード
-                </label>
-                <div className="relative">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {/* メールアドレス入力欄 */}
+                <div className="grid w-full items-center gap-1.5">
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-medium text-secondary-text"
+                  >
+                    メールアドレス
+                  </label>
                   <Input
-                    type="password"
-                    id="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pr-10"
+                    type="email"
+                    id="email"
+                    placeholder="user@example.com"
+                    {...register("email", {
+                      required: "メールアドレスは必須です",
+                      minLength: {
+                        value: 2,
+                        message: "メールアドレスは2文字以上で入力してください",
+                      },
+                      maxLength: {
+                        value: 254,
+                        message: "メールアドレスは254文字以内で入力してください",
+                      },
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "正しいメールアドレス形式で入力してください"
+                      }
+                    })}
                   />
-                  {password.length > 0 && (
-                    <button
-                      type="button"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-muted-text hover:text-secondary-text"
-                      onClick={() => setPassword("")}
-                    >
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">パスワードをクリア</span>
-                    </button>
+                  {/* エラーメッセージ表示 */}
+                  {errors.email && (
+                    <p className="text-error text-xs">{errors.email.message}</p>
                   )}
                 </div>
-              </div>
 
-              {/* ログインボタン*/}
-              <div className="mt-24">
-                <ActionLargeButton
-                  label="ログイン"
-                />
-              </div>
+                {/* 1つ目のパスワード入力 */}
+                <div className="grid w-full items-center gap-1.5 mt-5">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-medium text-secondary-text"
+                  >
+                    パスワード
+                  </label>
+                  <div className="relative">
+                    <Input
+                      type="password"
+                      id="password"
+                      placeholder="••••••••"
+                      className="pr-10"
+                      {...register("password", {
+                        required: "パスワードは必須です",
+                        minLength: {
+                          value: 8,
+                          message: "パスワードは8文字以上で入力してください",
+                        },
+                        maxLength: {
+                          value: 16,
+                          message: "パスワードは16文字以内で入力してください",
+                        },
+                      })}
+                    />
+
+                    {/* パスワードクリアボタンのロジック */}
+                    {passwordValue && passwordValue.length > 0 && (
+                      <button
+                        type="button"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-muted-text hover:text-secondary-text"
+                        // setValueを使って値をクリア
+                        onClick={() => setValue("password", "")}
+                      >
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">パスワードをクリア</span>
+                      </button>
+                    )}
+                  </div>
+                  {errors.password && (
+                    <p className="text-error text-xs">{errors.password.message}</p>
+                  )}
+                </div>
+
+                {/* ログインボタン*/}
+                <div className="mt-24">
+                  <ActionLargeButton
+                    label={isSubmitting ? "ログイン中..." : "ログイン"}
+                    type="submit"
+                    disabled={isSubmitting}
+                  />
+                </div>
+              </form>
             </div>
 
 
