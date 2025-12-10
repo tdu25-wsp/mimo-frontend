@@ -28,6 +28,8 @@ interface EntryListPageProps {
   emptyMessage?: string;
 }
 
+type EntryListPageMode = "normal" | "selection" | "summarize";
+
 export const EntryListPage = ({
   entries,
   title,
@@ -38,15 +40,31 @@ export const EntryListPage = ({
   additionalActions,
   emptyMessage = "エントリーがありません",
 }: EntryListPageProps) => {
-  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [isSummarizeMode, setIsSummarizeMode] = useState(false);
+
+  const [isMode, setIsMode] = useState<EntryListPageMode>("normal");
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
+  const isSelectionMode = isMode !== "normal";
+
   const toggleMode = () => {
-    if (isSelectionMode) {
+    if (isMode !== "normal") {
       setSelectedIds([]);
+      setIsMode("normal");
+    } else {
+      setIsMode("selection");
     }
-    setIsSelectionMode(!isSelectionMode);
   };
+
+  const toggleSummarizeMode = () => {
+    if (isMode === "summarize") {
+      setIsMode("normal");
+    } else {
+      setIsMode("summarize");
+    }
+    setIsSummarizeMode(!isSummarizeMode);
+  }
 
   const handleToggleSelection = (id: string) => {
     setSelectedIds((prev) =>
@@ -73,10 +91,75 @@ export const EntryListPage = ({
     }
   };
 
+  const SummarizeButton = () => {
+    return (
+      <button
+        onClick={toggleSummarizeMode}
+        className="
+        flex items-center gap-1
+        bg-transparent
+        border-2 border-primary
+        text-primary font-bold text-lg
+        px-2 py-2
+        rounded-full
+        hover:bg-gray-100 hover:text-primary transition-colors duration-300
+      "
+      >
+        <Wand size={18} strokeWidth={3} />
+        {isMode === "summarize" ? (
+          <span className="text-xs text-primary-text">{selectedIds.length === 0 ? "すべて要約" : "要約"}</span>
+        ) : (<span className="text-xs text-primary-text">要約</span>
+        )}
+      </button>
+    );
+  }
+
+  const NormalModeHeader = () => {
+    return (<>
+      {additionalActions}
+      <SummarizeButton />
+      <button
+        onClick={toggleMode}
+        className="p-2 hover:bg-gray-100 rounded-full text-xs font-bold"
+      >
+        選択
+      </button>
+    </>);
+  }
+
+  const SelectionModeHeader = () => {
+    return (
+      <>
+        <button
+          onClick={handleShareSelected}
+          disabled={selectedIds.length === 0}
+          className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-30"
+        >
+          <Share size={18} />
+        </button>
+        <button
+          onClick={handleDeleteSelected}
+          disabled={selectedIds.length === 0}
+          className="p-2 hover:bg-red-100 rounded-full text-red-500 disabled:opacity-30"
+        >
+          <Trash2 size={18} />
+        </button>
+      </>
+    );
+  }
+
+  const SummaryModeHeader = () => {
+    return (
+      <>
+        <SummarizeButton />
+      </>
+    );
+  }
+
   return (
     <>
       <Header
-        title={isSelectionMode ? `${selectedIds.length}件を選択` : title}
+        title={isSelectionMode ? `${selectedIds.length}件選択中` : title}
         showBackButton={!isSelectionMode && showBackButton}
         leftContent={
           isSelectionMode ? (
@@ -87,46 +170,9 @@ export const EntryListPage = ({
         }
         rightContent={
           <>
-            {isSelectionMode ? (
-              // 選択モード中のアクション
-              <>
-                <button
-                  onClick={handleShareSelected}
-                  disabled={selectedIds.length === 0}
-                  className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-30"
-                >
-                  <Wand size={20} />
-                </button>
-                <button
-                  onClick={handleShareSelected}
-                  disabled={selectedIds.length === 0}
-                  className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-30"
-                >
-                  <Share size={20} />
-                </button>
-                <button
-                  onClick={handleDeleteSelected}
-                  disabled={selectedIds.length === 0}
-                  className="p-2 hover:bg-red-100 rounded-full text-red-500 disabled:opacity-30"
-                >
-                  <Trash2 size={20} />
-                </button>
-              </>
-            ) : (
-              // 通常時のアクション
-              <>
-                {additionalActions}
-                <button className="p-2 hover:bg-gray-100 rounded-full">
-                  <Share size={20} />
-                </button>
-                <button
-                  onClick={toggleMode}
-                  className="p-2 hover:bg-gray-100 rounded-full text-sm font-bold"
-                >
-                  選択
-                </button>
-              </>
-            )}
+            {isMode === "normal" && <NormalModeHeader />}
+            {isMode === "selection" && <SelectionModeHeader />}
+            {isMode === "summarize" && <SummaryModeHeader />}
           </>
         }
       />
