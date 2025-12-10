@@ -64,6 +64,7 @@ export const EntryListPage = ({
       setIsMode("summarize");
     }
     setIsSummarizeMode(!isSummarizeMode);
+    setSelectedIds([]);
   }
 
   const handleToggleSelection = (id: string) => {
