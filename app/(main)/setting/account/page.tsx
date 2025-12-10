@@ -103,7 +103,7 @@ export default function AccountPage() {
               </DialogClose>
               <Button 
                 onClick={handleLogout}
-                className="bg-primary text-primary-text hover:bg-primary-hover text-white font-bold"
+                className="bg-primary hover:bg-primary-hover text-white font-bold"
               >
                 ログアウト
               </Button>
