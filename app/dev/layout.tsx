@@ -1,3 +1,5 @@
+import { EntryEditSheet } from "@/components/features/EntryEditSheet";
+
 export default function DevLayout({ children }: { children: React.ReactNode }) {
   // 本番環境では非表示
   if (process.env.NODE_ENV === 'production') {
@@ -13,6 +15,7 @@ export default function DevLayout({ children }: { children: React.ReactNode }) {
       <div className="bg-warning text-white px-4 py-2 text-center font-bold">
         ⚠️ 開発専用ページ - 本番環境では表示されません
       </div>
+      <EntryEditSheet />
       {children}
     </div>
   );
