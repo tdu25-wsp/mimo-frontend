@@ -22,6 +22,10 @@ export const EntryCard = (
 ) => {
 
     const handleClick = () => {
+        if (entry.type !== "memo") {
+            return;
+        }
+
         if (isSelectionMode && onToggleSelection) {
             // 選択モード中なら、選択状態をトグルするだけ
             onToggleSelection(entry.id);
@@ -36,13 +40,14 @@ export const EntryCard = (
             <li
                 onClick={handleClick}
                 className={twMerge(
-                    "px-6 py-4 rounded-3xl transition-all cursor-pointer relative flex items-center gap-3 shadow-lg",
+                    "px-6 py-4 rounded-3xl transition-all relative flex items-center gap-3 shadow-lg",
+                    entry.type === "memo" ? "cursor-pointer" : "cursor-default",
                     // 選択されている時は背景色を変えるなどの視覚効果
                     isSelected ? "bg-blue-50 border-blue-300" : "bg-white hover:bg-gray-50"
                 )}
             >
                 {/* 選択モード時のみ表示するチェックボックスエリア */}
-                {isSelectionMode && (
+                {isSelectionMode && entry.type === "memo" && (
                     <div className="flex-shrink-0 text-primary mr-2">
                         {isSelected ? (
                             <CheckCircle2 className="w-6 h-6 text-blue-500 fill-blue-100" />

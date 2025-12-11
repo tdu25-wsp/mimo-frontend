@@ -11,7 +11,7 @@ export default function MainLayout({
       <TabBar />
 
       {/* メインコンテンツ */}
-      <main className="md:ml-56 pb-16 md:pb-0 flex-1">
+      <main className="md:ml-48 pb-16 md:pb-0 flex-1">
         {children}
       </main>
     </div>
