@@ -1,3 +1,4 @@
+import { EntryEditSheet } from "@/components/features/EntryEditSheet";
 import TabBar from "@/components/layout/TabBar";
 
 export default function MainLayout({
@@ -13,6 +14,7 @@ export default function MainLayout({
       {/* メインコンテンツ */}
       <main className="md:ml-48 pb-16 md:pb-0 flex-1">
         {children}
+        <EntryEditSheet />
       </main>
     </div>
   );

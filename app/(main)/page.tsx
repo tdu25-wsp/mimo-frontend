@@ -2,6 +2,7 @@
 
 import { EntryList } from "@/components/features/EntryList";
 import { useMainStore } from "@/lib/stores/mainStore";
+import { Plus } from "lucide-react";
 
 export default function MainPage() {
 
@@ -11,6 +12,8 @@ export default function MainPage() {
   const selectedIds = useMainStore((state) => state.selectedEntryIds);
   const toggleEntrySelection = useMainStore((state) => state.toggleEntrySelection);
   const emptyMessage = "エントリーがありません";
+
+  const openCreateSheet = useMainStore((state) => state.openCreateSheet);
 
   const tags = useMainStore((state) => state.tags);
 
@@ -43,6 +46,13 @@ export default function MainPage() {
           onToggleSelection={toggleEntrySelection}
           emptyMessage={emptyMessage}
         />
+
+        <button
+          onClick={openCreateSheet}
+          className="fixed bottom-6 right-6 md:bottom-6 md:right-6 bottom-24 bg-primary text-white p-4 rounded-full shadow-lg z-40 hover:bg-primary-hover transition-colors"
+        >
+          <Plus size={24} />
+        </button>
       </div>
     </div>
   );
