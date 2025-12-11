@@ -1,6 +1,6 @@
 import { Entry } from "@/types/entry";
 import { twMerge } from "tailwind-merge";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2, Circle, Menu } from "lucide-react";
 import Text from "@/components/ui/Text";
 import Heading from "@/components/ui/Heading";
 import { EntryCardDropdownMenu } from "@/components/features/EntryCardDropdownMenu";
@@ -62,7 +62,7 @@ export const EntryCard = (
                     <Text style="body" className="mb-1 font-medium">{entry.content}</Text>
                     <div className="flex items-center justify-between">
                         <Text style="small" className="font-mono">{entry.createdAt}</Text>
-                        <EntryCardDropdownMenu />
+                        <EntryCardDropdownMenu {...entry} />
                     </div>
                 </div>
             </li>
