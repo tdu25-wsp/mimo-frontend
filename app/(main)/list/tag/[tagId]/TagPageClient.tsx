@@ -1,20 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { EntryListPage } from '@/components/features/EntryListPage';
 import { Tag } from '@/types/tag';
 import { useMainStore } from '@/lib/stores/mainStore';
 import { Ellipsis, TagIcon, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogClose,
-} from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -30,23 +20,13 @@ export function TagPageClient({ tag }: TagPageClientProps) {
     const getEntriesByTag = useMainStore((state) => state.getEntriesByTag);
     const deleteEntries = useMainStore((state) => state.deleteEntries);
     
-    const openTagEditModal = useMainStore((state) => state.openTagEditSheet);
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    
+    const openTagEditSheet = useMainStore((state) => state.openTagEditSheet);
+    const openDeleteDialog = useMainStore((state) => state.openDeleteDialog);
+
     const entries = getEntriesByTag(tag.id);
 
     const handleDeleteEntries = async (ids: string[]) => {
         await deleteEntries(ids);
-    };
-
-    const handleDeleteTag = () => {
-        console.log('削除:', tag.id);
-        // ここに実際の削除処理（deleteTagアクションなど）を追加する必要があります
-        // const deleteTag = useMainStore((state) => state.deleteTag);
-        // await deleteTag(tag.id);
-        
-        setShowDeleteDialog(false);
-        // 削除後のリダイレクト処理などが通常必要です
     };
 
     return (
@@ -81,13 +61,13 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem 
-                                        onClick={() => openTagEditModal(tag)}
+                                        onClick={() => openTagEditSheet(tag)}
                                     >
                                         <Pencil className="mr-2 h-4 w-4" />
                                         <span>編集</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem 
-                                        onClick={() => setShowDeleteDialog(true)}
+                                        onClick={() => openDeleteDialog({ type: 'tag', id: tag.id, name: tag.name })}
                                         className="text-error focus:text-error"
                                     >
                                         <Trash2 className="mr-2 h-4 w-4" />
@@ -100,31 +80,6 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                 }
             />
             
-            {/* 削除確認ダイアログ */}
-            <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                <DialogContent className="sm:max-w-[425px] bg-background border-border">
-                    <DialogHeader>
-                        <DialogTitle className="text-primary-text text-xl font-bold">タグを削除</DialogTitle>
-                        <DialogDescription className="text-secondary-text pt-2">
-                            「{tag.name}」を削除してもよろしいですか？<br />
-                            <span className="text-xs text-muted-text">※タグに含まれるメモは削除されません。</span>
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="mt-4 gap-2">
-                        <DialogClose asChild>
-                            <Button variant="outline" className="border-border text-primary-text hover:bg-gray-background">
-                                キャンセル
-                            </Button>
-                        </DialogClose>
-                        <Button 
-                            onClick={handleDeleteTag}
-                            className="bg-error hover:bg-red-600 text-white font-bold"
-                        >
-                            削除
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

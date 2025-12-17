@@ -1,5 +1,6 @@
 import { EntryEditSheet } from "@/components/features/EntryEditSheet";
 import { TagEditSheet } from "@/components/features/TagEditSheet";
+import { DeleteDialog } from "@/components/features/DeleteDialog";
 import TabBar from "@/components/layout/TabBar";
 
 export default function MainLayout({
@@ -17,6 +18,7 @@ export default function MainLayout({
         {children}
         <EntryEditSheet />
         <TagEditSheet />
+        <DeleteDialog />
       </main>
     </div>
   );
