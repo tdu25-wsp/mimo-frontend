@@ -13,6 +13,7 @@ interface EntryListPageProps {
   // ページ固有の設定
   title: string;
   showBackButton?: boolean;
+  showTrailingContent?: boolean;
 
   // ヘッダーとリストの間に挿入するコンテンツ（タグ名、検索バーなど）
   headerBelow?: React.ReactNode;
@@ -34,6 +35,7 @@ export const EntryListPage = ({
   entries,
   title,
   showBackButton = true,
+  showTrailingContent = true,
   headerBelow,
   onDelete,
   onShare,
@@ -169,7 +171,7 @@ export const EntryListPage = ({
             </button>
           ) : null
         }
-        rightContent={
+        rightContent={showTrailingContent &&
           <>
             {isMode === "normal" && <NormalModeHeader />}
             {isMode === "selection" && <SelectionModeHeader />}
