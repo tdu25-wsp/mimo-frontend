@@ -1,0 +1,19 @@
+import { SummaryDetail } from "@/components/features/SummaryDetail";
+import { memoRepository } from "@/lib/repositories";
+import { summaryRepository } from "@/lib/repositories";
+import { MemoEntry } from "@/types/entry";
+import { notFound } from "next/navigation";
+
+export default async function SummaryDetailPage({ params }: { params: { id: string } }) {
+    const { id } = await params;
+
+    const entry = await summaryRepository.getById(id);
+
+    if (!entry) {
+        notFound();
+    }
+
+    const sourceMemos = await memoRepository.getByIds(entry.memoIds) as MemoEntry[];
+
+    return <SummaryDetail entry={entry} sourceMemos={sourceMemos} />;
+}
