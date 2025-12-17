@@ -6,7 +6,7 @@ import { Tag } from '@/types/tag';
 import { useMainStore } from '@/lib/stores/mainStore';
 import { Ellipsis, TagIcon, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/Input';
+// Inputは不要になったので削除
 import {
     Dialog,
     DialogContent,
@@ -23,11 +23,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const COLOR_PRESETS = [
-    '#EF4444', '#F97316', '#EAB308', '#22C55E', '#06B6D4', 
-    '#3B82F6', '#A855F7', '#EC4899', '#64748B',
-];
-
 interface TagPageClientProps {
     tag: Tag;
 }
@@ -36,11 +31,13 @@ export function TagPageClient({ tag }: TagPageClientProps) {
     const getEntriesByTag = useMainStore((state) => state.getEntriesByTag);
     const deleteEntries = useMainStore((state) => state.deleteEntries);
     
-    const [showEditDialog, setShowEditDialog] = useState(false);
+    // ▼▼▼ ストアから編集用アクションを取得 ▼▼▼
+    const openTagEditModal = useMainStore((state) => state.openTagEditModal);
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     
-    const [editingName, setEditingName] = useState(tag.name);
-    const [editingColor, setEditingColor] = useState(tag.color || '#3B82F6');
+    // ▼ 編集用のローカルstate (showEditDialog, editingName, editingColor) は削除しました
 
     const entries = getEntriesByTag(tag.id);
 
@@ -48,14 +45,16 @@ export function TagPageClient({ tag }: TagPageClientProps) {
         await deleteEntries(ids);
     };
 
-    const handleUpdateTag = () => {
-        console.log('更新:', { name: editingName, color: editingColor });
-        setShowEditDialog(false);
-    };
+    // ▼ handleUpdateTag 関数は削除しました (Sheet側で処理するため)
 
     const handleDeleteTag = () => {
         console.log('削除:', tag.id);
+        // ここに実際の削除処理（deleteTagアクションなど）を追加する必要があります
+        // const deleteTag = useMainStore((state) => state.deleteTag);
+        // await deleteTag(tag.id);
+        
         setShowDeleteDialog(false);
+        // 削除後のリダイレクト処理などが通常必要です
     };
 
     return (
@@ -89,7 +88,11 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
+                                    <DropdownMenuItem 
+                                        // ▼▼▼ 変更: ストアのアクションを呼び出す ▼▼▼
+                                        onClick={() => openTagEditModal(tag)}
+                                        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+                                    >
                                         <Pencil className="mr-2 h-4 w-4" />
                                         <span>編集</span>
                                     </DropdownMenuItem>
@@ -107,70 +110,9 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                 }
             />
 
-            {/* 編集ダイアログ */}
-            <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-                <DialogContent className="sm:max-w-[425px] bg-background border-border">
-                    <DialogHeader>
-                        <DialogTitle className="text-primary-text text-xl font-bold">タグを編集</DialogTitle>
-                        <DialogDescription className="text-secondary-text">
-                            タグの名前と色を変更できます。
-                        </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="grid gap-4 py-4">
-                        {/* 名前入力エリア */}
-                        <div className="grid gap-2">
-                            <label htmlFor="name" className="text-sm font-bold text-primary-text">
-                                名前
-                            </label>
-                            <Input
-                                id="name"
-                                value={editingName}
-                                onChange={(e) => setEditingName(e.target.value)}
-                                className="col-span-3 text-primary-text"
-                            />
-                        </div>
+            {/* ▼ 編集用Dialogのコードブロックは全て削除しました（Sheetに置き換わったため） */}
 
-                        {/* 色選択エリア */}
-                        <div className="grid gap-2">
-                            <span className="text-sm font-bold text-primary-text">
-                                カラー
-                            </span>
-                            <div className="flex flex-wrap gap-2">
-                                {COLOR_PRESETS.map((color) => (
-                                    <button
-                                        key={color}
-                                        type="button"
-                                        onClick={() => setEditingColor(color)}
-                                        className={`w-8 h-8 rounded-full border-2 transition-all ${
-                                            editingColor === color 
-                                                ? 'border-primary scale-110 ring-2 ring-offset-2 ring-primary/30' 
-                                                : 'border-transparent hover:scale-105'
-                                        }`}
-                                        style={{ backgroundColor: color }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline" className="border-border text-primary-text hover:bg-gray-background">
-                                キャンセル
-                            </Button>
-                        </DialogClose>
-                        <Button 
-                            onClick={handleUpdateTag} 
-                            className="bg-primary text-white hover:bg-primary-hover font-bold"
-                        >
-                            保存
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* 削除確認ダイアログ */}
+            {/* 削除確認ダイアログ (これは残します) */}
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <DialogContent className="sm:max-w-[425px] bg-background border-border">
                     <DialogHeader>
