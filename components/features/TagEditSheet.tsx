@@ -11,14 +11,14 @@ const COLOR_PRESETS = [
 ];
 
 export const TagEditSheet = () => {
-    const isOpen = useMainStore((state) => state.isTagAddModalOpen);
-    const closeSheet = useMainStore((state) => state.closeTagAddModal);
+    const isOpen = useMainStore((state) => state.isTagSheetOpen);
+    const closeSheet = useMainStore((state) => state.closeTagAddSheet);
     
     // 編集対象のタグを取得
     const editingTag = useMainStore((state) => state.editingTag);
     
     const addTag = useMainStore((state) => state.addTag);
-    const updateTag = useMainStore((state) => state.updateTag); // updateTagアクションが必要
+    const updateTag = useMainStore((state) => state.updateTag);
 
     const [tagName, setTagName] = useState("");
     const [tagColor, setTagColor] = useState(COLOR_PRESETS[0]);

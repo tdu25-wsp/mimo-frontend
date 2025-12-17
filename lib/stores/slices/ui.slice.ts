@@ -6,7 +6,7 @@ export interface UISlice {
     isEntrySheetOpen: boolean;
     editingEntry: MemoEntry | null;
     
-    isTagAddModalOpen: boolean;
+    isTagSheetOpen: boolean;
     editingTag: Tag | null;
 
     setEntrySelectionMode: (isSelectionMode: boolean) => void;
@@ -14,9 +14,9 @@ export interface UISlice {
     openEditSheet: (entry: MemoEntry) => void;
     closeEntrySheet: () => void;
 
-    openTagAddModal: () => void;
-    openTagEditModal: (tag: Tag) => void;
-    closeTagAddModal: () => void;
+    openTagAddSheet: () => void;
+    openTagEditSheet: (tag: Tag) => void;
+    closeTagAddSheet: () => void;
 }
 
 export const createUISlice = (set: any): UISlice => ({
@@ -24,7 +24,7 @@ export const createUISlice = (set: any): UISlice => ({
     isEntrySheetOpen: false,
     editingEntry: null,
     
-    isTagAddModalOpen: false,
+    isTagSheetOpen: false,
     editingTag: null,
 
     setEntrySelectionMode: (isEntrySelectionMode: boolean) => set({ isEntrySelectionMode }),
@@ -32,7 +32,7 @@ export const createUISlice = (set: any): UISlice => ({
     openEditSheet: (entry: MemoEntry) => set({ isEntrySheetOpen: true, editingEntry: entry }),
     closeEntrySheet: () => set({ isEntrySheetOpen: false, editingEntry: null }),
     
-    openTagAddModal: () => set({ isTagAddModalOpen: true, editingTag: null }),
-    openTagEditModal: (tag: Tag) => set({ isTagAddModalOpen: true, editingTag: tag }),
-    closeTagAddModal: () => set({ isTagAddModalOpen: false, editingTag: null }),
+    openTagAddSheet: () => set({ isTagAddModalOpen: true, editingTag: null }),
+    openTagEditSheet: (tag: Tag) => set({ isTagAddModalOpen: true, editingTag: tag }),
+    closeTagAddSheet: () => set({ isTagAddModalOpen: false, editingTag: null }),
 });

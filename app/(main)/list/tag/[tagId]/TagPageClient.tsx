@@ -30,7 +30,7 @@ export function TagPageClient({ tag }: TagPageClientProps) {
     const getEntriesByTag = useMainStore((state) => state.getEntriesByTag);
     const deleteEntries = useMainStore((state) => state.deleteEntries);
     
-    const openTagEditModal = useMainStore((state) => state.openTagEditModal);
+    const openTagEditModal = useMainStore((state) => state.openTagEditSheet);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     
     const entries = getEntriesByTag(tag.id);

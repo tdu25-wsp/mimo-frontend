@@ -31,7 +31,7 @@ export function ListNavigation({navTitle = null, sections }: {navTitle?: String 
     const pathname = usePathname();
     const isRoot = pathname === "/list" || pathname === "/setting";
 
-    const openTagAddModal = useMainStore((state) => state.openTagAddModal);
+    const openTagAddModal = useMainStore((state) => state.openTagAddSheet);
 
     const handleActionClick = (sectionTitle: string) => {
         console.log(`${sectionTitle} のアクションボタンが押されました`);
