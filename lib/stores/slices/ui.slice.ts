@@ -32,7 +32,7 @@ export const createUISlice = (set: any): UISlice => ({
     openEditSheet: (entry: MemoEntry) => set({ isEntrySheetOpen: true, editingEntry: entry }),
     closeEntrySheet: () => set({ isEntrySheetOpen: false, editingEntry: null }),
     
-    openTagAddSheet: () => set({ isTagAddModalOpen: true, editingTag: null }),
-    openTagEditSheet: (tag: Tag) => set({ isTagAddModalOpen: true, editingTag: tag }),
-    closeTagAddSheet: () => set({ isTagAddModalOpen: false, editingTag: null }),
+    openTagAddSheet: () => set({ isTagSheetOpen: true, editingTag: null }),
+    openTagEditSheet: (tag: Tag) => set({ isTagSheetOpen: true, editingTag: tag }),
+    closeTagAddSheet: () => set({ isTagSheetOpen: false, editingTag: null }),
 });
