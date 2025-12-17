@@ -11,19 +11,29 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useMemo } from 'react';
 
 interface TagPageClientProps {
     tag: Tag;
 }
 
 export function TagPageClient({ tag }: TagPageClientProps) {
-    const getEntriesByTag = useMainStore((state) => state.getEntriesByTag);
     const deleteEntries = useMainStore((state) => state.deleteEntries);
-    
+
     const openTagEditSheet = useMainStore((state) => state.openTagEditSheet);
     const openDeleteDialog = useMainStore((state) => state.openDeleteDialog);
 
-    const entries = getEntriesByTag(tag.id);
+    const allEntries = useMainStore((state) => state.entries);
+
+    const entries = useMemo(() => {
+        return allEntries.filter((e) => {
+            if (e.type === 'memo') {
+                return e.autoTagIds.includes(tag.id) || e.manualTagIds.includes(tag.id);
+            } else {
+                return e.tagsIds?.includes(tag.id);
+            }
+        });
+    }, [allEntries, tag.id]);
 
     const handleDeleteEntries = async (ids: string[]) => {
         await deleteEntries(ids);
@@ -59,13 +69,13 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem 
+                                    <DropdownMenuItem
                                         onClick={() => openTagEditSheet(tag)}
                                     >
                                         <SquarePen className="mr-2 h-4 w-4" />
                                         <span>編集</span>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem 
+                                    <DropdownMenuItem
                                         onClick={() => openDeleteDialog({ type: 'tag', id: tag.id, name: tag.name })}
                                         className="text-error focus:text-error"
                                     >
@@ -78,7 +88,6 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                     </div>
                 }
             />
-            
         </>
     );
 }

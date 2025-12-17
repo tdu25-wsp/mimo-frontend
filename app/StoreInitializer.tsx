@@ -21,5 +21,7 @@ export function StoreInitializer({ entries, tags }: Props) {
     initialized.current = true;
   }
 
+  console.log("Store initialized with entries and tags.");
+
   return null;
 }
