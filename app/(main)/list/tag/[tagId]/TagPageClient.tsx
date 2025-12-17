@@ -38,10 +38,10 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                 headerBelow={
                     <div className="p-4">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-                                <TagIcon 
-                                    className="w-6 h-6" 
-                                    style={{ color: tag.color || '#3B82F6' }} 
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                                <TagIcon
+                                    className="w-6 h-6"
+                                    style={{ color: tag.color || '#3B82F6' }}
                                 />
                             </div>
                             <div className="flex-1">
