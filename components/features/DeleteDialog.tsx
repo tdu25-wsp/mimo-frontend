@@ -25,7 +25,11 @@ export function DeleteDialog() {
         try {
             if (deleteTarget.type === 'entry') {
                 await deleteEntries([deleteTarget.id]);
-            } else if (deleteTarget.type === 'tag') {
+            }
+            else if (deleteTarget.type === 'entries') {
+                await deleteEntries(deleteTarget.ids);
+            }
+            else if (deleteTarget.type === 'tag') {
                 // タグ削除処理
                 if (deleteTag) {
                     await deleteTag(deleteTarget.id);
@@ -33,6 +37,10 @@ export function DeleteDialog() {
                     console.warn("deleteTag action is not implemented yet");
                 }
             }
+            if (deleteTarget.onSuccess) {
+                deleteTarget.onSuccess();
+            }
+
         } catch (error) {
             console.error("削除に失敗しました", error);
         } finally {
@@ -55,6 +63,17 @@ export function DeleteDialog() {
                         </DialogDescription>
                     </DialogHeader>
                 </>
+            );
+        }
+        
+        if (deleteTarget.type === 'entries') {
+            return (
+                <DialogHeader>
+                    <DialogTitle className="text-primary-text text-xl font-bold">一括削除</DialogTitle>
+                    <DialogDescription className="text-secondary-text pt-2">
+                        選択した {deleteTarget.ids.length} 件のエントリーを削除してもよろしいですか？
+                    </DialogDescription>
+                </DialogHeader>
             );
         }
 

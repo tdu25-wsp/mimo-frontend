@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { EntryList } from "@/components/features/EntryList";
 import { Entry } from "@/types/entry";
 import { Share, Trash2, Wand } from "lucide-react";
+import { useMainStore } from "@/lib/stores/mainStore";
 
 interface EntryListPageProps {
   // データ
@@ -18,7 +19,6 @@ interface EntryListPageProps {
   headerBelow?: React.ReactNode;
 
   // カスタマイズ可能なアクション
-  onDelete?: (ids: string[]) => void;
   onShare?: (ids: string[]) => void;
 
   // 追加の右側アクション（共有や選択以外のボタン）
@@ -35,11 +35,12 @@ export const EntryListPage = ({
   title,
   showBackButton = true,
   headerBelow,
-  onDelete,
   onShare,
   additionalActions,
   emptyMessage = "エントリーがありません",
 }: EntryListPageProps) => {
+  const openDeleteDialog = useMainStore((state) => state.openDeleteDialog);
+
   const [isSummarizeMode, setIsSummarizeMode] = useState(false);
 
   const [isMode, setIsMode] = useState<EntryListPageMode>("normal");
@@ -76,12 +77,14 @@ export const EntryListPage = ({
   };
 
   const handleDeleteSelected = () => {
-    if (onDelete) {
-      onDelete(selectedIds);
-    } else {
-      console.log("削除対象ID:", selectedIds);
-    }
-    toggleMode();
+    openDeleteDialog({
+        type: 'entries',
+        ids: selectedIds,
+        onSuccess: () => {
+            // 削除が成功したら選択モードを終了する
+            toggleMode();
+        }
+    });
   };
 
   const handleShareSelected = () => {

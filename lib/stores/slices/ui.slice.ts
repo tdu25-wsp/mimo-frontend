@@ -2,8 +2,9 @@ import { MemoEntry } from "@/types/entry";
 import { Tag } from "@/types/tag";
 
 export type DeleteTarget = 
-  | { type: 'entry'; id: string } 
-  | { type: 'tag'; id: string; name: string }
+  | { type: 'entry'; id: string; onSuccess?: () => void} 
+  | { type: 'entries'; ids: string[]; onSuccess?: () => void }
+  | { type: 'tag'; id: string; name: string; onSuccess?: () => void }
   | null;
 
 export interface UISlice {

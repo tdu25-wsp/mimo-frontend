@@ -3,7 +3,7 @@
 import { EntryListPage } from '@/components/features/EntryListPage';
 import { Tag } from '@/types/tag';
 import { useMainStore } from '@/lib/stores/mainStore';
-import { Ellipsis, TagIcon, Pencil, Trash2 } from 'lucide-react';
+import { Ellipsis, TagIcon, SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -35,7 +35,6 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                 entries={entries}
                 title={tag.name}
                 showBackButton={true}
-                onDelete={handleDeleteEntries}
                 headerBelow={
                     <div className="p-4">
                         <div className="flex items-center gap-3">
@@ -63,14 +62,14 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                                     <DropdownMenuItem 
                                         onClick={() => openTagEditSheet(tag)}
                                     >
-                                        <Pencil className="mr-2 h-4 w-4" />
+                                        <SquarePen className="mr-2 h-4 w-4" />
                                         <span>編集</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem 
                                         onClick={() => openDeleteDialog({ type: 'tag', id: tag.id, name: tag.name })}
                                         className="text-error focus:text-error"
                                     >
-                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        <Trash2 className="mr-2 h-4 w-4 text-error" />
                                         <span>削除</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>

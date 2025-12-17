@@ -26,7 +26,6 @@ export const EntryCardDropdownMenu = (entry: Entry) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-40" align="end">
-                    <DropdownMenuLabel>Entry Actions</DropdownMenuLabel>
                     <DropdownMenuGroup>
                         {
                             entry?.type === 'memo' && (
