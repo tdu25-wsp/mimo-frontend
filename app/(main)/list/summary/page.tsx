@@ -1,4 +1,4 @@
-export default function SunnaryPage() {
+export default function SummaryPage() {
   return (
     <div>
       <h1>SummaryView</h1>

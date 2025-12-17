@@ -70,7 +70,7 @@ export function ListNavigation({navTitle = null, sections }: {navTitle?: String 
                         <div className="flex flex-col bg-background rounded-lg md:bg-transparent md:rounded-none divide-y divide-gray-100">
                             {section.items.map((item) => {
                                 const Icon = iconMap[item.icon];
-                                const isActive = pathname === item.href;
+                                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
 
                                 return (
                                     <Link

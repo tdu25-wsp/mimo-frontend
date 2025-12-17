@@ -79,6 +79,18 @@ export const summaryMockRepository: ISummaryRepository = {
   },
 
   /**
+   * idから要約・ジャーナリング要約取得
+   */
+  getById: async (id: string): Promise<SummaryEntry | undefined> => {
+    initializeMockData();
+    const summary = mockSummaries.find((s) => s.id === id);
+    if (!summary) {
+      return undefined;
+    }
+    return summary;
+  },
+
+  /**
    * ジャーナリング設定取得
    */
   getJournalingSummarySetting: async (): Promise<JournalingSettings> => {

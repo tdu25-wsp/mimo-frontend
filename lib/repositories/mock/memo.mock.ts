@@ -1,5 +1,10 @@
 import { getMockMemos } from "@/lib/converters";
-import { IMemoRepository, CreateMemoDto, UpdateMemoDto, MemoSearchParams } from "../interfaces/memo.interface";
+import {
+  IMemoRepository,
+  CreateMemoDto,
+  UpdateMemoDto,
+  MemoSearchParams,
+} from "../interfaces/memo.interface";
 import { Entry, MemoEntry } from "@/types/entry";
 
 // モックデータをメモリに保持
@@ -22,7 +27,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   getAll: async (params?: MemoSearchParams): Promise<Entry[]> => {
     initializeMockData();
-    
+
     let filteredMemos = [...mockMemos];
 
     // キーワード検索
@@ -50,14 +55,22 @@ export const memoMockRepository: IMemoRepository = {
   /**
    * メモ詳細閲覧
    */
-  getById: async (id: string): Promise<Entry> => {
+  getById: async (id: string): Promise<Entry | undefined> => {
     initializeMockData();
-    
+
+    // find は見つからない場合に undefined を返すため、そのまま返却します
     const memo = mockMemos.find((m) => m.id === id);
-    if (!memo) {
-      throw new Error(`Memo with id ${id} not found`);
-    }
     return memo;
+  },
+
+  /**
+   * 複数idを指定してメモ取得
+   */
+  getByIds: async (ids: string[]): Promise<Entry[] | undefined> => {
+    initializeMockData();
+
+    const memos = mockMemos.filter((m) => ids.includes(m.id));
+    return memos;
   },
 
   /**

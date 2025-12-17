@@ -24,7 +24,15 @@ export interface IMemoRepository {
   /**
    * メモ詳細閲覧 (GET /api/memos/:id)
    */
-  getById(id: string): Promise<Entry>;
+  getById(id: string): Promise<Entry | undefined>;
+
+  /**
+   * 複数メモ詳細閲覧
+   * getByIdを複数回呼ぶ代わりに一括で取得するためのメソッド
+   * getByIdでundefinedが返る場合はundefinedを返す
+   * 見つからない場合は空配列を返す
+   */
+  getByIds(ids: string[]): Promise<Entry[] | undefined>;
 
   /**
    * メモ記録 (POST /api/memos)
