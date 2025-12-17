@@ -1,9 +1,11 @@
-import { Entry } from "@/types/entry";
+import { Entry, MemoEntry } from "@/types/entry";
 import { twMerge } from "tailwind-merge";
 import { CheckCircle2, Circle, Menu } from "lucide-react";
 import Text from "@/components/ui/Text";
 import Heading from "@/components/ui/Heading";
 import { EntryCardDropdownMenu } from "@/components/features/EntryCardDropdownMenu";
+import { useMainStore } from "@/lib/stores/mainStore";
+import Link from "next/link";
 
 interface EntryCardProps {
     entry: Entry;
@@ -20,6 +22,14 @@ export const EntryCard = (
         onToggleSelection
     }: EntryCardProps
 ) => {
+    const openEditSheet = useMainStore((state) => state.openEditSheet);
+
+    let href: string | undefined = undefined;
+    if (entry.type === "summary") {
+        href = `/list/summary/${entry.id}`;
+    } else if (entry.type === "journaling") {
+        href = `/list/journaling-summary/${entry.id}`;
+    }
 
     const handleClick = () => {
         if (entry.type !== "memo") {
@@ -27,15 +37,13 @@ export const EntryCard = (
         }
 
         if (isSelectionMode && onToggleSelection) {
-            // 選択モード中なら、選択状態をトグルするだけ
             onToggleSelection(entry.id);
         } else {
-            // 通常時は詳細画面へ遷移 (router.pushなど)
-            console.log("詳細画面へ遷移:", entry.id);
+            openEditSheet(entry as MemoEntry);
         }
     };
 
-    return (
+    const CardContent = (
         <>
             <li
                 onClick={handleClick}
@@ -71,6 +79,20 @@ export const EntryCard = (
                     </div>
                 </div>
             </li>
+        </>
+    );
+
+    if (href) {
+        return (
+            <Link href={href} className="block">
+                {CardContent}
+            </Link>
+        )
+    }
+
+    return (
+        <>
+            {CardContent}
         </>
     );
 }
