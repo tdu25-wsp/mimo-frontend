@@ -6,7 +6,6 @@ import { Tag } from '@/types/tag';
 import { useMainStore } from '@/lib/stores/mainStore';
 import { Ellipsis, TagIcon, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-// Inputは不要になったので削除
 import {
     Dialog,
     DialogContent,
@@ -31,21 +30,14 @@ export function TagPageClient({ tag }: TagPageClientProps) {
     const getEntriesByTag = useMainStore((state) => state.getEntriesByTag);
     const deleteEntries = useMainStore((state) => state.deleteEntries);
     
-    // ▼▼▼ ストアから編集用アクションを取得 ▼▼▼
     const openTagEditModal = useMainStore((state) => state.openTagEditModal);
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     
-    // ▼ 編集用のローカルstate (showEditDialog, editingName, editingColor) は削除しました
-
     const entries = getEntriesByTag(tag.id);
 
     const handleDeleteEntries = async (ids: string[]) => {
         await deleteEntries(ids);
     };
-
-    // ▼ handleUpdateTag 関数は削除しました (Sheet側で処理するため)
 
     const handleDeleteTag = () => {
         console.log('削除:', tag.id);
@@ -89,9 +81,7 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem 
-                                        // ▼▼▼ 変更: ストアのアクションを呼び出す ▼▼▼
                                         onClick={() => openTagEditModal(tag)}
-                                        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
                                     >
                                         <Pencil className="mr-2 h-4 w-4" />
                                         <span>編集</span>
@@ -109,10 +99,8 @@ export function TagPageClient({ tag }: TagPageClientProps) {
                     </div>
                 }
             />
-
-            {/* ▼ 編集用Dialogのコードブロックは全て削除しました（Sheetに置き換わったため） */}
-
-            {/* 削除確認ダイアログ (これは残します) */}
+            
+            {/* 削除確認ダイアログ */}
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <DialogContent className="sm:max-w-[425px] bg-background border-border">
                     <DialogHeader>
