@@ -43,6 +43,11 @@ export const EntryCard = (
         }
     };
 
+    const handleMenuClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     const CardContent = (
         <>
             <li
@@ -75,7 +80,7 @@ export const EntryCard = (
                     <Text style="body" className="mb-1 font-medium">{entry.content}</Text>
                     <div className="flex items-center justify-between">
                         <Text style="small" className="font-mono">{entry.createdAt}</Text>
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div onClick={handleMenuClick}>
                             <EntryCardDropdownMenu {...entry} />
                         </div>
                     </div>
