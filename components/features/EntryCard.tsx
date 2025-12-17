@@ -75,7 +75,9 @@ export const EntryCard = (
                     <Text style="body" className="mb-1 font-medium">{entry.content}</Text>
                     <div className="flex items-center justify-between">
                         <Text style="small" className="font-mono">{entry.createdAt}</Text>
-                        <EntryCardDropdownMenu {...entry} />
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <EntryCardDropdownMenu {...entry} />
+                        </div>
                     </div>
                 </div>
             </li>
