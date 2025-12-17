@@ -21,6 +21,12 @@ const initializeMockData = () => {
   }
 };
 
+// モック用のタグデータ定義（簡易版）
+const mockTags = [
+  { id: "tag-1", name: "生活", colorCode: "#4A90E2", userId: "user-1", createdAt: new Date().toISOString() },
+  { id: "tag-2", name: "仕事", colorCode: "#F5A623", userId: "user-1", createdAt: new Date().toISOString() },
+];
+
 export const memoMockRepository: IMemoRepository = {
   /**
    * メモ一覧取得
@@ -78,7 +84,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   create: async (data: CreateMemoDto): Promise<Entry> => {
     initializeMockData();
-    
+
     const newMemo: MemoEntry = {
       id: 'memo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
       userId: 'mock-user-id',
@@ -100,7 +106,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   update: async (id: string, data: UpdateMemoDto): Promise<Entry> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);
@@ -122,26 +128,46 @@ export const memoMockRepository: IMemoRepository = {
    */
   deleteMany: async (ids: string[]): Promise<void> => {
     initializeMockData();
-    
+
     mockMemos = mockMemos.filter((memo) => !ids.includes(memo.id));
   },
 
   /**
    * エクスポート
    */
-  exportData: async (format: 'txt'): Promise<string> => {
+  exportData: async (ids: string[]) => {
     initializeMockData();
-    
-    if (format !== 'txt') {
-      throw new Error('Only txt format is supported');
+
+    // IDでフィルタリング
+    const targetMemos = mockMemos.filter((memo) => ids.includes(memo.id));
+
+    if (targetMemos.length === 0) {
+      throw new Error('No memos selected');
     }
 
-    return mockMemos
-      .map((memo) => {
-        const date = new Date(memo.createdAt).toLocaleString('ja-JP');
-        return `[${date}]\n${memo.content}\n---\n`;
-      })
-      .join('\n');
+    // export.json 形式への変換
+    return {
+      tags: mockTags.map(t => ({
+        TagID: t.id,
+        "UserID(FK)": t.userId,
+        Name: t.name,
+        colorCode: t.colorCode,
+        createdDate: t.createdAt,
+        updatedDate: t.createdAt // mockなので同値
+      })),
+      memos: targetMemos.map(m => ({
+        MemoID: m.id,
+        "UserID(FK)": m.userId,
+        // TagID(FK) は Entry型に含まれていない場合nullなどにするか、manualTagIds[0]等を充てる
+        "TagID(FK)": m.manualTagIds[0] || null,
+        content: m.content,
+        autoTagID: m.autoTagIds,
+        manualTagID: m.manualTagIds,
+        shareUrlToken: m.shareUrlToken,
+        createdDate: m.createdAt,
+        updatedDate: m.updatedAt
+      }))
+    };
   },
 
   /**
@@ -149,7 +175,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   share: async (id: string): Promise<{ shareUrl: string }> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);
@@ -172,7 +198,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   unshare: async (id: string): Promise<void> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);
