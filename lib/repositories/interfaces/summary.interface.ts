@@ -19,6 +19,11 @@ export interface ISummaryRepository {
   getSummaries(): Promise<SummaryEntry[]>;
 
   /**
+   * 要約・ジャーナリング要約取得 (GET /api/sum)
+   */
+  getById(id: string): Promise<SummaryEntry | undefined>;
+
+  /**
    * ジャーナリング設定取得 (GET /api/sum/journaling-freq)
    */
   getJournalingSummarySetting(): Promise<JournalingSettings>;
