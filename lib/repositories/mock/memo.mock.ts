@@ -6,6 +6,7 @@ import {
   MemoSearchParams,
 } from "../interfaces/memo.interface";
 import { Entry, MemoEntry } from "@/types/entry";
+import tagsData from "../../../public/data/tags.json";
 
 // モックデータをメモリに保持
 let mockMemos: MemoEntry[] = [];
@@ -20,12 +21,6 @@ const initializeMockData = () => {
     isInitialized = true;
   }
 };
-
-// モック用のタグデータ定義（簡易版）
-const mockTags = [
-  { id: "tag-1", name: "生活", colorCode: "#4A90E2", userId: "user-1", createdAt: new Date().toISOString() },
-  { id: "tag-2", name: "仕事", colorCode: "#F5A623", userId: "user-1", createdAt: new Date().toISOString() },
-];
 
 export const memoMockRepository: IMemoRepository = {
   /**
@@ -145,28 +140,25 @@ export const memoMockRepository: IMemoRepository = {
       throw new Error('No memos selected');
     }
 
-    // export.json 形式への変換
+    // tags.json のデータを使用
+    // tags.json が { "tags": [...] } という構造なので tagsData.tags で配列にアクセス
+    const tags = tagsData.tags;
+
+    const formattedMemos = targetMemos.map(m => ({
+      MemoID: m.id,
+      "UserID(FK)": m.userId,
+      "TagID(FK)": m.manualTagIds[0] || null, // 簡易的に最初のタグIDを使用
+      content: m.content,
+      autoTagID: m.autoTagIds,
+      manualTagID: m.manualTagIds,
+      shareUrlToken: m.shareUrlToken,
+      createdDate: m.createdAt,
+      updatedDate: m.updatedAt
+    }));
+
     return {
-      tags: mockTags.map(t => ({
-        TagID: t.id,
-        "UserID(FK)": t.userId,
-        Name: t.name,
-        colorCode: t.colorCode,
-        createdDate: t.createdAt,
-        updatedDate: t.createdAt // mockなので同値
-      })),
-      memos: targetMemos.map(m => ({
-        MemoID: m.id,
-        "UserID(FK)": m.userId,
-        // TagID(FK) は Entry型に含まれていない場合nullなどにするか、manualTagIds[0]等を充てる
-        "TagID(FK)": m.manualTagIds[0] || null,
-        content: m.content,
-        autoTagID: m.autoTagIds,
-        manualTagID: m.manualTagIds,
-        shareUrlToken: m.shareUrlToken,
-        createdDate: m.createdAt,
-        updatedDate: m.updatedAt
-      }))
+      tags: tags,
+      memos: formattedMemos
     };
   },
 
