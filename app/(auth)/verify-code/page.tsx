@@ -47,18 +47,12 @@ export default function VerifyCodePage() {
             {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto">
               <Heading level="h2" className="mb-10">
-                コードを入力
+                確認コードを入力
               </Heading>
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* コード入力エリア */}
                 <div className="grid w-full items-center gap-1.5 mt-5">
-                  <label
-                    htmlFor="code"
-                    className="text-sm font-medium text-secondary-text"
-                  >
-                    コード
-                  </label>
                   <div className="relative">
                     <Input
                       id="code"
