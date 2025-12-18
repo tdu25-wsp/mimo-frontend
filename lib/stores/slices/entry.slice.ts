@@ -17,7 +17,7 @@ export interface EntrySlice {
   updateEntry: (id: string, entry: Partial<Entry>) => void;
   createMemo: (content: string, manualTagIds: string[]) => Promise<void>;
   updateMemo: (memoId: string, content: string, manualTagIds: string[]) => Promise<void>;
-  deleteEntries: (ids: string[]) => void;
+  deleteEntries: (ids: string[]) => Promise<void>;
   toggleEntrySelection: (id: string) => void;
   clearEntrySelection: () => void;
   setLoading: (loading: boolean) => void;
@@ -110,13 +110,27 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
     }
   },
 
-  deleteEntries: (ids) =>
-    set((state: any) => ({
-      entries: state.entries.filter((e: Entry) => !ids.includes(e.id)),
-      selectedEntryIds: state.selectedEntryIds.filter(
-        (eid: string) => !ids.includes(eid)
-      ),
-    })),
+  deleteEntries: async (ids: string[]) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await memoRepository.deleteMany(ids);
+
+      set((state: any) => ({
+        entries: state.entries.filter((e: Entry) => !ids.includes(e.id)),
+        selectedEntryIds: state.selectedEntryIds.filter(
+          (eid: string) => !ids.includes(eid)
+        ),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "削除に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
 
   toggleEntrySelection: (id) =>
     set((state: any) => ({
