@@ -17,13 +17,18 @@ interface TagPageClientProps {
     tag: Tag;
 }
 
-export function TagPageClient({ tag }: TagPageClientProps) {
+export function TagPageClient({ tag: initialTag }: TagPageClientProps) {
     const deleteEntries = useMainStore((state) => state.deleteEntries);
 
     const openTagEditSheet = useMainStore((state) => state.openTagEditSheet);
     const openDeleteDialog = useMainStore((state) => state.openDeleteDialog);
 
     const allEntries = useMainStore((state) => state.entries);
+    const allTags = useMainStore((state) => state.tags);
+
+    const tag = useMemo(() => {
+        return allTags.find(t => t.id === initialTag.id) || initialTag;
+    }, [allTags, initialTag.id]);
 
     const entries = useMemo(() => {
         return allEntries.filter((e) => {

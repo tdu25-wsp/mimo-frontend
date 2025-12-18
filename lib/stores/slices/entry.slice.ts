@@ -1,5 +1,5 @@
+import { authRepository } from "@/lib/repositories";
 import { memoRepository } from "@/lib/repositories";
-import { authRepository } from "@/lib/repositories/mock/auth.mock";
 import { Entry } from "@/types/entry";
 import { CreateMemoDTO } from "@/types/server/create-memo-dto";
 import { UpdateMemoDTO } from "@/types/server/update-memo-dto";

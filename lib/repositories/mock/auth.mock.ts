@@ -1,6 +1,6 @@
 import { AuthResponse, IAuthRepository } from "../interfaces/auth.interface";
 
-export const authRepository: IAuthRepository = {
+export const authMockRepository: IAuthRepository = {
   /**
    * ユーザー新規登録 (POST /api/auth/register)
    */
