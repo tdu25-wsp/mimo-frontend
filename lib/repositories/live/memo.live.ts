@@ -62,10 +62,30 @@ export const memoLiveRepository: IMemoRepository = {
     });
   },
 
-  exportData: async (format: "txt") => {
-    const res = await fetch(`${API_BASE_URL}/memos/export?format=${format}`);
-    if (!res.ok) throw new Error("Fetch failed");
-    return await res.text();
+  exportData: async (ids: string[]) => {
+    // 1. タグ一覧の取得
+    const tagsPromise = fetch(`${API_BASE_URL}/tags`).then(async (res) => {
+      if (!res.ok) throw new Error("Failed to fetch tags");
+      return await res.json();
+    });
+
+    // 2. 選択されたメモ詳細の取得 (並列実行)
+    const memosPromise = Promise.all(
+      ids.map(async (id) => {
+        const res = await fetch(`${API_BASE_URL}/memos/${id}`);
+        if (!res.ok) throw new Error(`Failed to fetch memo ${id}`);
+        return await res.json();
+      })
+    );
+
+    // 3. 両方の完了を待つ
+    const [tags, memos] = await Promise.all([tagsPromise, memosPromise]);
+
+    // 4. マッピングせずにそのまま返す
+    return {
+      tags,
+      memos,
+    };
   },
 
   share: async (id: string) => {

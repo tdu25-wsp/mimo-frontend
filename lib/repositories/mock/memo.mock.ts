@@ -6,6 +6,7 @@ import {
 import { Entry, MemoEntry } from "@/types/entry";
 import { CreateMemoDTO } from "@/types/server/create-memo-dto";
 import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
+import tagsData from "../../../public/data/tags.json";
 
 // モックデータをメモリに保持
 let mockMemos: MemoEntry[] = [];
@@ -121,26 +122,43 @@ export const memoMockRepository: IMemoRepository = {
    */
   deleteMany: async (ids: string[]): Promise<void> => {
     initializeMockData();
-    
+
     mockMemos = mockMemos.filter((memo) => !ids.includes(memo.id));
   },
 
   /**
    * エクスポート
    */
-  exportData: async (format: 'txt'): Promise<string> => {
+  exportData: async (ids: string[]) => {
     initializeMockData();
-    
-    if (format !== 'txt') {
-      throw new Error('Only txt format is supported');
+
+    // IDでフィルタリング
+    const targetMemos = mockMemos.filter((memo) => ids.includes(memo.id));
+
+    if (targetMemos.length === 0) {
+      throw new Error('No memos selected');
     }
 
-    return mockMemos
-      .map((memo) => {
-        const date = new Date(memo.createdAt).toLocaleString('ja-JP');
-        return `[${date}]\n${memo.content}\n---\n`;
-      })
-      .join('\n');
+    // tags.json のデータを使用
+    // tags.json が { "tags": [...] } という構造なので tagsData.tags で配列にアクセス
+    const tags = tagsData.tags;
+
+    const formattedMemos = targetMemos.map(m => ({
+      MemoID: m.id,
+      "UserID(FK)": m.userId,
+      "TagID(FK)": m.manualTagIds[0] || null, // 簡易的に最初のタグIDを使用
+      content: m.content,
+      autoTagID: m.autoTagIds,
+      manualTagID: m.manualTagIds,
+      shareUrlToken: m.shareUrlToken,
+      createdDate: m.createdAt,
+      updatedDate: m.updatedAt
+    }));
+
+    return {
+      tags: tags,
+      memos: formattedMemos
+    };
   },
 
   /**
@@ -148,7 +166,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   share: async (id: string): Promise<{ shareUrl: string }> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);
@@ -171,7 +189,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   unshare: async (id: string): Promise<void> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);

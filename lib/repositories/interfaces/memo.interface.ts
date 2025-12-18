@@ -7,6 +7,12 @@ export interface MemoSearchParams {
   tagId?: string;  // タグ絞り込み
 }
 
+// エクスポートするデータの型定義
+export interface ExportData {
+  tags: any[];  
+  memos: any[];
+}
+
 export interface IMemoRepository {
   /**
    * メモ一覧取得 (GET /api/memos)
@@ -43,10 +49,9 @@ export interface IMemoRepository {
   deleteMany(ids: string[]): Promise<void>;
 
   /**
-   * エクスポート (GET /api/memos/export)
-   * テキストデータを返す想定
+   * 選択したメモと全タグをエクスポート用に取得 (APIレスポンスそのまま)
    */
-  exportData(format: 'txt'): Promise<string>;
+  exportData(ids: string[]): Promise<ExportData>;
 
   // --- シェア機能 (UC-10) ---
 
