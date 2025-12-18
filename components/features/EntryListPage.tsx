@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { EntryList } from "@/components/features/EntryList";
 import { Entry } from "@/types/entry";
-import { Share, Trash2, Wand } from "lucide-react";
+import { Download, Trash2, Wand } from "lucide-react";
 import { useMainStore } from "@/lib/stores/mainStore";
+import { memoMockRepository as memoRepository } from "@/lib/repositories/mock/memo.mock";
 
 interface EntryListPageProps {
   // データ
@@ -89,11 +90,38 @@ export const EntryListPage = ({
     });
   };
 
-  const handleShareSelected = () => {
-    if (onShare) {
-      onShare(selectedIds);
-    } else {
-      console.log("共有対象ID:", selectedIds);
+  const handleExportSelected = async () => {
+    if (selectedIds.length === 0) return;
+
+    try {
+      // 1. リポジトリからJSONデータ(配列)を取得
+      const data = await memoRepository.exportData(selectedIds);
+      
+      // 2. JSON文字列に変換
+      const jsonString = JSON.stringify(data, null, 2);
+      
+      // 3. Blobを作成
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      
+      // 4. ダウンロードリンクを生成してクリック（これでエクスプローラー/保存ダイアログが開く）
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      // ファイル名: memo_export_YYYY-MM-DD.json
+      a.download = `memo_export_${new Date().toISOString().slice(0, 10)}.json`; 
+      document.body.appendChild(a);
+      a.click();
+      
+      // 5. 後片付け
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      // 完了後に選択モードを解除するなら以下を実行
+      toggleMode();
+      
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("エクスポートに失敗しました");
     }
   };
 
@@ -137,11 +165,11 @@ export const EntryListPage = ({
     return (
       <>
         <button
-          onClick={handleShareSelected}
+          onClick={handleExportSelected}
           disabled={selectedIds.length === 0}
           className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-30"
         >
-          <Share size={18} />
+          <Download size={18} />
         </button>
         <button
           onClick={handleDeleteSelected}
