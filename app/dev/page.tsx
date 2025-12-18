@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useState } from "react";
 import Heading from "@/components/ui/Heading";
 import Text from "@/components/ui/Text";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
@@ -9,9 +9,18 @@ import LinkButton from "@/components/features/LinkButton";
 import { Input } from "@/components/ui/Input";
 import { Tag } from "@/components/ui/Tag";
 import { TagSelector } from "@/components/features/TagSelector";
+import { useMainStore } from "@/lib/stores/mainStore";
+import { getMockMemos } from "@/lib/converters";
+import { MemoEntry } from "@/types/entry";
 
 export default function DevPage() {
-  const [password, setPassword] = React.useState("")
+  const [password, setPassword] = useState("")
+  const tags = useMainStore((state) => state.tags);
+  const { openCreateSheet, openEditSheet } = useMainStore();
+
+  const entries = getMockMemos();
+  const sampleMemo = entries[4] as MemoEntry;
+
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-primary-text">Mimo - デザインシステム</h1>
@@ -207,7 +216,7 @@ export default function DevPage() {
       {/* インプット */}
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">インプット</h2>
-         <div className="bg-background border border-border rounded p-6 space-y-6 max-w-md ">  {/* 1. メールアドレス（ラベル付き） */}
+        <div className="bg-background border border-border rounded p-6 space-y-6 max-w-md ">  {/* 1. メールアドレス（ラベル付き） */}
           <div className="grid w-full items-center gap-1.5">
             <label
               htmlFor="email"
@@ -287,6 +296,9 @@ export default function DevPage() {
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">タグ（カテゴリ）</h2>
         <div className="bg-background border border-border rounded p-6 space-y-4">
+          {tags.map((tag) => (
+            <Tag key={tag.id} label={tag.name} />
+          ))}
           <TagSelector label="タグ">
               <Tag label="勉強" className="border-red-500" />
               <Tag label="プログラミング" className="border-black" />
@@ -300,6 +312,57 @@ export default function DevPage() {
       <section>
         <h2 className="text-2xl font-bold mb-4 text-primary-text">ステータスメッセージ</h2>
       </section>
+
+      {/* EntryEditSheet */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4 text-primary-text">EntryEditSheet</h2>
+
+        <div className="space-y-4">
+          {/* ボタン群 */}
+          <div className="flex gap-4">
+            <button
+              onClick={openCreateSheet}
+              className="px-6 py-3 bg-primary text-white font-bold rounded-lg hover:opacity-90"
+            >
+              新規メモ作成
+            </button>
+
+            <button
+              onClick={() => openEditSheet(sampleMemo)}
+              className="px-6 py-3 bg-accent text-white font-bold rounded-lg hover:opacity-90"
+            >
+              編集モードで開く
+            </button>
+          </div>
+
+          {/* サンプルメモ表示 */}
+          <div className="bg-background border border-border rounded-lg p-6 max-w-2xl">
+            <h3 className="text-lg font-bold text-primary-text mb-2">サンプルメモ</h3>
+            <div className="space-y-2">
+              <p className="text-sm text-secondary-text">
+                <span className="font-bold">ID:</span> <span className="font-mono">{sampleMemo.id}</span>
+              </p>
+              <p className="text-sm text-secondary-text">
+                <span className="font-bold">作成日:</span> <span className="font-mono">{new Date(sampleMemo.createdAt).toLocaleString('ja-JP')}</span>
+              </p>
+              <div className="mt-4 p-4 bg-gray-background rounded border border-border">
+                <p className="text-base text-on-primary-text whitespace-pre-wrap">{sampleMemo.content}</p>
+              </div>
+            </div>
+            {/* タグ */}
+            <div className="mt-4 flex gap-2">
+              {sampleMemo.manualTagIds.map((tagId) => {
+                const tag = tags.find((t) => t.id === tagId);
+                if (!tag) return null;
+                return <Tag key={tag.id} label={tag.name} />;
+              }
+              )}
+            </div>
+          </div>
+        </div>
+
+      </section>
+
     </div>
   );
 }

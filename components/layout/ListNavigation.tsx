@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import type { NavigationSection } from "@/types/navigation.types";
+import { useMainStore } from "@/lib/stores/mainStore";
 
 import {
     Folder,
@@ -30,11 +31,13 @@ export function ListNavigation({navTitle = null, sections }: {navTitle?: String 
     const pathname = usePathname();
     const isRoot = pathname === "/list" || pathname === "/setting";
 
+    const openTagAddModal = useMainStore((state) => state.openTagAddSheet);
+
     const handleActionClick = (sectionTitle: string) => {
         console.log(`${sectionTitle} のアクションボタンが押されました`);
         if (sectionTitle === "タグ") {
             // モーダルを開く処理をここに追加
-            console.log("タグ追加モーダルを開く処理を実行");
+            openTagAddModal();
         }
     };
 
@@ -70,7 +73,7 @@ export function ListNavigation({navTitle = null, sections }: {navTitle?: String 
                         <div className="flex flex-col bg-background rounded-lg md:bg-transparent md:rounded-none divide-y divide-gray-100">
                             {section.items.map((item) => {
                                 const Icon = iconMap[item.icon];
-                                const isActive = pathname === item.href;
+                                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
 
                                 return (
                                     <Link

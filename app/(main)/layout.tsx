@@ -1,3 +1,6 @@
+import { EntryEditSheet } from "@/components/features/EntryEditSheet";
+import { TagEditSheet } from "@/components/features/TagEditSheet";
+import { DeleteDialog } from "@/components/features/DeleteDialog";
 import TabBar from "@/components/layout/TabBar";
 
 export default function MainLayout({
@@ -11,8 +14,11 @@ export default function MainLayout({
       <TabBar />
 
       {/* メインコンテンツ */}
-      <main className="md:ml-56 pb-16 md:pb-0 flex-1">
+      <main className="md:ml-48 pb-16 md:pb-0 flex-1">
         {children}
+        <EntryEditSheet />
+        <TagEditSheet />
+        <DeleteDialog />
       </main>
     </div>
   );

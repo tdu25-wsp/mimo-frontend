@@ -4,9 +4,10 @@ interface TagProps {
   label: string;
   onRemove?: () => void;
   className?: string;
+  style?: React.CSSProperties;
 };
 
-export const Tag = ({ label, onRemove, className = "" }: TagProps) => {
+export const Tag = ({ label, onRemove, className = "", style }: TagProps) => {
   return (
     <span
       className={`
@@ -15,9 +16,9 @@ export const Tag = ({ label, onRemove, className = "" }: TagProps) => {
         bg-background text-primary-text font-bold text-sm
         ${className}
       `}
+      style={style}
     >
-      {label}
-
+      <p className="text-primary-text">{label}</p>
       {/* 削除ボタン */}
       <button
         onClick={onRemove}

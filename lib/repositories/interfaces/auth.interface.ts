@@ -52,7 +52,7 @@ export interface IAuthRepository {
   /**
    * 認証状態の確認 (GET /api/auth/me)
    */
-  getCurrentUser(): Promise<User>;
+  getCurrentUser(): Promise<string>;
 
   /**
    * アクセストークンの更新 (POST /api/auth/refresh)

@@ -1,8 +1,10 @@
+'use client';
+
 import { EntryListPage } from "@/components/features/EntryListPage";
-import { getMockMemos, getMockSummaries } from "@/lib/converters";
+import { useMainStore } from "@/lib/stores/mainStore";
 
 export default function AllMemosPage() {
-  const entries = [...getMockMemos(), ...getMockSummaries()];
+  const entries = useMainStore((state) => state.entries);
 
   return (
     <EntryListPage

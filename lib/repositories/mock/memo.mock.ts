@@ -1,6 +1,12 @@
 import { getMockMemos } from "@/lib/converters";
-import { IMemoRepository, CreateMemoDto, UpdateMemoDto, MemoSearchParams } from "../interfaces/memo.interface";
+import {
+  IMemoRepository,
+  MemoSearchParams,
+} from "../interfaces/memo.interface";
 import { Entry, MemoEntry } from "@/types/entry";
+import { CreateMemoDTO } from "@/types/server/create-memo-dto";
+import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
+import tagsData from "../../../public/data/tags.json";
 
 // モックデータをメモリに保持
 let mockMemos: MemoEntry[] = [];
@@ -22,7 +28,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   getAll: async (params?: MemoSearchParams): Promise<Entry[]> => {
     initializeMockData();
-    
+
     let filteredMemos = [...mockMemos];
 
     // キーワード検索
@@ -50,53 +56,60 @@ export const memoMockRepository: IMemoRepository = {
   /**
    * メモ詳細閲覧
    */
-  getById: async (id: string): Promise<Entry> => {
+  getById: async (id: string): Promise<Entry | undefined> => {
     initializeMockData();
-    
+
+    // find は見つからない場合に undefined を返すため、そのまま返却します
     const memo = mockMemos.find((m) => m.id === id);
-    if (!memo) {
-      throw new Error(`Memo with id ${id} not found`);
-    }
     return memo;
+  },
+
+  /**
+   * 複数idを指定してメモ取得
+   */
+  getByIds: async (ids: string[]): Promise<Entry[] | undefined> => {
+    initializeMockData();
+
+    const memos = mockMemos.filter((m) => ids.includes(m.id));
+    return memos;
   },
 
   /**
    * メモ記録
    */
-  create: async (data: CreateMemoDto): Promise<Entry> => {
+  create: async (data: CreateMemoDTO): Promise<Entry> => {
     initializeMockData();
-    
+
     const newMemo: MemoEntry = {
-      id: 'memo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-      userId: 'mock-user-id',
-      type: 'memo',
+      id: Date.now().toString(),
       content: data.content,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      type: "memo",
       shareUrlToken: null,
-      autoTagIds: [], // 実際はバックエンドで自動分類
-      manualTagIds: data.tagIds || [],
-    };
+      autoTagIds: [],
+      manualTagIds: data.manualTagID,
+      userId: data.userId,
+    }
 
-    mockMemos.push(newMemo);
     return newMemo;
   },
 
   /**
    * メモ更新
    */
-  update: async (id: string, data: UpdateMemoDto): Promise<Entry> => {
+  update: async (data: UpdateMemoDTO): Promise<Entry> => {
     initializeMockData();
     
-    const index = mockMemos.findIndex((m) => m.id === id);
+    const index = mockMemos.findIndex((m) => m.id === data.memoId);
     if (index === -1) {
-      throw new Error(`Memo with id ${id} not found`);
+      throw new Error(`Memo with id ${data.memoId} not found`);
     }
 
     const updatedMemo: MemoEntry = {
       ...mockMemos[index],
       content: data.content ?? mockMemos[index].content,
-      manualTagIds: data.tagIds ?? mockMemos[index].manualTagIds,
+      manualTagIds: data.manualTagID ?? mockMemos[index].manualTagIds,
       updatedAt: new Date().toISOString(),
     };
 
@@ -109,26 +122,43 @@ export const memoMockRepository: IMemoRepository = {
    */
   deleteMany: async (ids: string[]): Promise<void> => {
     initializeMockData();
-    
+
     mockMemos = mockMemos.filter((memo) => !ids.includes(memo.id));
   },
 
   /**
    * エクスポート
    */
-  exportData: async (format: 'txt'): Promise<string> => {
+  exportData: async (ids: string[]) => {
     initializeMockData();
-    
-    if (format !== 'txt') {
-      throw new Error('Only txt format is supported');
+
+    // IDでフィルタリング
+    const targetMemos = mockMemos.filter((memo) => ids.includes(memo.id));
+
+    if (targetMemos.length === 0) {
+      throw new Error('No memos selected');
     }
 
-    return mockMemos
-      .map((memo) => {
-        const date = new Date(memo.createdAt).toLocaleString('ja-JP');
-        return `[${date}]\n${memo.content}\n---\n`;
-      })
-      .join('\n');
+    // tags.json のデータを使用
+    // tags.json が { "tags": [...] } という構造なので tagsData.tags で配列にアクセス
+    const tags = tagsData.tags;
+
+    const formattedMemos = targetMemos.map(m => ({
+      MemoID: m.id,
+      "UserID(FK)": m.userId,
+      "TagID(FK)": m.manualTagIds[0] || null, // 簡易的に最初のタグIDを使用
+      content: m.content,
+      autoTagID: m.autoTagIds,
+      manualTagID: m.manualTagIds,
+      shareUrlToken: m.shareUrlToken,
+      createdDate: m.createdAt,
+      updatedDate: m.updatedAt
+    }));
+
+    return {
+      tags: tags,
+      memos: formattedMemos
+    };
   },
 
   /**
@@ -136,7 +166,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   share: async (id: string): Promise<{ shareUrl: string }> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);
@@ -159,7 +189,7 @@ export const memoMockRepository: IMemoRepository = {
    */
   unshare: async (id: string): Promise<void> => {
     initializeMockData();
-    
+
     const index = mockMemos.findIndex((m) => m.id === id);
     if (index === -1) {
       throw new Error(`Memo with id ${id} not found`);

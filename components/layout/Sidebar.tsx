@@ -10,7 +10,7 @@ export function Sidebar({ links }: { links: NavLink[] }) {
     const pathname = usePathname();
 
     return (
-        <aside className="hidden md:block fixed left-0 top-0 h-full w-56 bg-background border-r border-secondary-text/10">
+        <aside className="hidden md:block fixed left-0 top-0 h-full w-48 bg-background border-r border-secondary-text/10">
             <div className="p-8">
                 <Heading level="h1" className="pb-8">Mimo</Heading>
                 <nav className="space-y-2">

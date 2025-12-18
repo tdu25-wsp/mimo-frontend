@@ -1,49 +1,40 @@
 "use client"
 
-import { EntryList } from "@/components/features/EntryList";
+import { GroupedEntryList } from "@/components/features/GroupedEntryList";
 import { useMainStore } from "@/lib/stores/mainStore";
+import { Plus } from "lucide-react";
 
 export default function MainPage() {
-
   const entries = useMainStore((state) => state.entries);
-  const isSelectionMode = useMainStore((state) => state.isEntrySelectionMode);
-  const setSelectionMode = useMainStore((state) => state.setEntrySelectionMode);
-  const selectedIds = useMainStore((state) => state.selectedEntryIds);
-  const toggleEntrySelection = useMainStore((state) => state.toggleEntrySelection);
-  const emptyMessage = "エントリーがありません";
-
-  const tags = useMainStore((state) => state.tags);
+  const openCreateSheet = useMainStore((state) => state.openCreateSheet);
 
   return (
-    <div>
-      <h1>HomeView</h1>
-      <div className="max-w-xl mx-auto">
+    <>
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <header className="flex-shrink-0 sticky top-0 z-50 bg-background border-b border-border h-14 md:hidden">
+          <div className="flex items-center justify-between h-full px-4">
+            <h1 className="text-xl font-bold text-primary-text">Mimo</h1>
+          </div>
+        </header>
 
-        {/* タグ一覧の表示（動作確認用） */}
-        <h2>タグ一覧</h2>
-        <ul>
-          {tags.map((tag) => (
-            <li key={tag.id}>
-              <span>{tag.name}</span> - <span>{tag.color}</span>
-            </li>
-          ))}
-        </ul>
-
-        {/* 選択モード切り替えボタン（仮で配置） */}
-        <button
-          onClick={
-            () => setSelectionMode(!isSelectionMode)
-          }
-        >編集</button>
-
-        <EntryList
-          entries={entries}
-          isSelectionMode={isSelectionMode}
-          selectedIds={selectedIds}
-          onToggleSelection={toggleEntrySelection}
-          emptyMessage={emptyMessage}
-        />
+        <div className="flex-1 overflow-y-auto bg-gray-background">
+          <div className="max-w-xl mx-auto p-4 pb-24 md:pb-4">
+            <GroupedEntryList
+              entries={entries}
+              emptyMessage="まだメモがありません"
+            />
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* FABボタン */}
+      <button
+        onClick={openCreateSheet}
+        className="fixed bottom-6 right-6 md:bottom-6 md:right-6 bottom-24 bg-primary text-white p-4 rounded-full shadow-lg z-40 hover:bg-primary-hover transition-colors"
+      >
+        <Plus size={24} />
+      </button>
+    </>
   );
 }
