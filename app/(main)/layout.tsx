@@ -4,16 +4,27 @@ import { DeleteDialog } from "@/components/features/DeleteDialog";
 import TabBar from "@/components/layout/TabBar";
 import { StoreInitializer } from "../StoreInitializer";
 import { memoRepository, summaryRepository, tagRepository } from "@/lib/repositories";
+import { Entry } from "@/types/entry";
+import { Tag } from "@/types/tag";
 
 export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const initialMemos = await memoRepository.getAll();
-  const initialSummaries = await summaryRepository.getSummaries();
-  const initialEntries = [...initialMemos, ...initialSummaries];
-  const initialTags = await tagRepository.getAll();
+  let initialEntries: Entry[] = [];
+  let initialTags: Tag[] = [];
+  let hasError = false;
+
+  try {
+    const initialMemos = await memoRepository.getAll();
+    const initialSummaries = await summaryRepository.getSummaries();
+    initialEntries = [...initialMemos, ...initialSummaries];
+    initialTags = await tagRepository.getAll();
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
+    hasError = true;
+  }
 
   return (
     <>
