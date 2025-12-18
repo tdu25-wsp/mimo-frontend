@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useMainStore } from "@/lib/stores/mainStore";
-import { MemoEntry } from "@/types/entry";
 import ActionLargeButton from "./ActionLargeButton";
 import { TagSelector } from "./TagSelector";
 import { Tag } from "../ui/Tag";
@@ -13,8 +12,8 @@ export const EntryEditSheet = () => {
   const editingEntry = useMainStore((state) => state.editingEntry);
   const closeEntrySheet = useMainStore((state) => state.closeEntrySheet);
 
-  const addEntry = useMainStore((state) => state.addEntry);
-  const updateEntry = useMainStore((state) => state.updateEntry);
+  const createMemo = useMainStore((state) => state.createMemo);
+  const updateMemo = useMainStore((state) => state.updateMemo);
 
   const tags = useMainStore((state) => state.tags);
 
@@ -48,27 +47,9 @@ export const EntryEditSheet = () => {
     if (!content.trim()) return;
 
     if (editingEntry) {
-      const updatedEntry: MemoEntry = {
-        ...editingEntry,
-        content,
-        manualTagIds,
-        updatedAt: new Date().toISOString(),
-      };
-      updateEntry(editingEntry.id, updatedEntry);
-      console.log("更新:", updatedEntry);
+      updateMemo(editingEntry.id, content, manualTagIds);
     } else {
-      const newEntry: MemoEntry = {
-        id: Date.now().toString(),
-        content: content,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        type: "memo",
-        shareUrlToken: null,
-        autoTagIds: [],
-        manualTagIds: manualTagIds,
-        userId: "current-user",
-      }
-      await addEntry(newEntry);
+      createMemo(content, manualTagIds);
     }
     closeEntrySheet();
   };

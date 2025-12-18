@@ -1,11 +1,11 @@
 import { getMockMemos } from "@/lib/converters";
 import {
   IMemoRepository,
-  CreateMemoDto,
-  UpdateMemoDto,
   MemoSearchParams,
 } from "../interfaces/memo.interface";
 import { Entry, MemoEntry } from "@/types/entry";
+import { CreateMemoDTO } from "@/types/server/create-memo-dto";
+import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
 import tagsData from "../../../public/data/tags.json";
 
 // モックデータをメモリに保持
@@ -77,40 +77,39 @@ export const memoMockRepository: IMemoRepository = {
   /**
    * メモ記録
    */
-  create: async (data: CreateMemoDto): Promise<Entry> => {
+  create: async (data: CreateMemoDTO): Promise<Entry> => {
     initializeMockData();
 
     const newMemo: MemoEntry = {
-      id: 'memo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-      userId: 'mock-user-id',
-      type: 'memo',
+      id: Date.now().toString(),
       content: data.content,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      type: "memo",
       shareUrlToken: null,
-      autoTagIds: [], // 実際はバックエンドで自動分類
-      manualTagIds: data.tagIds || [],
-    };
+      autoTagIds: [],
+      manualTagIds: data.manualTagID,
+      userId: data.userId,
+    }
 
-    mockMemos.push(newMemo);
     return newMemo;
   },
 
   /**
    * メモ更新
    */
-  update: async (id: string, data: UpdateMemoDto): Promise<Entry> => {
+  update: async (data: UpdateMemoDTO): Promise<Entry> => {
     initializeMockData();
-
-    const index = mockMemos.findIndex((m) => m.id === id);
+    
+    const index = mockMemos.findIndex((m) => m.id === data.memoId);
     if (index === -1) {
-      throw new Error(`Memo with id ${id} not found`);
+      throw new Error(`Memo with id ${data.memoId} not found`);
     }
 
     const updatedMemo: MemoEntry = {
       ...mockMemos[index],
       content: data.content ?? mockMemos[index].content,
-      manualTagIds: data.tagIds ?? mockMemos[index].manualTagIds,
+      manualTagIds: data.manualTagID ?? mockMemos[index].manualTagIds,
       updatedAt: new Date().toISOString(),
     };
 

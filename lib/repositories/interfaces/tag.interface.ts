@@ -1,3 +1,5 @@
+import { CreateTagDTO } from "@/types/server/create-tag-dto";
+import { UpdateTagDTO } from "@/types/server/update-tag-dto";
 import { Tag } from "@/types/tag";
 
 export interface ITagRepository {
@@ -9,12 +11,12 @@ export interface ITagRepository {
   /**
    * タグ新規作成 (POST /api/tags)
    */
-  create(name: string, color?: string): Promise<Tag>;
+  create(data: CreateTagDTO): Promise<Tag>;
 
   /**
    * タグ編集 (PATCH /api/tags/:id)
    */
-  update(id: string, name: string, color?: string): Promise<Tag>;
+  update(data: UpdateTagDTO): Promise<Tag>;
 
   /**
    * タグ削除 (DELETE /api/tags/:id)

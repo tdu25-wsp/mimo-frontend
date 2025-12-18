@@ -1,9 +1,9 @@
 import { convertMemoFromDTO, convertMemosFromDTO } from "@/lib/converters";
 import {
   IMemoRepository,
-  CreateMemoDto,
-  UpdateMemoDto,
 } from "../interfaces/memo.interface";
+import { CreateMemoDTO } from "@/types/server/create-memo-dto";
+import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -38,7 +38,7 @@ export const memoLiveRepository: IMemoRepository = {
     return convertMemosFromDTO(dtos);
   },
 
-  create: async (data: CreateMemoDto) => {
+  create: async (data: CreateMemoDTO) => {
     const res = await fetch(`${API_BASE_URL}/memos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,8 +47,8 @@ export const memoLiveRepository: IMemoRepository = {
     return await res.json();
   },
 
-  update: async (id: string, data: UpdateMemoDto) => {
-    const res = await fetch(`${API_BASE_URL}/memos/${id}`, {
+  update: async (data: UpdateMemoDTO) => {
+    const res = await fetch(`${API_BASE_URL}/memos/${data.memoId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

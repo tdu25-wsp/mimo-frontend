@@ -1,14 +1,6 @@
 import { Entry } from "@/types/entry";
-
-export interface CreateMemoDto {
-  content: string;
-  tagIds?: string[]; // 空の場合はバックエンドで自動分類
-}
-
-export interface UpdateMemoDto {
-  content?: string;
-  tagIds?: string[]; // 手動分類更新用
-}
+import { CreateMemoDTO } from "@/types/server/create-memo-dto";
+import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
 
 export interface MemoSearchParams {
   q?: string;      // キーワード検索
@@ -43,12 +35,12 @@ export interface IMemoRepository {
   /**
    * メモ記録 (POST /api/memos)
    */
-  create(data: CreateMemoDto): Promise<Entry>;
+  create(data: CreateMemoDTO): Promise<Entry>;
 
   /**
    * メモ更新 (PATCH /api/memos/:id)
    */
-  update(id: string, data: UpdateMemoDto): Promise<Entry>;
+  update(date: UpdateMemoDTO): Promise<Entry>;
 
   /**
    * メモ削除（複数） (DELETE /api/memos)

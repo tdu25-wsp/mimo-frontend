@@ -24,10 +24,10 @@ export function DeleteDialog() {
 
         try {
             if (deleteTarget.type === 'entry') {
-                await deleteEntries([deleteTarget.id]);
+                deleteEntries([deleteTarget.id]);
             }
             else if (deleteTarget.type === 'entries') {
-                await deleteEntries(deleteTarget.ids);
+                deleteEntries(deleteTarget.ids);
             }
             else if (deleteTarget.type === 'tag') {
                 // タグ削除処理

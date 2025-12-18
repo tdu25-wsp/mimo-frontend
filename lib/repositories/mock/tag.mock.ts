@@ -1,6 +1,8 @@
 import { getMockTags } from "@/lib/converters";
 import { ITagRepository } from "../interfaces/tag.interface";
 import { Tag } from "@/types/tag";
+import { CreateTagDTO } from "@/types/server/create-tag-dto";
+import { UpdateTagDTO } from "@/types/server/update-tag-dto";
 
 let mockTags: Tag[] = [];
 let isInitialized = false;
@@ -18,49 +20,50 @@ export const tagMockRepository: ITagRepository = {
     return [...mockTags];
   },
 
-  create: async (name: string, color?: string): Promise<Tag> => {
+  create: async (data: CreateTagDTO): Promise<Tag> => {
     initializeMockData();
-    
+
     const now = new Date().toISOString();
     const newTag: Tag = {
-      id: `tag-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      userId: "mock-user-id",
-      name,
-      color: color || "#808080",
+      id: `tag-${Date.now().toString()}`,
+      userId: data.userId,
+      name: data.name,
+      color: data.colorCode || "#64748B",
       createdAt: now,
       updatedAt: now,
     };
-    
-    mockTags.push(newTag);
+
     return newTag;
   },
 
-  update: async (id: string, name: string, color?: string): Promise<Tag> => {
+  update: async (data: UpdateTagDTO): Promise<Tag> => {
     initializeMockData();
-    
-    const index = mockTags.findIndex((tag) => tag.id === id);
+
+    const index = mockTags.findIndex((tag) => tag.id === data.tagId);
     if (index === -1) {
-      throw new Error(`Tag with id ${id} not found`);
+      throw new Error(`Tag with id ${data.tagId} not found`);
     }
-    
-    mockTags[index] = {
+
+    const updateTag: Tag = {
       ...mockTags[index],
-      name,
-      ...(color !== undefined && { color }),
+      name: data.name,
+      color: data.colorCode,
       updatedAt: new Date().toISOString(),
     };
-    
-    return mockTags[index];
+
+    mockTags[index] = updateTag;
+
+    return updateTag;
   },
 
   delete: async (id: string): Promise<void> => {
     initializeMockData();
-    
+
     const index = mockTags.findIndex((tag) => tag.id === id);
     if (index === -1) {
       throw new Error(`Tag with id ${id} not found`);
     }
-    
+
     mockTags = mockTags.filter((tag) => tag.id !== id);
   },
-}
+};

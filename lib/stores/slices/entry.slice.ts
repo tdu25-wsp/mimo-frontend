@@ -1,4 +1,8 @@
+import { authRepository } from "@/lib/repositories";
+import { memoRepository } from "@/lib/repositories";
 import { Entry } from "@/types/entry";
+import { CreateMemoDTO } from "@/types/server/create-memo-dto";
+import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
 
 export interface EntrySlice {
   // State
@@ -11,7 +15,9 @@ export interface EntrySlice {
   setEntries: (entries: Entry[]) => void;
   addEntry: (entry: Entry) => void;
   updateEntry: (id: string, entry: Partial<Entry>) => void;
-  deleteEntries: (ids: string[]) => void;
+  createMemo: (content: string, manualTagIds: string[]) => Promise<void>;
+  updateMemo: (memoId: string, content: string, manualTagIds: string[]) => Promise<void>;
+  deleteEntries: (ids: string[]) => Promise<void>;
   toggleEntrySelection: (id: string) => void;
   clearEntrySelection: () => void;
   setLoading: (loading: boolean) => void;
@@ -47,11 +53,84 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
       ),
     })),
 
-  deleteEntries: (ids) =>
-    set((state: any) => ({
-      entries: state.entries.filter((e: Entry) => !ids.includes(e.id)),
-      selectedEntryIds: state.selectedEntryIds.filter((eid: string) => !ids.includes(eid)),
-    })),
+  createMemo: async (content: string, manualTagIds: string[]) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const userId = await authRepository.getCurrentUser();
+
+      const createMemoDTO: CreateMemoDTO = {
+        userId: userId,
+        content: content,
+        manualTagID: manualTagIds,
+      };
+
+      const created = await memoRepository.create(createMemoDTO);
+
+      set((state: any) => ({
+        entries: [...state.entries, created],
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "作成に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  updateMemo: async (memoId: string, content: string, manualTagIds: string[]) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const userId = await authRepository.getCurrentUser();
+
+      const updateMemoDTO: UpdateMemoDTO = {
+        userId: userId,
+        memoId: memoId,
+        content: content,
+        manualTagID: manualTagIds,
+      };
+
+      const updated = await memoRepository.update(updateMemoDTO);
+
+      set((state: any) => ({
+        entries: state.entries.map((e: Entry) =>
+          e.id === updated.id ? { ...e, ...updated } : e
+        ),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "更新に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  deleteEntries: async (ids: string[]) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await memoRepository.deleteMany(ids);
+
+      set((state: any) => ({
+        entries: state.entries.filter((e: Entry) => !ids.includes(e.id)),
+        selectedEntryIds: state.selectedEntryIds.filter(
+          (eid: string) => !ids.includes(eid)
+        ),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "削除に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
 
   toggleEntrySelection: (id) =>
     set((state: any) => ({
@@ -67,15 +146,16 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
   setError: (error) => set({ error }),
 
   // Selectors (派生状態)
-  getMemos: () => get().entries.filter((e: Entry) => e.type === 'memo'),
+  getMemos: () => get().entries.filter((e: Entry) => e.type === "memo"),
 
-  getSummaries: () => get().entries.filter((e: Entry) => e.type === 'summary'),
+  getSummaries: () => get().entries.filter((e: Entry) => e.type === "summary"),
 
-  getJournalings: () => get().entries.filter((e: Entry) => e.type === 'journaling'),
+  getJournalings: () =>
+    get().entries.filter((e: Entry) => e.type === "journaling"),
 
   getEntriesByTag: (tagId: string) =>
     get().entries.filter((e: Entry) => {
-      if (e.type === 'memo') {
+      if (e.type === "memo") {
         return e.autoTagIds.includes(tagId) || e.manualTagIds.includes(tagId);
       } else {
         return e.tagsIds?.includes(tagId);

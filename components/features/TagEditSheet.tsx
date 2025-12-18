@@ -13,11 +13,11 @@ const COLOR_PRESETS = [
 export const TagEditSheet = () => {
     const isOpen = useMainStore((state) => state.isTagSheetOpen);
     const closeSheet = useMainStore((state) => state.closeTagAddSheet);
-    
+
     // 編集対象のタグを取得
     const editingTag = useMainStore((state) => state.editingTag);
-    
-    const addTag = useMainStore((state) => state.addTag);
+
+    const createTag = useMainStore((state) => state.createTag);
     const updateTag = useMainStore((state) => state.updateTag);
 
     const [tagName, setTagName] = useState("");
@@ -42,30 +42,11 @@ export const TagEditSheet = () => {
         if (!tagName.trim()) return;
 
         if (editingTag) {
-            // ▼ 更新処理
-            const updatedTag = {
-                ...editingTag,
-                name: tagName,
-                color: tagColor,
-                updatedAt: new Date().toISOString(),
-            };
-            // ストアにupdateTagアクションがある前提
-            if (updateTag) await updateTag(editingTag.id, updatedTag);
-            console.log("タグを更新:", updatedTag);
+            updateTag(editingTag.id, tagName, tagColor);
         } else {
-            // ▼ 新規作成処理
-            const newTag = {
-                id: Date.now().toString(),
-                name: tagName,
-                color: tagColor,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                userId: "current-user",
-            };
-            if (addTag) await addTag(newTag);
-            console.log("新しいタグを追加:", newTag);
+            createTag(tagName, tagColor);
         }
-       
+
         closeSheet();
     };
 
@@ -113,11 +94,10 @@ export const TagEditSheet = () => {
                                     key={color}
                                     type="button"
                                     onClick={() => setTagColor(color)}
-                                    className={`w-10 h-10 rounded-full border-2 transition-all ${
-                                        tagColor === color
-                                            ? 'border-primary scale-110 ring-2 ring-offset-2 ring-primary/30'
-                                            : 'border-transparent hover:scale-105'
-                                    }`}
+                                    className={`w-10 h-10 rounded-full border-2 transition-all ${tagColor === color
+                                        ? 'border-primary scale-110 ring-2 ring-offset-2 ring-primary/30'
+                                        : 'border-transparent hover:scale-105'
+                                        }`}
                                     style={{ backgroundColor: color }}
                                 />
                             ))}
@@ -130,7 +110,7 @@ export const TagEditSheet = () => {
                     onClick={handleSubmit}
                     disabled={!tagName.trim()}
                 />
-                 <div className="h-4 md:hidden" />
+                <div className="h-4 md:hidden" />
             </div>
         </div>
     );
