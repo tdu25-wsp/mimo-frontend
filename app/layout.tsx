@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { memoRepository, summaryRepository, tagRepository } from "@/lib/repositories";
-import { StoreInitializer } from "./StoreInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +22,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialMemos = await memoRepository.getAll();
-  const initialSummaries = await summaryRepository.getSummaries();
-  const initialEntries = [...initialMemos, ...initialSummaries];
-  const initialTags = await tagRepository.getAll();
-
   return (
     <html lang="ja">
-      <StoreInitializer entries={initialEntries} tags={initialTags} />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
