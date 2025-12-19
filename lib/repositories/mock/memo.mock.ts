@@ -88,8 +88,8 @@ export const memoMockRepository: IMemoRepository = {
       type: "memo",
       shareUrlToken: null,
       autoTagIds: [],
-      manualTagIds: data.manualTagID,
-      userId: data.userId,
+      manualTagIds: data.tag_id,
+      userId: data.user_id,
     }
 
     return newMemo;
@@ -101,15 +101,15 @@ export const memoMockRepository: IMemoRepository = {
   update: async (data: UpdateMemoDTO): Promise<Entry> => {
     initializeMockData();
     
-    const index = mockMemos.findIndex((m) => m.id === data.memoId);
+    const index = mockMemos.findIndex((m) => m.id === data.memo_id);
     if (index === -1) {
-      throw new Error(`Memo with id ${data.memoId} not found`);
+      throw new Error(`Memo with id ${data.memo_id} not found`);
     }
 
     const updatedMemo: MemoEntry = {
       ...mockMemos[index],
       content: data.content ?? mockMemos[index].content,
-      manualTagIds: data.manualTagID ?? mockMemos[index].manualTagIds,
+      manualTagIds: data.tag_id ?? mockMemos[index].manualTagIds,
       updatedAt: new Date().toISOString(),
     };
 

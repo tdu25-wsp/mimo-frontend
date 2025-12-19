@@ -1,6 +1,5 @@
 export interface UpdateMemoDTO {
-  userId: string;
-  memoId: string;
+  memo_id: string;
   content: string;
-  manualTagID: string[];
+  tag_id: string[];
 }
