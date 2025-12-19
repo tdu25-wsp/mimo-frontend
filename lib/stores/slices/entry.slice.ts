@@ -3,6 +3,7 @@ import { memoRepository } from "@/lib/repositories";
 import { Entry } from "@/types/entry";
 import { CreateMemoDTO } from "@/types/server/create-memo-dto";
 import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
+import { toast } from "sonner";
 
 export interface EntrySlice {
   // State
@@ -60,9 +61,9 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
       const userId = await authRepository.getCurrentUser();
 
       const createMemoDTO: CreateMemoDTO = {
-        userId: userId,
+        user_id: userId,
         content: content,
-        manualTagID: manualTagIds,
+        tag_id: manualTagIds,
       };
 
       const created = await memoRepository.create(createMemoDTO);
@@ -72,6 +73,7 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
         isLoading: false,
       }));
     } catch (error) {
+      toast.error("保存に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "作成に失敗しました",
         isLoading: false,
@@ -84,13 +86,12 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      const userId = await authRepository.getCurrentUser();
+      // const userId = await authRepository.getCurrentUser();
 
       const updateMemoDTO: UpdateMemoDTO = {
-        userId: userId,
-        memoId: memoId,
+        memo_id: memoId,
         content: content,
-        manualTagID: manualTagIds,
+        tag_id: manualTagIds,
       };
 
       const updated = await memoRepository.update(updateMemoDTO);
@@ -102,6 +103,7 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
         isLoading: false,
       }));
     } catch (error) {
+      toast.error("更新に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "更新に失敗しました",
         isLoading: false,
@@ -124,6 +126,7 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
         isLoading: false,
       }));
     } catch (error) {
+      toast.error("削除に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "削除に失敗しました",
         isLoading: false,

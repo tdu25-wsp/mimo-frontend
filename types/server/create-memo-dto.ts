@@ -1,5 +1,5 @@
 export interface CreateMemoDTO {
-  userId: string;
+  user_id: string;
   content: string;
-  manualTagID: string[];
+  tag_id: string[];
 }

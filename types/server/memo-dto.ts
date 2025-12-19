@@ -1,10 +1,10 @@
 export interface MemoDTO {
-  MemoID: string;
-  "UserID(FK)": string;
+  memo_id: string;
+  user_id: string;
   content: string;
-  autoTagID: string[];
-  manualTagID: string[];
-  shareUrlToken: string | null;
-  createdDate: string;
-  updatedDate: string;
+  auto_tag_id: string[];
+  manual_tag_id: string[];
+  share_url_token: string | null;
+  created_at: string;
+  updated_at: string;
 }

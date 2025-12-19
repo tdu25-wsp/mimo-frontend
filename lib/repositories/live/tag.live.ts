@@ -3,14 +3,21 @@ import { ITagRepository } from "../interfaces/tag.interface";
 import { CreateTagDTO } from "@/types/server/create-tag-dto";
 import { UpdateTagDTO } from "@/types/server/update-tag-dto";
 import { convertTagsFromDTO } from "@/lib/converters/tag.converter";
+import { TagDTO } from "@/types/server/tag-dto";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const tagLiveRepository: ITagRepository = {
   getAll: async (): Promise<Tag[]> => {
-    const res = await fetch(`${API_BASE_URL}/api/tags`);
-    if (!res.ok) throw new Error("Fetch failed");
-    const dtos = await res.json();
+    const res = await fetch(`${API_BASE_URL}/tags`);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `タグの取得に失敗しました (${res.status})`
+      );
+    }
+    const dto = await res.json();
+    const dtos: TagDTO[] = dto.tags;
     return convertTagsFromDTO(dtos);
   },
 
