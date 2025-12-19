@@ -5,6 +5,8 @@ import { TagPageClient } from "./TagPageClient";
 import { use } from "react";
 import { useMainStore } from "@/lib/stores/mainStore";
 
+export const runtime = 'edge';
+
 interface TagPageProps {
     params: Promise<{
         tagId: string;
