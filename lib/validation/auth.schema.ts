@@ -52,7 +52,6 @@ export const verifyCodeSchema = z.object({
   code: z
     .string()
     .min(1, "確認コードを入力してください")
-    .length(4, "4桁のコードを入力してください"), 
 });
 
 // --- 型のエクスポート (コンポーネントで使う用) ---
