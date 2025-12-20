@@ -17,7 +17,20 @@ const passwordSchema = z
   .min(8, "パスワードは8文字以上で入力してください")
   .max(16, "パスワードは16文字以内で入力してください");
 
+//  ユーザーID (英数字のみ, 記号禁止)
+const userIdRule = z
+  .string()
+  .min(1, "ユーザーIDは必須です")
+  .min(4, "ユーザーIDは4文字以上で入力してください") // 一般的な長さ制限（適宜変更可）
+  .max(20, "ユーザーIDは20文字以内で入力してください") // 一般的な長さ制限（適宜変更可）
+  .regex(/^[a-zA-Z0-9]+$/, "ユーザーIDは半角英数字のみで入力してください");
+
 // --- 各フォーム用のスキーマ ---
+
+// フォーム用スキーマ
+export const userIdSchema = z.object({
+  userId: userIdRule,
+});
 
 // ログイン用
 export const loginSchema = z.object({
@@ -54,6 +67,7 @@ export const verifyCodeSchema = z.object({
 });
 
 // --- 型のエクスポート (コンポーネントで使う用) ---
+export type UserIdInput = z.infer<typeof userIdSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type SignupEmailInput = z.infer<typeof signupEmailSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
