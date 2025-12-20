@@ -7,7 +7,7 @@ import Heading from "@/components/ui/Heading";
 import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordSchema, ResetPasswordInput } from "@/lib/validation/auth.schema";
+import { passwordSetupSchema, PasswordSetupInput } from "@/lib/validation/auth.schema";
 
 export default function ResetPasswordPage() {
   // useFormのセットアップ
@@ -17,8 +17,8 @@ export default function ResetPasswordPage() {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ResetPasswordInput>({
-    resolver: zodResolver(resetPasswordSchema),
+  } = useForm<PasswordSetupInput>({
+    resolver: zodResolver(passwordSetupSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -30,10 +30,10 @@ export default function ResetPasswordPage() {
   const confirmPasswordValue = watch("confirmPassword");
 
   // 送信時の処理
-  const onSubmit: SubmitHandler<ResetPasswordInput> = (data) => {
-    //console.log("変更データ:", data);
-    // ここでパスワード変更APIを叩く
+  const onSubmit: SubmitHandler<PasswordSetupInput> = (data) => {
+    console.log("送信データ:", data);
   };
+
 
   return (
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
@@ -54,7 +54,7 @@ export default function ResetPasswordPage() {
           <main className="flex-1 flex flex-col justify-center px-6 pb-20">
             <div className="w-full max-w-[402px] mx-auto">
               <Heading level="h2" className="mb-10">
-                パスワードを変更
+                パスワードを設定
               </Heading>
 
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -72,6 +72,7 @@ export default function ResetPasswordPage() {
                       id="password"
                       placeholder="8〜16文字のパスワード"
                       className="pr-10"
+                      autoFocus
                       {...register("password")}
                     />
 
@@ -104,7 +105,6 @@ export default function ResetPasswordPage() {
                     パスワードをもう一度入力
                   </label>
                   <div className="relative">
-                    {/* StateとIDを確認用に変更 */}
                     <Input
                       type="password"
                       id="confirm-password"
@@ -118,7 +118,6 @@ export default function ResetPasswordPage() {
                         onClick={() => setValue("confirmPassword", "")}
                       >
                         <X className="h-4 w-4" />
-                        <span className="sr-only">パスワードをクリア</span>
                       </button>
                     )}
                   </div>
@@ -130,10 +129,10 @@ export default function ResetPasswordPage() {
                   )}
                 </div>
 
-                {/* 変更ボタン */}
+                {/* 登録ボタン */}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "変更中..." : "変更"}
+                    label={isSubmitting ? "登録中..." : "登録"}
                     type="submit"
                     disabled={isSubmitting}
                   />

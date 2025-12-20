@@ -30,18 +30,13 @@ export const signupEmailSchema = z.object({
   email: emailSchema,
 });
 
-// 新規登録  (パスワード入力画面用)
-export const signupPasswordSchema = z.object({
-  password: passwordSchema,
-});
-
 // パスワードリセットメール送信
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
 
-// パスワード変更 (確認用パスワードの一致チェックを含む)
-export const resetPasswordSchema = z
+// パスワード登録・変更 (確認用パスワードの一致チェックを含む)
+export const passwordSetupSchema = z
   .object({
     password: passwordSchema,
     confirmPassword: z.string().min(1, "確認用パスワードは必須です"),
@@ -61,7 +56,6 @@ export const verifyCodeSchema = z.object({
 // --- 型のエクスポート (コンポーネントで使う用) ---
 export type LoginInput = z.infer<typeof loginSchema>;
 export type SignupEmailInput = z.infer<typeof signupEmailSchema>;
-export type SignupPasswordInput = z.infer<typeof signupPasswordSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type PasswordSetupInput = z.infer<typeof passwordSetupSchema>;
 export type VerifyCodeInput = z.infer<typeof verifyCodeSchema>;
