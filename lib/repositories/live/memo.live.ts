@@ -1,64 +1,118 @@
 import { convertMemoFromDTO, convertMemosFromDTO } from "@/lib/converters";
-import {
-  IMemoRepository,
-} from "../interfaces/memo.interface";
+import { IMemoRepository } from "../interfaces/memo.interface";
 import { CreateMemoDTO } from "@/types/server/create-memo-dto";
 import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
+import { PROXY_API_BASE_URL } from "@/lib/constants";
+import { MemoDTO } from "@/types/server/memo-dto";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const memoLiveRepository: IMemoRepository = {
   getAll: async () => {
-    // API_BASE_URL を使って fetch する
-    const res = await fetch(`${API_BASE_URL}/memos`);
-    if (!res.ok) throw new Error("Fetch failed");
-    const dtos = await res.json();
+    // await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機
+    
+    const userId = "mock-user-id"; // 仮のユーザーID
+    const res = await fetch(`${API_BASE_URL}/memos/list/${userId}`);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `メモの取得に失敗しました (${res.status})`
+      );
+    }
+    const dto = await res.json();
+    const dtos: MemoDTO[] = dto.memos;
     return convertMemosFromDTO(dtos);
   },
 
   getById: async (id: string) => {
-    const res = await fetch(`${API_BASE_URL}/memos/${id}`);
-    if (!res.ok) throw new Error("Fetch failed");
-    const dto = await res.json();
-    return convertMemoFromDTO(dto);
+    const res = await fetch(`${PROXY_API_BASE_URL}/memos/${id}`);
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `メモの取得に失敗しました (${res.status})`
+      );
+    }
+
+    const dtos = await res.json();
+    return convertMemoFromDTO(dtos);
   },
 
   getByIds: async (ids: string[]) => {
     if (ids.length === 0) return [];
 
-    const queryParams = ids.map((id) => `ids=${id}`).join("&");
-    const res = await fetch(`${API_BASE_URL}/memos?${queryParams}`);
+    try {
+      const memoPromises = ids.map(async (id) => {
+        const res = await fetch(`${API_BASE_URL}/memos/${id}`);
 
-    if (!res.ok) {
-      if (res.status === 404) return undefined;
-      throw new Error("Fetch failed");
+        if (!res.ok) {
+          if (res.status === 404) {
+            return undefined;
+          }
+          throw new Error(`メモ ${id} の取得に失敗しました (${res.status})`);
+        }
+
+        const dto = await res.json();
+        return convertMemoFromDTO(dto);
+      });
+
+      const results = await Promise.all(memoPromises);
+
+      return results.filter((memo) => memo !== undefined);
+    } catch (error) {
+      console.error("getByIds error:", error);
+      throw error;
     }
-
-    const dtos = await res.json();
-    return convertMemosFromDTO(dtos);
   },
 
   create: async (data: CreateMemoDTO) => {
-    const res = await fetch(`${API_BASE_URL}/memos`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}/memos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    return await res.json();
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `メモの作成に失敗しました (${res.status})`
+      );
+    }
+
+    const dto = await res.json();
+    return convertMemoFromDTO(dto);
   },
 
   update: async (data: UpdateMemoDTO) => {
-    const res = await fetch(`${API_BASE_URL}/memos/${data.memoId}`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}/memos/${data.memo_id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    return await res.json();
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `メモの更新に失敗しました (${res.status})`
+      );
+    }
+
+    const dto = await res.json();
+    return convertMemoFromDTO(dto);
   },
 
   deleteMany: async (ids: string[]) => {
-    await fetch(`${API_BASE_URL}/memos/${ids}`, {
-      method: "DELETE",
+    ids.forEach(async (id) => {
+      const res = await fetch(`${PROXY_API_BASE_URL}/memos/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `メモの削除に失敗しました (${res.status})`
+        );
+      }
     });
   },
 

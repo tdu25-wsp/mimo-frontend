@@ -3,6 +3,7 @@ import { tagRepository } from "@/lib/repositories";
 import { CreateTagDTO } from "@/types/server/create-tag-dto";
 import { UpdateTagDTO } from "@/types/server/update-tag-dto";
 import { Tag } from "@/types/tag";
+import { toast } from "sonner";
 
 export interface TagSlice {
   tags: Tag[];
@@ -37,6 +38,7 @@ export const createTagSlice = (set: any): TagSlice => ({
         isLoading: false,
       }));
     } catch (error) {
+      toast.error("作成に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "作成に失敗しました",
         isLoading: false,
@@ -67,6 +69,7 @@ export const createTagSlice = (set: any): TagSlice => ({
         isLoading: false,
       }));
     } catch (error) {
+      toast.error("更新に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "更新に失敗しました",
         isLoading: false,
