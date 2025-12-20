@@ -19,24 +19,28 @@ const passwordSchema = z
 
 // --- 各フォーム用のスキーマ ---
 
-// 1. ログイン用
+// ログイン用
 export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
 
-// 2. 新規登録用
-export const signupSchema = z.object({
+// 新規登録 (メールアドレス入力画面用)
+export const signupEmailSchema = z.object({
   email: emailSchema,
+});
+
+// 新規登録  (パスワード入力画面用)
+export const signupPasswordSchema = z.object({
   password: passwordSchema,
 });
 
-// 3. パスワードリセットメール送信
+// パスワードリセットメール送信
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
 
-// 4. パスワード変更 (確認用パスワードの一致チェックを含む)
+// パスワード変更 (確認用パスワードの一致チェックを含む)
 export const resetPasswordSchema = z
   .object({
     password: passwordSchema,
@@ -47,7 +51,7 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"], // エラーを出すフィールドを指定
   });
 
-// 5. 確認コード入力 (4桁の数字)
+// 確認コード入力 (4桁の数字)
 export const verifyCodeSchema = z.object({
   code: z
     .string()
@@ -56,7 +60,8 @@ export const verifyCodeSchema = z.object({
 
 // --- 型のエクスポート (コンポーネントで使う用) ---
 export type LoginInput = z.infer<typeof loginSchema>;
-export type SignupInput = z.infer<typeof signupSchema>;
+export type SignupEmailInput = z.infer<typeof signupEmailSchema>;
+export type SignupPasswordInput = z.infer<typeof signupPasswordSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type VerifyCodeInput = z.infer<typeof verifyCodeSchema>;
