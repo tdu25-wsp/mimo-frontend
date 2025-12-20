@@ -31,7 +31,7 @@ export default function ResetPasswordPage() {
 
   // 送信時の処理
   const onSubmit: SubmitHandler<PasswordSetupInput> = (data) => {
-    console.log("送信データ:", data);
+    //console.log("送信データ:", data);
   };
 
 

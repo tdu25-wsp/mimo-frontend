@@ -27,8 +27,7 @@ export default function UserIdPage() {
   const userIdValue = watch("userId");
 
   const onSubmit: SubmitHandler<UserIdInput> = (data) => {
-    console.log("ユーザーID:", data.userId);
-    // ここでIDの重複チェックAPIなどを叩くことが多いです
+    //console.log("ユーザーID:", data.userId);
   };
 
   return (
