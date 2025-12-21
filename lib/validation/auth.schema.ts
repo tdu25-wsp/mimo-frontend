@@ -17,27 +17,39 @@ const passwordSchema = z
   .min(8, "パスワードは8文字以上で入力してください")
   .max(16, "パスワードは16文字以内で入力してください");
 
+//  ユーザーID (英数字のみ, 記号禁止)
+const userIdRule = z
+  .string()
+  .min(1, "ユーザーIDは必須です")
+  .min(4, "ユーザーIDは4文字以上で入力してください") // 一般的な長さ制限（適宜変更可）
+  .max(20, "ユーザーIDは20文字以内で入力してください") // 一般的な長さ制限（適宜変更可）
+  .regex(/^[a-zA-Z0-9]+$/, "ユーザーIDは半角英数字のみで入力してください");
+
 // --- 各フォーム用のスキーマ ---
 
-// 1. ログイン用
+// フォーム用スキーマ
+export const userIdSchema = z.object({
+  userId: userIdRule,
+});
+
+// ログイン用
 export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
 
-// 2. 新規登録用
-export const signupSchema = z.object({
+// 新規登録 (メールアドレス入力画面用)
+export const signupEmailSchema = z.object({
   email: emailSchema,
-  password: passwordSchema,
 });
 
-// 3. パスワードリセットメール送信
+// パスワードリセットメール送信
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
 
-// 4. パスワード変更 (確認用パスワードの一致チェックを含む)
-export const resetPasswordSchema = z
+// パスワード登録・変更 (確認用パスワードの一致チェックを含む)
+export const passwordSetupSchema = z
   .object({
     password: passwordSchema,
     confirmPassword: z.string().min(1, "確認用パスワードは必須です"),
@@ -47,7 +59,7 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"], // エラーを出すフィールドを指定
   });
 
-// 5. 確認コード入力 (4桁の数字)
+// 確認コード入力 (4桁の数字)
 export const verifyCodeSchema = z.object({
   code: z
     .string()
@@ -55,8 +67,9 @@ export const verifyCodeSchema = z.object({
 });
 
 // --- 型のエクスポート (コンポーネントで使う用) ---
+export type UserIdInput = z.infer<typeof userIdSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
-export type SignupInput = z.infer<typeof signupSchema>;
+export type SignupEmailInput = z.infer<typeof signupEmailSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type PasswordSetupInput = z.infer<typeof passwordSetupSchema>;
 export type VerifyCodeInput = z.infer<typeof verifyCodeSchema>;
