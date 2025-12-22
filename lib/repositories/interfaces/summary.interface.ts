@@ -21,7 +21,7 @@ export interface ISummaryRepository {
   /**
    * 要約・ジャーナリング要約取得 (GET /api/sum)
    */
-  getById(id: string): Promise<SummaryEntry | undefined>;
+  getById(id: string): Promise<SummaryEntry>;
 
   /**
    * 要約削除 (DELETE /api/sum/:id)

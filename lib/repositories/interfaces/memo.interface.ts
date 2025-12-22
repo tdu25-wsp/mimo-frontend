@@ -30,7 +30,7 @@ export interface IMemoRepository {
    * getByIdでundefinedが返る場合はundefinedを返す
    * 見つからない場合は空配列を返す
    */
-  getByIds(ids: string[]): Promise<Entry[] | undefined>;
+  getByIds(ids: string[]): Promise<Entry[]>;
 
   /**
    * メモ記録 (POST /api/memos)

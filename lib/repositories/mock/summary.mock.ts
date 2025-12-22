@@ -76,11 +76,11 @@ export const summaryMockRepository: ISummaryRepository = {
   /**
    * idから要約・ジャーナリング要約取得
    */
-  getById: async (id: string): Promise<SummaryEntry | undefined> => {
+  getById: async (id: string): Promise<SummaryEntry> => {
     initializeMockData();
     const summary = mockSummaries.find((s) => s.id === id);
     if (!summary) {
-      return undefined;
+      throw new Error(`Summary with id ${id} not found`);
     }
     return summary;
   },

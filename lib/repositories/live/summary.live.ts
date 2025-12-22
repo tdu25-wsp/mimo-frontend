@@ -50,12 +50,22 @@ export const summaryLiveRepository: ISummaryRepository = {
     return convertSummariesFromDTO(dtos) as SummaryEntry[];
   },
 
-  getById: async (id: string): Promise<SummaryEntry | undefined> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/${id}`, {
+  getById: async (id: string): Promise<SummaryEntry> => {
+    let headers: HeadersInit = {};
+    let url = `${PROXY_API_BASE_URL}/sum/${id}`;
+
+    if (typeof window === "undefined") {
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      headers = { Cookie: cookieStore.toString() };
+      url = `${API_BASE_URL}/sum/${id}`;
+    }
+
+    const res = await fetch(url, {
+      headers,
       credentials: "include",
     });
     if (!res.ok) {
-      if (res.status === 404) return undefined;
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
         errorData.message || `要約の取得に失敗しました (${res.status})`

@@ -40,9 +40,22 @@ export const memoLiveRepository: IMemoRepository = {
   getByIds: async (ids: string[]) => {
     if (ids.length === 0) return [];
 
+    let headers: HeadersInit = {};
+    let baseUrl = PROXY_API_BASE_URL;
+
+    if (typeof window === "undefined") {
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      headers = { Cookie: cookieStore.toString() };
+      baseUrl = API_BASE_URL || "";
+    }
+
     try {
       const memoPromises = ids.map(async (id) => {
-        const res = await fetch(`${API_BASE_URL}/memos/${id}`);
+        const res = await fetch(`${baseUrl}/memos/${id}`, {
+          headers,
+          credentials: "include",
+        });
 
         if (!res.ok) {
           if (res.status === 404) {
