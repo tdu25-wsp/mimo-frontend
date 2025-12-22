@@ -1,4 +1,3 @@
-import { authRepository } from "@/lib/repositories";
 import { tagRepository } from "@/lib/repositories";
 import { CreateTagDTO } from "@/types/server/create-tag-dto";
 import { UpdateTagDTO } from "@/types/server/update-tag-dto";
@@ -65,20 +64,16 @@ export const createTagSlice = (set: any, get: any): TagSlice => ({
     }
   },
 
-  updateTag: async (tagId: string, name: string, colorCode) => {
+  updateTag: async (tagId: string, name: string, colorCode: string) => {
     try {
       set({ isLoading: true, error: null });
 
-      const user = await authRepository.getCurrentUser();
-
       const updateTagDTO: UpdateTagDTO = {
-        userId: user.id,
-        tagId: tagId,
         name: name,
-        colorCode: colorCode,
+        color_code: colorCode,
       };
 
-      const updated = await tagRepository.update(updateTagDTO);
+      const updated = await tagRepository.update(tagId, updateTagDTO);
 
       set((state: any) => ({
         tags: state.tags.map((e: Tag) =>

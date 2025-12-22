@@ -43,13 +43,22 @@ export const tagLiveRepository: ITagRepository = {
     return convertTagFromDTO(dto);
   },
 
-  update: async (data: UpdateTagDTO): Promise<Tag> => {
-    const res = await fetch(`${API_BASE_URL}/api/tags/${data.tagId}`, {
+  update: async (tagId: string, data: UpdateTagDTO): Promise<Tag> => {
+    const res = await fetch(`${PROXY_API_BASE_URL}/tags/${tagId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
-    return await res.json();
+    if (!res.ok) {
+      toast.error("タグの更新に失敗しました");
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `タグの更新に失敗しました (${res.status})`
+      );
+    }
+    const dto = await res.json();
+    return convertTagFromDTO(dto);
   },
 
   delete: async (id: string): Promise<void> => {

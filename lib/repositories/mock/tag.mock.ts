@@ -39,18 +39,18 @@ export const tagMockRepository: ITagRepository = {
     return newTag;
   },
 
-  update: async (data: UpdateTagDTO): Promise<Tag> => {
+  update: async (tagId: string, data: UpdateTagDTO): Promise<Tag> => {
     initializeMockData();
 
-    const index = mockTags.findIndex((tag) => tag.id === data.tagId);
+    const index = mockTags.findIndex((tag) => tag.id === tagId);
     if (index === -1) {
-      throw new Error(`Tag with id ${data.tagId} not found`);
+      throw new Error(`Tag with id ${tagId} not found`);
     }
 
     const updateTag: Tag = {
       ...mockTags[index],
       name: data.name,
-      color: data.colorCode,
+      color: data.color_code,
       updatedAt: new Date().toISOString(),
     };
 

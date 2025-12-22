@@ -16,7 +16,7 @@ export interface ITagRepository {
   /**
    * タグ編集 (PATCH /api/tags/:id)
    */
-  update(data: UpdateTagDTO): Promise<Tag>;
+  update(tagId: string, data: UpdateTagDTO): Promise<Tag>;
 
   /**
    * タグ削除 (DELETE /api/tags/:id)
