@@ -58,10 +58,10 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      const userId = await authRepository.getCurrentUser();
+      const user = await authRepository.getCurrentUser();
 
       const createMemoDTO: CreateMemoDTO = {
-        user_id: userId,
+        user_id: user.id,
         content: content,
         tag_id: manualTagIds,
       };

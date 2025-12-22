@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
@@ -7,13 +9,17 @@ import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupEmailSchema, SignupEmailInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
 export default function SignupPage() {
+  const router = useRouter();
+  const sendVerificationCode = useMainStore((state) => state.sendVerificationCode);
+  const isLoading = useMainStore((state) => state.isLoading);
+
   const {
     register,
     handleSubmit,
-    setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignupEmailInput>({
     resolver: zodResolver(signupEmailSchema),
     defaultValues: {
@@ -22,9 +28,14 @@ export default function SignupPage() {
   });
 
   // 送信時の処理
-  const onSubmit: SubmitHandler<SignupEmailInput> = (data) => {
-    //console.log("登録データ:", data);
-    // ここに新規登録APIを叩く処理
+  const onSubmit: SubmitHandler<SignupEmailInput> = async (data) => {
+    try {
+      await sendVerificationCode(data.email, "signup");
+      toast.success("確認コードを送信しました");
+      router.push("/verify-code?mode=signup");
+    } catch (error: any) {
+      toast.error(error.message || "エラーが発生しました");
+    }
   };
 
   return (
@@ -77,9 +88,9 @@ export default function SignupPage() {
                 {/* 登録ボタン*/}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "登録中..." : "登録"}
+                    label={isLoading ? "送信中..." : "登録"}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>

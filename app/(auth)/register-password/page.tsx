@@ -1,5 +1,8 @@
 "use client";
 
+import { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
@@ -8,15 +11,30 @@ import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { passwordSetupSchema, PasswordSetupInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
-export default function ResetPasswordPage() {
-  // useFormのセットアップ
+function RegisterPasswordContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode") as "signup" | "reset" | null;
+
+  const setTempPassword = useMainStore((state) => state.setTempPassword);
+  const resetPassword = useMainStore((state) => state.resetPassword);
+  const isLoading = useMainStore((state) => state.isLoading);
+  const tempEmail = useMainStore((state) => state.tempEmail);
+
+  useEffect(() => {
+    if (!tempEmail) {
+      router.replace(mode === "reset" ? "/forgot-password" : "/signup");
+    }
+  }, [tempEmail, mode, router]);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<PasswordSetupInput>({
     resolver: zodResolver(passwordSetupSchema),
     defaultValues: {
@@ -25,40 +43,42 @@ export default function ResetPasswordPage() {
     },
   });
 
-  // クリアボタンの表示制御とバリデーション用に値を監視
   const passwordValue = watch("password");
   const confirmPasswordValue = watch("confirmPassword");
 
-  // 送信時の処理
-  const onSubmit: SubmitHandler<PasswordSetupInput> = (data) => {
-    //console.log("送信データ:", data);
+  const onSubmit: SubmitHandler<PasswordSetupInput> = async (data) => {
+    try {
+      if (mode === "reset") {
+        await resetPassword(data.password);
+        toast.success("パスワードを再設定しました");
+        router.push("/login");
+      } else {
+        // signup
+        setTempPassword(data.password);
+        router.push("/register-id");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "エラーが発生しました");
+    }
   };
-
 
   return (
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
-
-      {/* ヘッダー */}
       <Header
         title="Mimo"
         showBackButton={true}
         className="bg-background border-b shadow-sm"
       />
 
-      {/* コンテンツエリアのラッパー */}
       <div className="flex-1 flex justify-center w-full">
-
-        {/* カード部分のレスポンシブ対応 */}
         <div className="w-full sm:max-w-sm bg-background sm:border-border sm:shadow-sm flex flex-col">
-
           <main className="flex-1 flex flex-col justify-center px-6 pb-20">
             <div className="w-full max-w-[402px] mx-auto">
               <Heading level="h2" className="mb-10">
-                パスワードを設定
+                {mode === "reset" ? "新しいパスワードを設定" : "パスワードを設定"}
               </Heading>
 
               <form onSubmit={handleSubmit(onSubmit)}>
-                {/* 1つ目のパスワード入力 */}
                 <div className="grid w-full items-center gap-1.5">
                   <label
                     htmlFor="password"
@@ -76,7 +96,6 @@ export default function ResetPasswordPage() {
                       {...register("password")}
                     />
 
-                    {/* クリアボタン */}
                     {passwordValue && passwordValue.length > 0 && (
                       <button
                         type="button"
@@ -88,7 +107,6 @@ export default function ResetPasswordPage() {
                       </button>
                     )}
                   </div>
-                  {/* エラー表示 */}
                   {errors.password && (
                     <p className="text-error text-xs mt-1">
                       {errors.password.message}
@@ -96,7 +114,6 @@ export default function ResetPasswordPage() {
                   )}
                 </div>
 
-                {/* 2つ目のパスワード入力（確認用） */}
                 <div className="grid w-full items-center gap-1.5 mt-5">
                   <label
                     htmlFor="confirm-password"
@@ -121,7 +138,6 @@ export default function ResetPasswordPage() {
                       </button>
                     )}
                   </div>
-                  {/* エラー表示 */}
                   {errors.confirmPassword && (
                     <p className="text-error text-xs mt-1">
                       {errors.confirmPassword.message}
@@ -129,12 +145,11 @@ export default function ResetPasswordPage() {
                   )}
                 </div>
 
-                {/* 登録ボタン */}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "登録中..." : "登録"}
+                    label={isLoading ? "処理中..." : (mode === "reset" ? "再設定する" : "次へ")}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>
@@ -143,5 +158,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterPasswordContent />
+    </Suspense>
   );
 }

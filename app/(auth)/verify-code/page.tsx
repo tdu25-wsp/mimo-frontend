@@ -1,5 +1,8 @@
 "use client";
 
+import { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
@@ -8,14 +11,30 @@ import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { verifyCodeSchema, VerifyCodeInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
-export default function VerifyCodePage() {
+function VerifyCodeContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode") as "signup" | "reset" | null;
+  
+  const registerVerify = useMainStore((state) => state.registerVerify);
+  const verifyResetCode = useMainStore((state) => state.verifyResetCode);
+  const isLoading = useMainStore((state) => state.isLoading);
+  const tempEmail = useMainStore((state) => state.tempEmail);
+
+  useEffect(() => {
+    if (!tempEmail) {
+      router.replace(mode === "reset" ? "/forgot-password" : "/signup");
+    }
+  }, [tempEmail, mode, router]);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<VerifyCodeInput>({
     resolver: zodResolver(verifyCodeSchema),
     defaultValues: {
@@ -25,33 +44,42 @@ export default function VerifyCodePage() {
 
   const codeValue = watch("code");
 
-  // 送信時の処理
-  const onSubmit: SubmitHandler<VerifyCodeInput> = (data) => {
-    //console.log("登録データ:", data);
-    // ここにAPIを叩く処理
+  const onSubmit: SubmitHandler<VerifyCodeInput> = async (data) => {
+    try {
+      if (mode === "reset") {
+        await verifyResetCode(data.code);
+        toast.success("認証に成功しました");
+        router.push("/register-password?mode=reset");
+      } else {
+        await registerVerify(data.code);
+        toast.success("認証に成功しました");
+        router.push("/register-password?mode=signup");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "認証コードが正しくありません");
+    }
   };
 
   return (
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
-      {/* ヘッダー */}
       <Header
         title="Mimo"
         showBackButton={true}
         className="bg-background border-b shadow-sm"
       />
 
-      {/* コンテンツエリアのラッパー */}
       <div className="flex-1 flex justify-center w-full">
         <div className="w-full sm:max-w-sm bg-background sm:border-border sm:shadow-sm flex flex-col">
           <main className="flex-1 flex flex-col justify-center px-6 pb-20">
-            {/* 中身の幅固定 */}
             <div className="w-full max-w-[402px] mx-auto">
-              <Heading level="h2" className="mb-10">
+              <Heading level="h2" className="mb-2">
                 確認コードを入力
               </Heading>
+              <p className="text-sm text-muted-text mb-10">
+                {tempEmail} 宛に送信された6桁のコードを入力してください
+              </p>
 
               <form onSubmit={handleSubmit(onSubmit)}>
-                {/* コード入力エリア */}
                 <div className="grid w-full items-center gap-1.5 mt-5">
                   <div className="relative">
                     <Input
@@ -79,12 +107,11 @@ export default function VerifyCodePage() {
                   )}
                 </div>
 
-                {/* 送信ボタン */}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "送信中..." : "送信"}
+                    label={isLoading ? "確認中..." : "次へ"}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>
@@ -93,5 +120,13 @@ export default function VerifyCodePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyCodePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyCodeContent />
+    </Suspense>
   );
 }

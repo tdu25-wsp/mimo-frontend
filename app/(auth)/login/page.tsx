@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
 import { X } from "lucide-react";
@@ -8,15 +10,19 @@ import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
 export default function LoginPage() {
-  // useFormのセットアップ
+  const router = useRouter();
+  const login = useMainStore((state) => state.login);
+  const isLoading = useMainStore((state) => state.isLoading);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,9 +35,14 @@ export default function LoginPage() {
   const passwordValue = watch("password");
 
   // 送信時の処理
-  const onSubmit: SubmitHandler<LoginInput> = (data) => {
-    //console.log("Form Data:", data);
-    // ここにログインAPIを叩く処理を追加 (例: supabase.auth.signIn...)
+  const onSubmit: SubmitHandler<LoginInput> = async (data) => {
+    try {
+      await login(data);
+      toast.success("ログインしました");
+      router.push("/list/all");
+    } catch (error: any) {
+      toast.error(error.message || "ログインに失敗しました");
+    }
   };
 
   return (
@@ -124,9 +135,9 @@ export default function LoginPage() {
                 {/* ログインボタン*/}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "ログイン中..." : "ログイン"}
+                    label={isLoading ? "ログイン中..." : "ログイン"}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>

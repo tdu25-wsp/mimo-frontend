@@ -1,61 +1,74 @@
 import { User } from "@/types/user";
 
-// 認証系のレスポンス型（JWTを含む場合など）
-export interface AuthResponse {
-  accessToken: string;
-  refreshToken?: string;
-  user?: User;
+// --- DTOs (Data Transfer Objects) ---
+
+// 1. 登録フロー用
+export interface RegisterStartDTO {
+  email: string;
 }
 
+export interface RegisterVerifyDTO {
+  email: string;
+  code: string;
+}
+
+export interface RegisterCompleteDTO {
+  user_id: string;
+  email: string;
+  display_name: string;
+  password: string;
+}
+
+// 2. ログイン用
+export interface LoginDTO {
+  email: string;
+  password: string;
+}
+
+// 3. パスワードリセット用
+export interface ForgotPasswordDTO {
+  email: string;
+}
+
+export interface VerifyResetCodeDTO {
+  email: string;
+  code: string;
+}
+
+export interface ResetPasswordDTO {
+  email: string;
+  new_password: string;
+}
+
+// 4. パスワード変更（認証済み）
+export interface ChangePasswordDTO {
+  old_password: string;
+  new_password: string;
+}
+
+// --- Repository Interface ---
+
 export interface IAuthRepository {
-  /**
-   * ユーザー新規登録 (POST /api/auth/register)
-   * 確認コードの送信をトリガーします
-   */
-  register(email: string, password: string): Promise<void>;
+  // 登録フロー
+  registerStart(data: RegisterStartDTO): Promise<void>;
+  registerVerify(data: RegisterVerifyDTO): Promise<void>;
+  registerComplete(data: RegisterCompleteDTO): Promise<User>;
 
-  /**
-   * メールアドレス確認 (POST /api/auth/verify-email)
-   * 登録時に送信された確認コードを検証します
-   */
-  verifyEmail(code: string): Promise<AuthResponse>;
-
-  /**
-   * ログイン (POST /api/auth/login)
-   */
-  login(email: string, password: string): Promise<AuthResponse>;
-
-  /**
-   * ログアウト (POST /api/auth/logout)
-   */
+  // ログイン・ログアウト
+  login(data: LoginDTO): Promise<User>;
   logout(): Promise<void>;
-
-  /**
-   * 確認コードの検証 (POST /api/auth/verify)
-   * クエリパラメータでフローを指定 (register | forgot-password)
-   * レスポンスとして一時的なJWTなどが返る想定
-   */
-  verifyCode(code: string, flow: 'register' | 'forgot-password'): Promise<AuthResponse>;
-
-  /**
-   * パスワードリセット申請 (POST /api/auth/forgot-password)
-   * ResetPassword ロールを持ったアクセストークンを取得
-   */
-  forgotPassword(): Promise<void>;
   
-  /**
-   * パスワード変更 (POST /api/auth/change-password)
-   * forgot-passwordで取得したアクセストークンを用いて新しいパスワードを設定
-   */
-  changePassword(newPassword: string, resetToken: string): Promise<void>;
+  // ユーザー情報取得 (Me)
+  getCurrentUser(): Promise<User>;
+  
+  // トークンリフレッシュ
+  refreshToken(): Promise<void>;
 
-  /**
-   * 認証状態の確認 (GET /api/auth/me)
-   */
-  getCurrentUser(): Promise<string>;
+  // パスワードリセットフロー
+  forgotPassword(data: ForgotPasswordDTO): Promise<void>;
+  verifyResetCode(data: VerifyResetCodeDTO): Promise<void>;
+  resetPassword(data: ResetPasswordDTO): Promise<void>;
 
-  /**
-   * アクセストークンの更新 (POST /api/auth/refresh)
-   */
-  refreshAccessToken(refreshToken: string): Promise<AuthResponse>;
+  // パスワード変更
+  changePassword(data: ChangePasswordDTO): Promise<void>;
 }
