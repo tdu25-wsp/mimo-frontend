@@ -23,15 +23,15 @@ export const tagMockRepository: ITagRepository = {
     return [...mockTags];
   },
 
-  create: async (data: CreateTagDTO): Promise<Tag> => {
+  create: async (userId: string, data: CreateTagDTO): Promise<Tag> => {
     initializeMockData();
 
     const now = new Date().toISOString();
     const newTag: Tag = {
       id: `tag-${Date.now().toString()}`,
-      userId: data.userId,
+      userId: userId,
       name: data.name,
-      color: data.colorCode || "#64748B",
+      color: data.color_code || "#64748B",
       createdAt: now,
       updatedAt: now,
     };

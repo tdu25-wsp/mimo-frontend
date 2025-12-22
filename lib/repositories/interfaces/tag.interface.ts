@@ -11,7 +11,7 @@ export interface ITagRepository {
   /**
    * タグ新規作成 (POST /api/tags)
    */
-  create(data: CreateTagDTO): Promise<Tag>;
+  create(userId: string, data: CreateTagDTO): Promise<Tag>;
 
   /**
    * タグ編集 (PATCH /api/tags/:id)

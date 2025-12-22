@@ -42,15 +42,14 @@ export const createTagSlice = (set: any, get: any): TagSlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      const user = await authRepository.getCurrentUser();
+      const user = get().user;
 
       const createTagDTO: CreateTagDTO = {
-        userId: user.id,
         name: name,
-        colorCode: colorCode,
+        color_code: colorCode,
       };
 
-      const created = await tagRepository.create(createTagDTO);
+      const created = await tagRepository.create(user.id, createTagDTO);
 
       set((state: any) => ({
         tags: [...state.tags, created],
