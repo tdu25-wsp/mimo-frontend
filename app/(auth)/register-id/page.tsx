@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
@@ -8,14 +11,27 @@ import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userIdSchema, UserIdInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
 export default function UserIdPage() {
+  const router = useRouter();
+  const registerComplete = useMainStore((state) => state.registerComplete);
+  const isLoading = useMainStore((state) => state.isLoading);
+  const tempEmail = useMainStore((state) => state.tempEmail);
+  const tempPassword = useMainStore((state) => state.tempPassword);
+
+  useEffect(() => {
+    if (!tempEmail || !tempPassword) {
+      router.replace("/signup");
+    }
+  }, [tempEmail, tempPassword, router]);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UserIdInput>({
     resolver: zodResolver(userIdSchema),
     defaultValues: {
@@ -23,23 +39,29 @@ export default function UserIdPage() {
     },
   });
 
-  // クリアボタン表示制御用
   const userIdValue = watch("userId");
 
-  const onSubmit: SubmitHandler<UserIdInput> = (data) => {
-    //console.log("ユーザーID:", data.userId);
+  const onSubmit: SubmitHandler<UserIdInput> = async (data) => {
+    try {
+      await registerComplete({
+        user_id: data.userId,
+        display_name: data.userId, // 初期値としてIDを使用
+      });
+      toast.success("登録が完了しました");
+      router.push("/list/all");
+    } catch (error: any) {
+      toast.error(error.message || "登録に失敗しました");
+    }
   };
 
   return (
     <div className="min-h-screen w-full bg-background sm:bg-gray-background flex flex-col">
-      {/* ヘッダー */}
       <Header
         title="Mimo"
         showBackButton={true}
         className="bg-background border-b shadow-sm"
       />
 
-      {/* コンテンツエリア */}
       <div className="flex-1 flex justify-center w-full">
         <div className="w-full sm:max-w-sm bg-background sm:border-border sm:shadow-sm flex flex-col">
           <main className="flex-1 flex flex-col justify-center px-6 pb-20">
@@ -68,7 +90,6 @@ export default function UserIdPage() {
                       {...register("userId")}
                     />
 
-                    {/* クリアボタン */}
                     {userIdValue && userIdValue.length > 0 && (
                       <button
                         type="button"
@@ -81,14 +102,12 @@ export default function UserIdPage() {
                     )}
                   </div>
                   
-                  {/* エラーメッセージ */}
                   {errors.userId && (
                     <p className="text-error text-xs mt-1">
                       {errors.userId.message}
                     </p>
                   )}
                   
-                  {/* 補足説明 */}
                   <p className="text-xs text-muted-text mt-1">
                     ※半角英数字のみ使用できます
                   </p>
@@ -96,9 +115,9 @@ export default function UserIdPage() {
 
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "登録中..." : "登録"}
+                    label={isLoading ? "登録中..." : "登録"}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>
