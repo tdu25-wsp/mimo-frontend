@@ -84,7 +84,7 @@ export const EntryEditSheet = () => {
 
         <textarea
           ref={textareaRef}
-          className="flex-1 w-full resize-none outline-none text-base p-2 bg-transparent placeholder:text-gray-300"
+          className="w-full resize-none outline-none text-2xl p-2 bg-transparent placeholder:text-gray-300"
           placeholder="メモを入力..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -108,7 +108,7 @@ export const EntryEditSheet = () => {
           </TagSelector>
         </div>
 
-        <ActionLargeButton className="mb-80 md:mb-0" label={editingEntry ? "更新" : "投稿"} onClick={handleSubmit} disabled={!content.trim()} />
+        <ActionLargeButton className="md:mb-0" label={editingEntry ? "更新" : "投稿"} onClick={handleSubmit} disabled={!content.trim()} />
 
         <div className="h-4" />
 
