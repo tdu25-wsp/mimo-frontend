@@ -70,7 +70,7 @@ export const summaryMockRepository: ISummaryRepository = {
    */
   getSummaries: async (userId: string): Promise<SummaryEntry[]> => {
     initializeMockData();
-    return mockSummaries.filter((s) => s.userId === userId);
+    return mockSummaries;
   },
 
   /**
