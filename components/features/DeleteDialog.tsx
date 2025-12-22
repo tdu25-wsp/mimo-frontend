@@ -71,7 +71,7 @@ export function DeleteDialog() {
                 <DialogHeader>
                     <DialogTitle className="text-primary-text text-xl font-bold">一括削除</DialogTitle>
                     <DialogDescription className="text-secondary-text pt-2">
-                        選択した {deleteTarget.ids.length} 件のエントリーを削除してもよろしいですか？
+                        選択した {deleteTarget.ids.length} 件のメモを削除してもよろしいですか？
                     </DialogDescription>
                 </DialogHeader>
             );
@@ -82,7 +82,7 @@ export function DeleteDialog() {
             <DialogHeader>
                 <DialogTitle className="text-primary-text text-xl font-bold">削除</DialogTitle>
                 <DialogDescription className="text-secondary-text pt-2">
-                    このエントリーを削除してもよろしいですか？
+                    このメモを削除してもよろしいですか？
                 </DialogDescription>
             </DialogHeader>
         );
