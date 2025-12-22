@@ -21,5 +21,5 @@ export interface ITagRepository {
   /**
    * タグ削除 (DELETE /api/tags/:id)
    */
-  delete(id: string): Promise<void>;
+  delete(tagId: string): Promise<void>;
 }

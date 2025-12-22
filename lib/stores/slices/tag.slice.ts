@@ -11,7 +11,7 @@ export interface TagSlice {
   fetchTags: () => Promise<void>;
   createTag: (name: string, colorCode: string) => Promise<void>;
   updateTag: (tagId: string, name: string, colorCode: string) => Promise<void>;
-  deleteTag: (id: string) => void;
+  deleteTag: (id: string) => Promise<void>;
 }
 
 export const createTagSlice = (set: any, get: any): TagSlice => ({
@@ -91,8 +91,21 @@ export const createTagSlice = (set: any, get: any): TagSlice => ({
     }
   },
 
-  deleteTag: (id) =>
-    set((state: any) => ({
-      tags: state.tags.filter((t: Tag) => t.id !== id),
-    })),
+  deleteTag: async (id: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      await tagRepository.delete(id);
+      set((state: any) => ({
+        tags: state.tags.filter((t: Tag) => t.id !== id),
+        isLoading: false,
+      }));
+    } catch (error) {
+      toast.error("削除に失敗しました。もう一度お試しください。");
+      set({
+        error: error instanceof Error ? error.message : "削除に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
 });

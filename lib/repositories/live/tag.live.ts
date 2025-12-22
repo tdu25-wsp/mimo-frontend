@@ -61,8 +61,17 @@ export const tagLiveRepository: ITagRepository = {
     return convertTagFromDTO(dto);
   },
 
-  delete: async (id: string): Promise<void> => {
-    // Implement the logic to delete a tag from the live data source
-    throw new Error("Not implemented");
+  delete: async (tagId: string): Promise<void> => {
+    const res = await fetch(`${PROXY_API_BASE_URL}/tags/${tagId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      toast.error("タグの削除に失敗しました");
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `タグの削除に失敗しました (${res.status})`
+      );
+    }
   },
 };
