@@ -1,8 +1,9 @@
 import { authRepository } from "@/lib/repositories";
-import { memoRepository } from "@/lib/repositories";
+import { memoRepository, summaryRepository } from "@/lib/repositories";
 import { Entry } from "@/types/entry";
 import { CreateMemoDTO } from "@/types/server/create-memo-dto";
 import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
+import { SummarizeRequestDTO } from "@/lib/repositories/interfaces/summary.interface";
 import { toast } from "sonner";
 
 export interface EntrySlice {
@@ -20,6 +21,7 @@ export interface EntrySlice {
   createMemo: (content: string, manualTagIds: string[]) => Promise<void>;
   updateMemo: (memoId: string, content: string, manualTagIds: string[]) => Promise<void>;
   deleteEntries: (ids: string[]) => Promise<void>;
+  generateSummary: (memoIds: string[]) => Promise<void>;
   toggleEntrySelection: (id: string) => void;
   clearEntrySelection: () => void;
   setLoading: (loading: boolean) => void;
@@ -53,8 +55,17 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
         return;
       }
 
-      const entries = await memoRepository.getAll(user.id);
-      set({ entries, isLoading: false });
+      const [memos, summaries] = await Promise.all([
+        memoRepository.getAll(user.id),
+        summaryRepository.getSummaries(user.id),
+      ]);
+
+      // 日付順（新しい順）にソートして結合
+      const allEntries = [...memos, ...summaries].sort((a, b) => 
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+
+      set({ entries: allEntries, isLoading: false });
     } catch (error) {
       toast.error("メモの取得に失敗しました。もう一度お試しください。");
       set({
@@ -159,6 +170,36 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
       toast.error("削除に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "削除に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  generateSummary: async (memoIds: string[]) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      // const user = await authRepository.getCurrentUser();
+
+      const user = get().user;
+
+      const request: SummarizeRequestDTO = {
+        user_id: user.id,
+        memo_ids: memoIds,
+      };
+
+      const summary = await summaryRepository.generate(request);
+
+      set((state: any) => ({
+        entries: [...state.entries, summary],
+        isLoading: false,
+      }));
+      toast.success("要約を生成しました");
+    } catch (error) {
+      toast.error("要約の生成に失敗しました。もう一度お試しください。");
+      set({
+        error: error instanceof Error ? error.message : "要約の生成に失敗しました",
         isLoading: false,
       });
       throw error;

@@ -14,6 +14,7 @@ import { userMockRepository } from "./mock/user.mock";
 // Live実装
 import { authLiveRepository } from "./live/auth.live";
 import { memoLiveRepository } from "./live/memo.live";
+import { summaryLiveRepository } from "./live/summary.live";
 import { tagLiveRepository } from "./live/tag.live";
 
 // 環境変数で切り替え ( .env.local で設定 )
@@ -21,6 +22,6 @@ const useMock = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
 
 export const authRepository: IAuthRepository = useMock ? authMockRepository : authLiveRepository;
 export const memoRepository: IMemoRepository = useMock ? memoMockRepository : memoLiveRepository;
-export const summaryRepository: ISummaryRepository = summaryMockRepository;
+export const summaryRepository: ISummaryRepository = useMock ? summaryMockRepository : summaryLiveRepository;
 export const tagRepository: ITagRepository = useMock ? tagMockRepository : tagLiveRepository;
 export const userRepository: IUserRepository = userMockRepository;

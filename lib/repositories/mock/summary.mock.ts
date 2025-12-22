@@ -38,13 +38,8 @@ export const summaryMockRepository: ISummaryRepository = {
     let memoIds: string[] = [];
     let tagIds: string[] = [];
 
-    if (data.memoIds && data.memoIds.length > 0) {
-      memoIds = data.memoIds;
-    } else if (data.tagId) {
-      // タグIDから関連メモを取得
-      const memos = await memoMockRepository.getAll({ tagId: data.tagId });
-      memoIds = memos.map((memo) => memo.id);
-      tagIds = [data.tagId];
+    if (data.memo_ids && data.memo_ids.length > 0) {
+      memoIds = data.memo_ids;
     }
 
     if (memoIds.length === 0) {
@@ -73,9 +68,9 @@ export const summaryMockRepository: ISummaryRepository = {
    * ジャーナリング要約一覧取得
    * 自動生成された要約のみを取得
    */
-  getSummaries: async (): Promise<SummaryEntry[]> => {
+  getSummaries: async (userId: string): Promise<SummaryEntry[]> => {
     initializeMockData();
-    return mockSummaries;
+    return mockSummaries.filter((s) => s.userId === userId);
   },
 
   /**
