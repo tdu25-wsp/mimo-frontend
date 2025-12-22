@@ -14,6 +14,7 @@ import {
 export function DeleteDialog() {
     const deleteTarget = useMainStore((state) => state.deleteTarget);
     const closeDeleteDialog = useMainStore((state) => state.closeDeleteDialog);
+    const entries = useMainStore((state) => state.entries);
 
     const deleteEntries = useMainStore((state) => state.deleteEntries);
     const deleteTag = useMainStore((state) => state.deleteTag);
@@ -65,24 +66,45 @@ export function DeleteDialog() {
                 </>
             );
         }
-        
+
         if (deleteTarget.type === 'entries') {
+            const targetEntries = entries.filter(e => deleteTarget.ids.includes(e.id));
+
+            const uniqueTypes = Array.from(new Set(targetEntries.map(e => e.type)));
+
+            const typeLabels = uniqueTypes.map(type => {
+                if (type === 'memo') return 'メモ';
+                if (type === 'summary') return '要約';
+                if (type === 'journaling') return 'ジャーナリング要約';
+                return 'データ';
+            });
+
+            const labelString = typeLabels.join('・');
             return (
                 <DialogHeader>
                     <DialogTitle className="text-primary-text text-xl font-bold">一括削除</DialogTitle>
                     <DialogDescription className="text-secondary-text pt-2">
-                        選択した {deleteTarget.ids.length} 件のエントリーを削除してもよろしいですか？
+                        選択した {deleteTarget.ids.length} 件の{labelString}を削除してもよろしいですか？
                     </DialogDescription>
                 </DialogHeader>
             );
         }
 
-        // Default: Entry
+        const targetEntry = entries.find((e) => e.id === deleteTarget.id);
+        const entryType = targetEntry?.type || 'memo'; // 見つからない場合はデフォルトでmemo
+
+        let typeLabel = "メモ";
+        if (entryType === 'summary') {
+            typeLabel = "要約";
+        } else if (entryType === 'journaling') {
+            typeLabel = "ジャーナリング要約";
+        }
+
         return (
             <DialogHeader>
                 <DialogTitle className="text-primary-text text-xl font-bold">削除</DialogTitle>
                 <DialogDescription className="text-secondary-text pt-2">
-                    このエントリーを削除してもよろしいですか？
+                    この{typeLabel}を削除してもよろしいですか？
                 </DialogDescription>
             </DialogHeader>
         );
