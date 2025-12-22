@@ -48,7 +48,7 @@ export default function UserIdPage() {
         display_name: data.userId, // 初期値としてIDを使用
       });
       toast.success("登録が完了しました");
-      router.push("/list/all");
+      router.push("/");
     } catch (error: any) {
       toast.error(error.message || "登録に失敗しました");
     }
