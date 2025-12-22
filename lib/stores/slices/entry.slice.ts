@@ -157,7 +157,18 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      await memoRepository.deleteMany(ids);
+      // メモとサマリーを分けて削除処理
+      const state = get();
+      const memosToDelete = ids.filter(id => state.entries.find((e: Entry) => e.id === id)?.type === 'memo');
+      const summariesToDelete = ids.filter(id => {
+        const entry = state.entries.find((e: Entry) => e.id === id);
+        return entry?.type === 'summary' || entry?.type === 'journaling';
+      });
+
+      await Promise.all([
+        memosToDelete.length > 0 ? memoRepository.deleteMany(memosToDelete) : Promise.resolve(),
+        ...summariesToDelete.map(id => summaryRepository.delete(id))
+      ]);
 
       set((state: any) => ({
         entries: state.entries.filter((e: Entry) => !ids.includes(e.id)),

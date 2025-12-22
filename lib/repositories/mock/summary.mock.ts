@@ -85,6 +85,15 @@ export const summaryMockRepository: ISummaryRepository = {
     return summary;
   },
 
+  delete: async (id: string): Promise<void> => {
+    initializeMockData();
+    const index = mockSummaries.findIndex((s) => s.id === id);
+    if (index === -1) {
+      throw new Error(`Summary with id ${id} not found`);
+    }
+    mockSummaries.splice(index, 1);
+  },
+
   /**
    * ジャーナリング設定取得
    */

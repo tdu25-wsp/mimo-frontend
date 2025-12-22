@@ -24,6 +24,11 @@ export interface ISummaryRepository {
   getById(id: string): Promise<SummaryEntry | undefined>;
 
   /**
+   * 要約削除 (DELETE /api/sum/:id)
+   */
+  delete(id: string): Promise<void>;
+
+  /**
    * ジャーナリング設定取得 (GET /api/sum/journaling-freq)
    */
   getJournalingSummarySetting(): Promise<JournalingSettings>;

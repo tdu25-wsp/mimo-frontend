@@ -7,6 +7,7 @@ import { JournalingSettings } from "@/types/journaling-setting";
 import { PROXY_API_BASE_URL } from "@/lib/constants";
 import { convertSummaryFromDTO, convertSummariesFromDTO } from "@/lib/converters/summary.converter";
 import { SummaryDTO } from "@/types/server/summary-dto";
+import { toast } from "sonner";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -63,6 +64,21 @@ export const summaryLiveRepository: ISummaryRepository = {
     const dto = await res.json();
     const summaryDto: SummaryDTO = dto.summary || dto;
     return convertSummaryFromDTO(summaryDto) as SummaryEntry;
+  },
+
+  delete: async (id: string): Promise<void> => {
+    const res = await fetch(`${PROXY_API_BASE_URL}/sum/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      toast.error("要約の削除に失敗しました。もう一度お試しください。");
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `要約の削除に失敗しました (${res.status})`
+      );
+    }
   },
 
   getJournalingSummarySetting: async (): Promise<JournalingSettings> => {
