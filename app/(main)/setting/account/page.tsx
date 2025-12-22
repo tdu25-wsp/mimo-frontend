@@ -33,7 +33,7 @@ export default function AccountPage() {
       <Header title="アカウント設定" showBackButton={true} />
 
       <main className="mx-auto">
-        <div className="space-y-2">
+        <div className="max-w-md mx-auto">
           <Button
             variant="ghost"
             className="w-full justify-start text-left h-14 px-4 text-primary-text hover:bg-gray-background hover:text-primary-text transition-colors"
