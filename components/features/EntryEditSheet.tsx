@@ -84,7 +84,7 @@ export const EntryEditSheet = () => {
 
         <textarea
           ref={textareaRef}
-          className="w-full resize-none outline-none text-2xl p-2 bg-transparent placeholder:text-gray-300"
+          className="w-full resize-none outline-none text-2xl md:text-base p-2 bg-transparent placeholder:text-gray-300"
           placeholder="メモを入力..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
