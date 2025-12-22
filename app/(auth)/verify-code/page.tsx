@@ -87,6 +87,7 @@ function VerifyCodeContent() {
                       type="text"
                       placeholder="コードを入力"
                       className="pr-10"
+                      autoFocus
                       {...register("code")}
                     />
                     {codeValue && codeValue.length > 0 && (

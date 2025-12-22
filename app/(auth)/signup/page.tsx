@@ -75,6 +75,7 @@ export default function SignupPage() {
                     type="email"
                     id="email"
                     placeholder="user@example.com"
+                    autoFocus
                     {...register("email")}
                   />
                   {/* エラーメッセージ */}
