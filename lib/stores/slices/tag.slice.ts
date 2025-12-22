@@ -23,10 +23,10 @@ export const createTagSlice = (set: any): TagSlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      const userId = await authRepository.getCurrentUser();
+      const user = await authRepository.getCurrentUser();
 
       const createTagDTO: CreateTagDTO = {
-        userId: userId,
+        userId: user.id,
         name: name,
         colorCode: colorCode,
       };
@@ -51,10 +51,10 @@ export const createTagSlice = (set: any): TagSlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      const userId = await authRepository.getCurrentUser();
+      const user = await authRepository.getCurrentUser();
 
       const updateTagDTO: UpdateTagDTO = {
-        userId: userId,
+        userId: user.id,
         tagId: tagId,
         name: name,
         colorCode: colorCode,
