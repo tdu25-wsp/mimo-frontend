@@ -88,6 +88,7 @@ export const memoLiveRepository: IMemoRepository = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
 
     if (!res.ok) {
@@ -105,6 +106,7 @@ export const memoLiveRepository: IMemoRepository = {
     ids.forEach(async (id) => {
       const res = await fetch(`${PROXY_API_BASE_URL}/memos/${id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!res.ok) {
