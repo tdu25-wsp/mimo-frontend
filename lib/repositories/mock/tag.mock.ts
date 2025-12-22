@@ -15,8 +15,11 @@ const initializeMockData = () => {
 };
 
 export const tagMockRepository: ITagRepository = {
-  getAll: async (): Promise<Tag[]> => {
+  getAll: async (userId?: string): Promise<Tag[]> => {
     initializeMockData();
+    if (userId) {
+      return mockTags.filter((tag) => tag.userId === userId);
+    }
     return [...mockTags];
   },
 

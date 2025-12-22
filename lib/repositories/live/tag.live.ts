@@ -4,12 +4,15 @@ import { CreateTagDTO } from "@/types/server/create-tag-dto";
 import { UpdateTagDTO } from "@/types/server/update-tag-dto";
 import { convertTagsFromDTO } from "@/lib/converters/tag.converter";
 import { TagDTO } from "@/types/server/tag-dto";
+import { PROXY_API_BASE_URL } from "@/lib/constants";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const tagLiveRepository: ITagRepository = {
-  getAll: async (): Promise<Tag[]> => {
-    const res = await fetch(`${API_BASE_URL}/tags`);
+  getAll: async (userId: string): Promise<Tag[]> => {
+    const res = await fetch(`${PROXY_API_BASE_URL}/tags/${userId}`, {
+      credentials: "include",
+    });
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(

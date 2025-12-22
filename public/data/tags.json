@@ -1,44 +1,44 @@
 {
   "tags": [
     {
-      "TagID": "tag-1",
-      "UserID(FK)": "user-1",
-      "Name": "生活",
-      "colorCode": "#4A90E2",
-      "createdDate": "2025-11-15T12:01:00Z",
-      "updatedDate": "2025-11-15T12:01:00Z"
+      "tag_id": "tag-1",
+      "user_id": "user-1",
+      "name": "生活",
+      "color_code": "#4A90E2",
+      "created_at": "2025-11-15T12:01:00Z",
+      "updated_at": "2025-11-15T12:01:00Z"
     },
     {
-      "TagID": "tag-2",
-      "UserID(FK)": "user-1",
-      "Name": "仕事",
-      "colorCode": "#F5A623",
-      "createdDate": "2025-11-15T12:02:00Z",
-      "updatedDate": "2025-11-15T12:02:00Z"
+      "tag_id": "tag-2",
+      "user_id": "user-1",
+      "name": "仕事",
+      "color_code": "#F5A623",
+      "created_at": "2025-11-15T12:02:00Z",
+      "updated_at": "2025-11-15T12:02:00Z"
     },
     {
-      "TagID": "tag-3",
-      "UserID(FK)": "user-1",
-      "Name": "アイデア",
-      "colorCode": "#7ED321",
-      "createdDate": "2025-11-15T12:03:00Z",
-      "updatedDate": "2025-11-15T12:03:00Z"
+      "tag_id": "tag-3",
+      "user_id": "user-1",
+      "name": "アイデア",
+      "color_code": "#7ED321",
+      "created_at": "2025-11-15T12:03:00Z",
+      "updated_at": "2025-11-15T12:03:00Z"
     },
     {
-      "TagID": "tag-4",
-      "UserID(FK)": "user-1",
-      "Name": "予定",
-      "colorCode": "#E74C3C",
-      "createdDate": "2025-12-02T10:00:00Z",
-      "updatedDate": "2025-12-02T10:00:00Z"
+      "tag_id": "tag-4",
+      "user_id": "user-1",
+      "name": "予定",
+      "color_code": "#E74C3C",
+      "created_at": "2025-12-02T10:00:00Z",
+      "updated_at": "2025-12-02T10:00:00Z"
     },
     {
-      "TagID": "tag-5",
-      "UserID(FK)": "user-1",
-      "Name": "趣味",
-      "colorCode": "#9B59B6",
-      "createdDate": "2025-12-02T10:00:00Z",
-      "updatedDate": "2025-12-02T10:00:00Z"
+      "tag_id": "tag-5",
+      "user_id": "user-1",
+      "name": "趣味",
+      "color_code": "#9B59B6",
+      "created_at": "2025-12-02T10:00:00Z",
+      "updated_at": "2025-12-02T10:00:00Z"
     }
   ]
 }

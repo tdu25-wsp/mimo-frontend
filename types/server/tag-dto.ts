@@ -1,8 +1,8 @@
 export interface TagDTO {
-  TagID: string;
-  "UserID(FK)": string;
-  Name: string;
-  colorCode: string;
-  createdDate: string;
-  updatedDate: string;
+  tag_id: string;
+  user_id: string;
+  name: string;
+  color_code: string;
+  created_at: string;
+  updated_at: string;
 }

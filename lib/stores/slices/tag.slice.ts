@@ -23,19 +23,17 @@ export const createTagSlice = (set: any, get: any): TagSlice => ({
   fetchTags: async () => {
     try {
       // set({ isLoading: true, error: null });
-      // const user = get().user;
+      const user = get().user;
       
-      // if (!user) {
-      //   set({ tags: [], isLoading: false });
-      //   return;
-      // }
+      if (!user) {
+        set({ tags: [] });
+        return;
+      }
 
-      // const tags = await tagRepository.getAll(user.id);
-      // set({ tags, isLoading: false });
-      
-      // 一旦モックデータなどを想定して空実装、またはリポジトリの実装に合わせて修正が必要
-      // 現状のリポジトリインターフェースを確認する必要があるため、ここでは枠だけ用意
+      const tags = await tagRepository.getAll(user.id);
+      set({ tags });
     } catch (error) {
+      toast.error("タグの取得に失敗しました。もう一度お試しください。");
       console.error("Failed to fetch tags", error);
     }
   },
