@@ -1,27 +1,23 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useMainStore } from "@/lib/stores/mainStore";
-import { Entry } from "@/types/entry";
-import { Tag } from "@/types/tag";
 
-interface Props {
-  entries: Entry[];
-  tags: Tag[];
-}
+export function StoreInitializer() {
+  const user = useMainStore((state) => state.user);
+  const fetchEntries = useMainStore((state) => state.fetchEntries);
+  // const fetchTags = useMainStore((state) => state.fetchTags);
+  
+  const fetchedUserId = useRef<string | null>(null);
 
-export function StoreInitializer({ entries, tags }: Props) {
-  const initialized = useRef(false);
-
-  if (!initialized.current) {
-    // Storeのアクションを呼んでデータを注入！
-    // useMainStore.getState().setInitialData(entries, tags);
-    useMainStore.getState().setEntries(entries);
-    useMainStore.getState().setTags(tags);
-    initialized.current = true;
-  }
-
-  console.log("Store initialized with entries and tags.");
+  useEffect(() => {
+    if (user && user.id !== fetchedUserId.current) {
+      console.log("Initializing data for user:", user.id);
+      fetchEntries();
+      // fetchTags();
+      fetchedUserId.current = user.id;
+    }
+  }, [user, fetchEntries]);
 
   return null;
 }

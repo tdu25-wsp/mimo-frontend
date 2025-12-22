@@ -14,6 +14,7 @@ export interface EntrySlice {
 
   // Actions
   setEntries: (entries: Entry[]) => void;
+  fetchEntries: () => Promise<void>;
   addEntry: (entry: Entry) => void;
   updateEntry: (id: string, entry: Partial<Entry>) => void;
   createMemo: (content: string, manualTagIds: string[]) => Promise<void>;
@@ -42,6 +43,27 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
   // Actions
   setEntries: (entries) => set({ entries }),
 
+  fetchEntries: async () => {
+    try {
+      set({ isLoading: true, error: null });
+      const user = get().user;
+      
+      if (!user) {
+        set({ entries: [], isLoading: false });
+        return;
+      }
+
+      const entries = await memoRepository.getAll(user.id);
+      set({ entries, isLoading: false });
+    } catch (error) {
+      toast.error("メモの取得に失敗しました。もう一度お試しください。");
+      set({
+        error: error instanceof Error ? error.message : "取得に失敗しました",
+        isLoading: false,
+      });
+    }
+  },
+
   addEntry: (entry) =>
     set((state: any) => ({
       entries: [...state.entries, entry],
@@ -58,10 +80,18 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
     try {
       set({ isLoading: true, error: null });
 
-      const user = await authRepository.getCurrentUser();
+      // let user = get().user;
+
+      let user = await authRepository.getCurrentUser();
+
+      // if (!user && !user.user_id) {
+      //   user = await authRepository.getCurrentUser();
+      // }
+
+      const user_id = user.id;
 
       const createMemoDTO: CreateMemoDTO = {
-        user_id: user.id,
+        user_id: user_id,
         content: content,
         tag_id: manualTagIds,
       };

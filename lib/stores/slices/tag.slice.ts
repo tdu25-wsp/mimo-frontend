@@ -9,15 +9,36 @@ export interface TagSlice {
   tags: Tag[];
 
   setTags: (tags: Tag[]) => void;
+  fetchTags: () => Promise<void>;
   createTag: (name: string, colorCode: string) => Promise<void>;
   updateTag: (tagId: string, name: string, colorCode: string) => Promise<void>;
   deleteTag: (id: string) => void;
 }
 
-export const createTagSlice = (set: any): TagSlice => ({
+export const createTagSlice = (set: any, get: any): TagSlice => ({
   tags: [],
 
   setTags: (tags) => set({ tags }),
+
+  fetchTags: async () => {
+    try {
+      // set({ isLoading: true, error: null });
+      // const user = get().user;
+      
+      // if (!user) {
+      //   set({ tags: [], isLoading: false });
+      //   return;
+      // }
+
+      // const tags = await tagRepository.getAll(user.id);
+      // set({ tags, isLoading: false });
+      
+      // 一旦モックデータなどを想定して空実装、またはリポジトリの実装に合わせて修正が必要
+      // 現状のリポジトリインターフェースを確認する必要があるため、ここでは枠だけ用意
+    } catch (error) {
+      console.error("Failed to fetch tags", error);
+    }
+  },
 
   createTag: async (name: string, colorCode: string) => {
     try {

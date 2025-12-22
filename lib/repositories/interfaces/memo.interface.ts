@@ -17,7 +17,7 @@ export interface IMemoRepository {
   /**
    * メモ一覧取得 (GET /api/memos)
    */
-  getAll(params?: MemoSearchParams): Promise<Entry[]>;
+  getAll(userId: string, params?: MemoSearchParams): Promise<Entry[]>;
 
   /**
    * メモ詳細閲覧 (GET /api/memos/:id)

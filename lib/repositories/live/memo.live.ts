@@ -8,11 +8,10 @@ import { MemoDTO } from "@/types/server/memo-dto";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const memoLiveRepository: IMemoRepository = {
-  getAll: async () => {
-    // await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機
-    
-    const userId = "mock-user-id"; // 仮のユーザーID
-    const res = await fetch(`${API_BASE_URL}/memos/list/${userId}`);
+  getAll: async (userId: string) => {
+    const res = await fetch(`${PROXY_API_BASE_URL}/memos/list/${userId}`, {
+      credentials: "include",
+    });
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
@@ -70,6 +69,7 @@ export const memoLiveRepository: IMemoRepository = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
 
     if (!res.ok) {

@@ -2,8 +2,6 @@ import { IAuthRepository, RegisterStartDTO, RegisterVerifyDTO, RegisterCompleteD
 import { User } from "@/types/user";
 import { PROXY_API_BASE_URL } from "@/lib/constants";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 // 共通のヘッダーとCookie設定
 const fetchConfig = {
   headers: {
@@ -25,6 +23,15 @@ const handleResponse = async (res: Response) => {
   const text = await res.text();
   return text ? JSON.parse(text) : {};
 };
+
+const mapToUser = (data: any): User => ({
+  id: data.user_id || data.id,
+  email: data.email,
+  display_name: data.display_name,
+  created_at: data.created_at,
+  updated_at: data.updated_at,
+  journalingSetting: data.journalingSetting
+});
 
 export const authLiveRepository: IAuthRepository = {
   // --- 登録フロー ---
@@ -53,7 +60,7 @@ export const authLiveRepository: IAuthRepository = {
       body: JSON.stringify(data),
     });
     const json = await handleResponse(res);
-    return json.user;
+    return mapToUser(json.user);
   },
 
   // --- ログイン・ログアウト ---
@@ -64,7 +71,7 @@ export const authLiveRepository: IAuthRepository = {
       body: JSON.stringify(data),
     });
     const json = await handleResponse(res);
-    return json.user;
+    return mapToUser(json.user);
   },
 
   logout: async () => {
@@ -82,7 +89,7 @@ export const authLiveRepository: IAuthRepository = {
       method: "GET",
     });
     const json = await handleResponse(res);
-    return json.user;
+    return mapToUser(json.user);
   },
 
   refreshToken: async () => {

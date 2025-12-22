@@ -32,18 +32,27 @@ async function proxy(
 
     // --- Cookie修正の最終版 ---
     if (process.env.NODE_ENV === "development") {
-      const setCookieHeader = responseHeaders.get("set-cookie");
-      if (setCookieHeader) {
-        // 既存の属性を削除して、開発環境用に強制上書きします
-        const newSetCookie =
-          setCookieHeader
-            // .replace(/; Secure/gi, "")           // Secure削除
-            // .replace(/; Domain=[^;]+/gi, "")     // Domain削除
-            .replace(/; Path=[^;]+/gi, "") // 既存のPath削除
-            .replace(/; SameSite=[^;]+/gi, "") + // 既存のSameSite削除
-          "; Path=/; SameSite=Lax"; // Path=/ と SameSite=Lax を強制付与
+      // 1. getSetCookie() を使って、生のCookie文字列を「配列」としてすべて取得する
+      // (注意: Node.js 18+ / Next.js App Router環境で利用可能です)
+      const cookies = response.headers.getSetCookie();
 
-        responseHeaders.set("set-cookie", newSetCookie);
+      if (cookies.length > 0) {
+        // 2. 既存の Set-Cookie ヘッダーを一旦すべて削除する (重複・混在防止)
+        responseHeaders.delete("set-cookie");
+
+        // 3. 配列をループして、個別に書き換えて append (追加) する
+        cookies.forEach((cookieValue) => {
+          const newSetCookie =
+            cookieValue
+              // .replace(/; Secure/gi, "")           // 必要に応じて
+              // .replace(/; Domain=[^;]+/gi, "")     // 必要に応じて
+              .replace(/; Path=[^;]+/gi, "") // 既存Path削除
+              .replace(/; SameSite=[^;]+/gi, "") + // 既存SameSite削除
+            "; Path=/; SameSite=Lax"; // 強制付与
+
+          // set ではなく append を使うことで複数行のヘッダーを出力する
+          responseHeaders.append("set-cookie", newSetCookie);
+        });
       }
     }
     // -------------------------

@@ -12,7 +12,7 @@ export const useMainStore = create<MainStore>()(
     persist(
       (set, get) => ({
         ...createEntrySlice(set, get),
-        ...createTagSlice(set),
+        ...createTagSlice(set, get),
         ...createUISlice(set),
         ...createAuthSlice(set, get),
       }),
