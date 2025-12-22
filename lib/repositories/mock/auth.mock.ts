@@ -14,8 +14,9 @@ import { User } from "@/types/user";
 const mockUser: User = {
   id: "user-1",
   email: "test@example.com",
-  displayName: "Test User",
-  avatarUrl: "/avatars/user-1.png",
+  name: "Test User",
+  passwordHash: "hashedpassword",
+  passwordSalt: "salt",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };
@@ -41,7 +42,6 @@ export const authMockRepository: IAuthRepository = {
     return {
       ...mockUser,
       email: data.email,
-      displayName: data.display_name,
     };
   },
 
