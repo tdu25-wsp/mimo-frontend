@@ -34,6 +34,7 @@ export default function SignupPage() {
       toast.success("確認コードを送信しました");
       router.push("/verify-code?mode=signup");
     } catch (error: any) {
+      console.error("Signup error:", error);
       toast.error(error.message || "エラーが発生しました");
     }
   };

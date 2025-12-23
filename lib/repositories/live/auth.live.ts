@@ -12,16 +12,56 @@ const fetchConfig = {
 
 // エラーハンドリング用ヘルパー
 const handleResponse = async (res: Response) => {
+  console.log(`[Auth API] Response status: ${res.status}, ok: ${res.ok}`);
+  console.log(`[Auth API] Response headers:`, Object.fromEntries(res.headers.entries()));
+  
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
+    let errorData: any = {};
+    try {
+      const text = await res.text();
+      console.error(`[Auth API Error] Status: ${res.status}, Body: ${text}`);
+      if (text) {
+        try {
+          errorData = JSON.parse(text);
+        } catch (parseError) {
+          console.error(`[Auth API Error] Failed to parse error JSON:`, parseError);
+          errorData = { message: text };
+        }
+      }
+    } catch (e) {
+      console.error("[Auth API Error] Failed to read error response:", e);
+    }
     throw new Error(errorData.error || errorData.message || `Request failed: ${res.status}`);
   }
+  
   // 204 No Content の場合は null を返す
   if (res.status === 204) {
+    console.log(`[Auth API Success] 204 No Content`);
     return null;
   }
-  const text = await res.text();
-  return text ? JSON.parse(text) : {};
+  
+  try {
+    const text = await res.text();
+    console.log(`[Auth API Success] Status: ${res.status}, Body length: ${text.length}`);
+    console.log(`[Auth API Success] Body content:`, text);
+    
+    if (!text) {
+      console.log(`[Auth API Success] Empty body, returning {}`);
+      return {};
+    }
+    
+    const parsed = JSON.parse(text);
+    console.log(`[Auth API Success] Parsed JSON:`, parsed);
+    return parsed;
+  } catch (error) {
+    console.error("[Auth API] Failed to parse response:", error);
+    console.error("[Auth API] Error type:", error instanceof Error ? error.constructor.name : typeof error);
+    if (error instanceof Error) {
+      console.error("[Auth API] Error message:", error.message);
+      console.error("[Auth API] Error stack:", error.stack);
+    }
+    throw new Error("Decoding failed: Invalid JSON response from server");
+  }
 };
 
 const mapToUser = (data: any): User => ({
