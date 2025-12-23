@@ -1,36 +1,41 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
 import Heading from "@/components/ui/Heading";
-import { X } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, SignupInput } from "@/lib/validation/auth.schema";
+import { signupEmailSchema, SignupEmailInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
 export default function SignupPage() {
+  const router = useRouter();
+  const sendVerificationCode = useMainStore((state) => state.sendVerificationCode);
+  const isLoading = useMainStore((state) => state.isLoading);
+
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupInput>({
-    resolver: zodResolver(signupSchema),
+    formState: { errors },
+  } = useForm<SignupEmailInput>({
+    resolver: zodResolver(signupEmailSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  // パスワードの入力監視（クリアボタン用）
-  const passwordValue = watch("password");
-
   // 送信時の処理
-  const onSubmit: SubmitHandler<SignupInput> = (data) => {
-    //console.log("登録データ:", data);
-    // ここに新規登録APIを叩く処理
+  const onSubmit: SubmitHandler<SignupEmailInput> = async (data) => {
+    try {
+      await sendVerificationCode(data.email, "signup");
+      toast.success("確認コードを送信しました");
+      router.push("/verify-code?mode=signup");
+    } catch (error: any) {
+      toast.error(error.message || "エラーが発生しました");
+    }
   };
 
   return (
@@ -56,6 +61,7 @@ export default function SignupPage() {
               <Heading level="h2" className="mb-10">
                 新規登録
               </Heading>
+
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* メールアドレス入力欄 */}
                 <div className="grid w-full items-center gap-1.5">
@@ -69,6 +75,7 @@ export default function SignupPage() {
                     type="email"
                     id="email"
                     placeholder="user@example.com"
+                    autoFocus
                     {...register("email")}
                   />
                   {/* エラーメッセージ */}
@@ -79,47 +86,12 @@ export default function SignupPage() {
                   )}
                 </div>
 
-                {/* 1つ目のパスワード入力 */}
-                <div className="grid w-full items-center gap-1.5 mt-5">
-                  <label
-                    htmlFor="password"
-                    className="text-sm font-medium text-secondary-text"
-                  >
-                    パスワード
-                  </label>
-                  <div className="relative">
-                    <Input
-                      type="password"
-                      id="password"
-                      placeholder="••••••••"
-                      className="pr-10"
-                      {...register("password")}
-                    />
-                    {passwordValue && passwordValue.length > 0 && (
-                      <button
-                        type="button"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-muted-text hover:text-secondary-text"
-                        onClick={() => setValue("password", "")}
-                      >
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">パスワードをクリア</span>
-                      </button>
-                    )}
-                  </div>
-                  {/* エラーメッセージ */}
-                  {errors.password && (
-                    <p className="text-error text-xs">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-
                 {/* 登録ボタン*/}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "登録中..." : "登録"}
+                    label={isLoading ? "送信中..." : "登録"}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>

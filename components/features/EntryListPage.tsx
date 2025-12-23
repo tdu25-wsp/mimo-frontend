@@ -43,6 +43,7 @@ export const EntryListPage = ({
   emptyMessage = "エントリーがありません",
 }: EntryListPageProps) => {
   const openDeleteDialog = useMainStore((state) => state.openDeleteDialog);
+  const generateSummary = useMainStore((state) => state.generateSummary);
 
   const [isSummarizeMode, setIsSummarizeMode] = useState(false);
 
@@ -61,14 +62,28 @@ export const EntryListPage = ({
     }
   };
 
-  const toggleSummarizeMode = () => {
+  const handleSummarizeAction = async () => {
     if (isMode === "summarize") {
+      if (selectedIds.length > 0) {
+        await generateSummary(selectedIds);
+      } else {
+        // 選択されていない場合は表示されているすべてのメモを対象にする
+        const allMemoIds = entries
+          .filter((entry) => entry.type === "memo")
+          .map((entry) => entry.id);
+
+        if (allMemoIds.length > 0) {
+          await generateSummary(allMemoIds);
+        }
+      }
       setIsMode("normal");
+      setIsSummarizeMode(false);
+      setSelectedIds([]);
     } else {
       setIsMode("summarize");
+      setIsSummarizeMode(true);
+      setSelectedIds([]);
     }
-    setIsSummarizeMode(!isSummarizeMode);
-    setSelectedIds([]);
   }
 
   const handleToggleSelection = (id: string) => {
@@ -128,7 +143,7 @@ export const EntryListPage = ({
   const SummarizeButton = () => {
     return (
       <button
-        onClick={toggleSummarizeMode}
+        onClick={handleSummarizeAction}
         className="
         flex items-center gap-1
         bg-transparent

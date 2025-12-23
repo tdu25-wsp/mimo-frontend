@@ -2,8 +2,8 @@ import { SummaryEntry } from "@/types/entry";
 import { JournalingSettings } from "@/types/journaling-setting";
 
 export interface SummarizeRequestDTO {
-  memoIds?: string[]; // 選択したメモから生成
-  tagId?: string; // タグに関連するメモから生成
+  user_id: string;
+  memo_ids: string[];
 }
 
 export interface ISummaryRepository {
@@ -16,12 +16,17 @@ export interface ISummaryRepository {
   /**
    * 要約・ジャーナリング要約取得 (GET /api/sum)
    */
-  getSummaries(): Promise<SummaryEntry[]>;
+  getSummaries(userId: string): Promise<SummaryEntry[]>;
 
   /**
    * 要約・ジャーナリング要約取得 (GET /api/sum)
    */
-  getById(id: string): Promise<SummaryEntry | undefined>;
+  getById(id: string): Promise<SummaryEntry>;
+
+  /**
+   * 要約削除 (DELETE /api/sum/:id)
+   */
+  delete(id: string): Promise<void>;
 
   /**
    * ジャーナリング設定取得 (GET /api/sum/journaling-freq)

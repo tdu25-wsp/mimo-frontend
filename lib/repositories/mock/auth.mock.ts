@@ -1,98 +1,98 @@
-import { AuthResponse, IAuthRepository } from "../interfaces/auth.interface";
+import { 
+  IAuthRepository, 
+  RegisterStartDTO, 
+  RegisterVerifyDTO, 
+  RegisterCompleteDTO, 
+  LoginDTO, 
+  ForgotPasswordDTO, 
+  VerifyResetCodeDTO, 
+  ResetPasswordDTO, 
+  ChangePasswordDTO 
+} from "../interfaces/auth.interface";
+import { User } from "@/types/user";
+
+const mockUser: User = {
+  id: "user-1",
+  email: "test@example.com",
+  display_name: "Test User",
+  passwordHash: "hashedpassword",
+  passwordSalt: "salt",
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
 
 export const authMockRepository: IAuthRepository = {
-  /**
-   * ユーザー新規登録 (POST /api/auth/register)
-   */
-  register: async (email: string, password: string): Promise<void> => {
-    console.log(`Mock register: ${email}`);
-    // モック実装：実際には何もしない
-    return;
+  // --- 登録フロー ---
+  registerStart: async (data: RegisterStartDTO) => {
+    console.log("Mock registerStart:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
   },
 
-  /**
-   * メールアドレス確認 (POST /api/auth/verify-email)
-   * 登録時に送信された確認コードを検証します
-   */
-  verifyEmail: async (code: string): Promise<AuthResponse> => {
-    console.log(`Mock verifyEmail: ${code}`);
+  registerVerify: async (data: RegisterVerifyDTO) => {
+    console.log("Mock registerVerify:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (data.code !== "123456") {
+      throw new Error("Invalid verification code");
+    }
+  },
+
+  registerComplete: async (data: RegisterCompleteDTO): Promise<User> => {
+    console.log("Mock registerComplete:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
     return {
-      accessToken: "mock-access-token",
-      refreshToken: "mock-refresh-token",
+      ...mockUser,
+      email: data.email,
     };
   },
 
-  /**
-   * ログイン (POST /api/auth/login)
-   */
-  login: async (email: string, password: string): Promise<AuthResponse> => {
-    console.log(`Mock login: ${email}`);
-    return {
-      accessToken: "mock-access-token",
-      refreshToken: "mock-refresh-token",
-    };
+  // --- ログイン・ログアウト ---
+  login: async (data: LoginDTO): Promise<User> => {
+    console.log("Mock login:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (data.email === "error@example.com") {
+      throw new Error("Invalid credentials");
+    }
+    return mockUser;
   },
 
-  /**
-   * ログアウト (POST /api/auth/logout)
-   */
-  logout: async (): Promise<void> => {
+  logout: async () => {
     console.log("Mock logout");
-    return;
+    await new Promise((resolve) => setTimeout(resolve, 500));
   },
 
-  /**
-   * 確認コードの検証 (POST /api/auth/verify)
-   * クエリパラメータでフローを指定 (register | forgot-password)
-   * レスポンスとして一時的なJWTなどが返る想定
-   */
-  verifyCode: async (
-    code: string,
-    flow: "register" | "forgot-password"
-  ): Promise<AuthResponse> => {
-    console.log(`Mock verifyCode: ${code} (flow: ${flow})`);
-    return {
-      accessToken: "mock-temp-access-token",
-      refreshToken: "mock-temp-refresh-token",
-    };
+  // --- ユーザー情報 ---
+  getCurrentUser: async (): Promise<User> => {
+    console.log("Mock getCurrentUser");
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    return mockUser;
   },
 
-  /**
-   * パスワードリセット申請 (POST /api/auth/forgot-password)
-   * ResetPassword ロールを持ったアクセストークンを取得
-   */
-  forgotPassword: async (): Promise<void> => {
-    console.log("Mock forgotPassword");
-    return;
+  refreshToken: async () => {
+    console.log("Mock refreshToken");
+    await new Promise((resolve) => setTimeout(resolve, 500));
   },
 
-  /**
-   * パスワード変更 (POST /api/auth/change-password)
-   * forgot-passwordで取得したアクセストークンを用いて新しいパスワードを設定
-   */
-  changePassword: async (
-    newPassword: string,
-    resetToken: string
-  ): Promise<void> => {
-    console.log(`Mock changePassword with token: ${resetToken}`);
-    return;
+  // --- パスワードリセット ---
+  forgotPassword: async (data: ForgotPasswordDTO) => {
+    console.log("Mock forgotPassword:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
   },
 
-  /**
-   * 現在のユーザーを取得（モックでは固定値を返す）
-   */
-  getCurrentUser: async (): Promise<string> => {
-    return "mock-user-id";
+  verifyResetCode: async (data: VerifyResetCodeDTO) => {
+    console.log("Mock verifyResetCode:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (data.code !== "123456") {
+      throw new Error("Invalid reset code");
+    }
   },
 
-  /**
-   * アクセストークンの更新 (POST /api/auth/refresh)
-   */
-  refreshAccessToken: async (refreshToken: string): Promise<AuthResponse> => {
-    console.log(`Mock refreshAccessToken: ${refreshToken}`);
-    return {
-      accessToken: "mock-new-access-token",
-      refreshToken: "mock-new-refresh-token",
-    };
+  resetPassword: async (data: ResetPasswordDTO) => {
+    console.log("Mock resetPassword:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  },
+
+  changePassword: async (data: ChangePasswordDTO) => {
+    console.log("Mock changePassword:", data);
+    await new Promise((resolve) => setTimeout(resolve, 500));
   },
 };

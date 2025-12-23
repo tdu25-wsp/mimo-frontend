@@ -17,7 +17,7 @@ export interface IMemoRepository {
   /**
    * メモ一覧取得 (GET /api/memos)
    */
-  getAll(params?: MemoSearchParams): Promise<Entry[]>;
+  getAll(userId: string, params?: MemoSearchParams): Promise<Entry[]>;
 
   /**
    * メモ詳細閲覧 (GET /api/memos/:id)
@@ -30,7 +30,7 @@ export interface IMemoRepository {
    * getByIdでundefinedが返る場合はundefinedを返す
    * 見つからない場合は空配列を返す
    */
-  getByIds(ids: string[]): Promise<Entry[] | undefined>;
+  getByIds(ids: string[]): Promise<Entry[]>;
 
   /**
    * メモ記録 (POST /api/memos)

@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useMainStore } from "@/lib/stores/mainStore";
 import { Header } from "@/components/layout/Header";
 import ActionLargeButton from "@/components/features/ActionLargeButton";
 import { Input } from "@/components/ui/Input";
@@ -7,13 +9,18 @@ import Heading from "@/components/ui/Heading";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPasswordSchema, ForgotPasswordInput } from "@/lib/validation/auth.schema";
+import { toast } from "sonner";
 
 export default function ForgotPasswordPage() {
+  const router = useRouter();
+  const sendVerificationCode = useMainStore((state) => state.sendVerificationCode);
+  const isLoading = useMainStore((state) => state.isLoading);
+
   // useFormのセットアップ
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ForgotPasswordInput>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -23,9 +30,13 @@ export default function ForgotPasswordPage() {
 
   // 送信時の処理
   const onSubmit: SubmitHandler<ForgotPasswordInput> = async (data) => {
-    //console.log("送信データ:", data);
-    // ここにパスワードリセットメール送信APIの呼び出しなどを記述
-    // await resetPassword(data.email);
+    try {
+      await sendVerificationCode(data.email, "reset");
+      toast.success("確認コードを送信しました");
+      router.push("/verify-code?mode=reset");
+    } catch (error: any) {
+      toast.error(error.message || "エラーが発生しました");
+    }
   };
 
   return (
@@ -65,6 +76,7 @@ export default function ForgotPasswordPage() {
                     type="email"
                     id="email"
                     placeholder="user@example.com"
+                    autoFocus
                     {...register("email")}
                   />
                   {/* エラーメッセージ表示 */}
@@ -78,9 +90,9 @@ export default function ForgotPasswordPage() {
                 {/* 送信ボタン*/}
                 <div className="mt-24">
                   <ActionLargeButton
-                    label={isSubmitting ? "送信中..." : "送信"}
+                    label={isLoading ? "送信中..." : "送信"}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   />
                 </div>
               </form>
