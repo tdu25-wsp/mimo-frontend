@@ -12,7 +12,7 @@ const publicPaths = [
   "/verify-code",
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. 静的ファイルやAPIルートは処理せずにスルー
