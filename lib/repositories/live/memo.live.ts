@@ -8,11 +8,10 @@ import { MemoDTO } from "@/types/server/memo-dto";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const memoLiveRepository: IMemoRepository = {
-  getAll: async () => {
-    // await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機
-    
-    const userId = "mock-user-id"; // 仮のユーザーID
-    const res = await fetch(`${API_BASE_URL}/memos/list/${userId}`);
+  getAll: async (userId: string) => {
+    const res = await fetch(`${PROXY_API_BASE_URL}/memos/list/${userId}`, {
+      credentials: "include",
+    });
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
@@ -41,9 +40,22 @@ export const memoLiveRepository: IMemoRepository = {
   getByIds: async (ids: string[]) => {
     if (ids.length === 0) return [];
 
+    let headers: HeadersInit = {};
+    let baseUrl = PROXY_API_BASE_URL;
+
+    if (typeof window === "undefined") {
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      headers = { Cookie: cookieStore.toString() };
+      baseUrl = API_BASE_URL || "";
+    }
+
     try {
       const memoPromises = ids.map(async (id) => {
-        const res = await fetch(`${API_BASE_URL}/memos/${id}`);
+        const res = await fetch(`${baseUrl}/memos/${id}`, {
+          headers,
+          credentials: "include",
+        });
 
         if (!res.ok) {
           if (res.status === 404) {
@@ -70,6 +82,7 @@ export const memoLiveRepository: IMemoRepository = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
 
     if (!res.ok) {
@@ -88,6 +101,7 @@ export const memoLiveRepository: IMemoRepository = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
 
     if (!res.ok) {
@@ -105,6 +119,7 @@ export const memoLiveRepository: IMemoRepository = {
     ids.forEach(async (id) => {
       const res = await fetch(`${PROXY_API_BASE_URL}/memos/${id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!res.ok) {

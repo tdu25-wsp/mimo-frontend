@@ -3,12 +3,12 @@ import { TagDTO } from "@/types/server/tag-dto";
 
 export const convertTagFromDTO = (dto: TagDTO): Tag => {
   return {
-    id: dto.TagID,
-    userId: dto["UserID(FK)"],
-    name: dto.Name,
-    color: dto.colorCode,
-    createdAt: dto.createdDate,
-    updatedAt: dto.updatedDate,
+    id: dto.tag_id,
+    userId: dto.user_id,
+    name: dto.name,
+    color: dto.color_code,
+    createdAt: dto.created_at,
+    updatedAt: dto.updated_at,
   };
 }
 

@@ -26,26 +26,10 @@ export const memoMockRepository: IMemoRepository = {
   /**
    * メモ一覧取得
    */
-  getAll: async (params?: MemoSearchParams): Promise<Entry[]> => {
+  getAll: async (userId: string) => {
     initializeMockData();
 
     let filteredMemos = [...mockMemos];
-
-    // キーワード検索
-    if (params?.q) {
-      const query = params.q.toLowerCase();
-      filteredMemos = filteredMemos.filter((memo) =>
-        memo.content.toLowerCase().includes(query)
-      );
-    }
-
-    // タグ絞り込み
-    if (params?.tagId) {
-      filteredMemos = filteredMemos.filter((memo) =>
-        memo.autoTagIds.includes(params.tagId!) ||
-        memo.manualTagIds.includes(params.tagId!)
-      );
-    }
 
     // 作成日時の降順でソート
     return filteredMemos.sort(
@@ -67,7 +51,7 @@ export const memoMockRepository: IMemoRepository = {
   /**
    * 複数idを指定してメモ取得
    */
-  getByIds: async (ids: string[]): Promise<Entry[] | undefined> => {
+  getByIds: async (ids: string[]) => {
     initializeMockData();
 
     const memos = mockMemos.filter((m) => ids.includes(m.id));

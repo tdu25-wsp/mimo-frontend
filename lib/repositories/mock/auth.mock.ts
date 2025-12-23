@@ -14,11 +14,11 @@ import { User } from "@/types/user";
 const mockUser: User = {
   id: "user-1",
   email: "test@example.com",
-  name: "Test User",
+  display_name: "Test User",
   passwordHash: "hashedpassword",
   passwordSalt: "salt",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 };
 
 export const authMockRepository: IAuthRepository = {

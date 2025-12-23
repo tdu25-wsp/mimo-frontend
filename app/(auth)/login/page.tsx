@@ -39,7 +39,7 @@ export default function LoginPage() {
     try {
       await login(data);
       toast.success("ログインしました");
-      router.push("/list/all");
+      router.push("/");
     } catch (error: any) {
       toast.error(error.message || "ログインに失敗しました");
     }

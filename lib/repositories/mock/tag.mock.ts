@@ -15,20 +15,23 @@ const initializeMockData = () => {
 };
 
 export const tagMockRepository: ITagRepository = {
-  getAll: async (): Promise<Tag[]> => {
+  getAll: async (userId?: string): Promise<Tag[]> => {
     initializeMockData();
+    if (userId) {
+      return mockTags.filter((tag) => tag.userId === userId);
+    }
     return [...mockTags];
   },
 
-  create: async (data: CreateTagDTO): Promise<Tag> => {
+  create: async (userId: string, data: CreateTagDTO): Promise<Tag> => {
     initializeMockData();
 
     const now = new Date().toISOString();
     const newTag: Tag = {
       id: `tag-${Date.now().toString()}`,
-      userId: data.userId,
+      userId: userId,
       name: data.name,
-      color: data.colorCode || "#64748B",
+      color: data.color_code || "#64748B",
       createdAt: now,
       updatedAt: now,
     };
@@ -36,18 +39,18 @@ export const tagMockRepository: ITagRepository = {
     return newTag;
   },
 
-  update: async (data: UpdateTagDTO): Promise<Tag> => {
+  update: async (tagId: string, data: UpdateTagDTO): Promise<Tag> => {
     initializeMockData();
 
-    const index = mockTags.findIndex((tag) => tag.id === data.tagId);
+    const index = mockTags.findIndex((tag) => tag.id === tagId);
     if (index === -1) {
-      throw new Error(`Tag with id ${data.tagId} not found`);
+      throw new Error(`Tag with id ${tagId} not found`);
     }
 
     const updateTag: Tag = {
       ...mockTags[index],
       name: data.name,
-      color: data.colorCode,
+      color: data.color_code,
       updatedAt: new Date().toISOString(),
     };
 

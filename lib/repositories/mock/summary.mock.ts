@@ -38,13 +38,8 @@ export const summaryMockRepository: ISummaryRepository = {
     let memoIds: string[] = [];
     let tagIds: string[] = [];
 
-    if (data.memoIds && data.memoIds.length > 0) {
-      memoIds = data.memoIds;
-    } else if (data.tagId) {
-      // タグIDから関連メモを取得
-      const memos = await memoMockRepository.getAll({ tagId: data.tagId });
-      memoIds = memos.map((memo) => memo.id);
-      tagIds = [data.tagId];
+    if (data.memo_ids && data.memo_ids.length > 0) {
+      memoIds = data.memo_ids;
     }
 
     if (memoIds.length === 0) {
@@ -73,7 +68,7 @@ export const summaryMockRepository: ISummaryRepository = {
    * ジャーナリング要約一覧取得
    * 自動生成された要約のみを取得
    */
-  getSummaries: async (): Promise<SummaryEntry[]> => {
+  getSummaries: async (userId: string): Promise<SummaryEntry[]> => {
     initializeMockData();
     return mockSummaries;
   },
@@ -81,13 +76,22 @@ export const summaryMockRepository: ISummaryRepository = {
   /**
    * idから要約・ジャーナリング要約取得
    */
-  getById: async (id: string): Promise<SummaryEntry | undefined> => {
+  getById: async (id: string): Promise<SummaryEntry> => {
     initializeMockData();
     const summary = mockSummaries.find((s) => s.id === id);
     if (!summary) {
-      return undefined;
+      throw new Error(`Summary with id ${id} not found`);
     }
     return summary;
+  },
+
+  delete: async (id: string): Promise<void> => {
+    initializeMockData();
+    const index = mockSummaries.findIndex((s) => s.id === id);
+    if (index === -1) {
+      throw new Error(`Summary with id ${id} not found`);
+    }
+    mockSummaries.splice(index, 1);
   },
 
   /**
