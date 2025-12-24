@@ -48,6 +48,42 @@ export const EntryCard = (
         e.stopPropagation();
     }
 
+    const displayDate = (() => {
+        const date = new Date(entry.createdAt);
+        const today = new Date();
+
+        const isToday = date.toDateString() === today.toDateString();
+
+        if (isToday) {
+            const diffMs = today.getTime() - date.getTime();
+            const diffMinutes = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+            if (diffHours > 0) {
+                return `${diffHours}時間前`;
+            } else if (diffMinutes > 0) {
+                return `${diffMinutes}分前`;
+            } else {
+                return `たった今`;
+            }
+        } else {
+            const isThisYear = date.getFullYear() === today.getFullYear();
+
+            if (isThisYear) {
+                return date.toLocaleDateString('ja-JP', {
+                    month: '2-digit',
+                    day: '2-digit',
+                });
+            } else {
+                return date.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                });
+            }
+        }
+    })()
+
     const CardContent = (
         <>
             <li
@@ -79,7 +115,9 @@ export const EntryCard = (
                     }
                     <Text style="body" className="mb-1 font-medium">{entry.content}</Text>
                     <div className="flex items-center justify-between">
-                        <Text style="small" className="font-mono">{entry.createdAt}</Text>
+                        <Text style="small" className="font-mono">
+                            {displayDate}
+                        </Text>
                         <div onClick={handleMenuClick}>
                             <EntryCardDropdownMenu {...entry} />
                         </div>
