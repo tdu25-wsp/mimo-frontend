@@ -25,6 +25,11 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Mockモードの場合は認証チェックをスキップ
+  if (process.env.NEXT_PUBLIC_USE_MOCK === "true") {
+    return NextResponse.next();
+  }
+
   // 2. トークンの取得と検証
   const refreshToken = request.cookies.get("refresh_token")?.value;
   let isAuthenticated = false;
