@@ -70,9 +70,7 @@ export const EntryEditSheet = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center bg-black/20 backdrop-blur-xs">
-
-      <div className="relative w-full md:w-[600px] h-[95vh] md:h-auto md:min-h-[500px] bg-background rounded-t-2xl md:rounded-2xl p-4 flex flex-col shadow-2xl animate-in slide-in-from-bottom-10 fade-in duration-200">
-
+      <div className="relative w-full md:w-[600px] h-[85vh] md:h-auto md:min-h-[500px] bg-background rounded-t-2xl md:rounded-2xl p-4 flex flex-col shadow-2xl animate-in slide-in-from-bottom-10 fade-in duration-200">
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={closeEntrySheet}
@@ -108,7 +106,7 @@ export const EntryEditSheet = () => {
           </TagSelector>
         </div>
 
-        <ActionLargeButton className="mb-80 md:mb-0" label={editingEntry ? "更新" : "投稿"} onClick={handleSubmit} disabled={!content.trim()} />
+        <ActionLargeButton className="md:mb-0" label={editingEntry ? "更新" : "投稿"} onClick={handleSubmit} disabled={!content.trim()} />
 
         <div className="h-4" />
 
