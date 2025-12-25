@@ -13,19 +13,24 @@ import {
 } from "@/components/ui/dialog";
 import { Trash2, LogOut } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { useMainStore } from "@/lib/stores/mainStore";
+import { useRouter } from "next/navigation";
 
 export default function AccountPage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const logout = useMainStore((state) => state.logout);
+  const router = useRouter();
 
   const handleDeleteAccount = () => {
     //console.log("アカウントを削除しました");
     setShowDeleteDialog(false);
   };
 
-  const handleLogout = () => {
-    //console.log("ログアウトしました");
+  const handleLogout = async () => {
+    await logout();
     setShowLogoutDialog(false);
+    router.push("/login");
   };
 
   return (

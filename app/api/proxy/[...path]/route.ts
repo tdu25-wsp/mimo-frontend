@@ -19,6 +19,9 @@ async function proxy(
   const headers = new Headers(request.headers);
   headers.delete("host");
   headers.delete("connection");
+  // Content-Encodingを削除して、fetchが自動デコードするようにする
+  headers.delete("content-encoding");
+  headers.delete("content-length");
 
   try {
     const response = await fetch(url, {
@@ -28,44 +31,90 @@ async function proxy(
       cache: "no-store",
     });
 
-    const responseHeaders = new Headers(response.headers);
+    // レスポンスのログを追加
+    console.log(`[Proxy] ${request.method} ${pathString} -> Status: ${response.status}`);
+    console.log(`[Proxy] Response Content-Type:`, response.headers.get('content-type'));
+    
+    // レスポンスボディを読み取る
+    let responseText: string;
+    try {
+      responseText = await response.text();
+      console.log(`[Proxy] Response body length: ${responseText.length} bytes`);
+      if (responseText.length < 1000) {
+        console.log(`[Proxy] Response body:`, responseText);
+      } else {
+        console.log(`[Proxy] Response body (first 500 chars):`, responseText.substring(0, 500));
+      }
+    } catch (textError) {
+      console.error(`[Proxy] Failed to read response text:`, textError);
+      throw new Error('Failed to read response from backend');
+    }
+
+    const responseHeaders = new Headers();
+    // 重要なヘッダーのみコピー
+    const contentType = response.headers.get('content-type');
+    if (contentType) {
+      responseHeaders.set('content-type', contentType);
+    }
+    // Content-EncodingとContent-Lengthは設定しない（ブラウザが自動処理）
 
     // --- Cookie修正の最終版 ---
+    const cookies = response.headers.getSetCookie();
+    console.log(`[Proxy] Set-Cookie count:`, cookies.length);
+    
     if (process.env.NODE_ENV === "development") {
-      // 1. getSetCookie() を使って、生のCookie文字列を「配列」としてすべて取得する
-      // (注意: Node.js 18+ / Next.js App Router環境で利用可能です)
-      const cookies = response.headers.getSetCookie();
-
+      // 開発環境: SameSite=Lax
       if (cookies.length > 0) {
-        // 2. 既存の Set-Cookie ヘッダーを一旦すべて削除する (重複・混在防止)
-        responseHeaders.delete("set-cookie");
-
-        // 3. 配列をループして、個別に書き換えて append (追加) する
         cookies.forEach((cookieValue) => {
+          console.log(`[Proxy Dev] Original cookie:`, cookieValue);
           const newSetCookie =
             cookieValue
-              // .replace(/; Secure/gi, "")           // 必要に応じて
-              // .replace(/; Domain=[^;]+/gi, "")     // 必要に応じて
-              .replace(/; Path=[^;]+/gi, "") // 既存Path削除
-              .replace(/; SameSite=[^;]+/gi, "") + // 既存SameSite削除
-            "; Path=/; SameSite=Lax"; // 強制付与
+              .replace(/; Path=[^;]+/gi, "")
+              .replace(/; SameSite=[^;]+/gi, "")
+              .replace(/; Secure/gi, "") +
+            "; Path=/; SameSite=Lax";
 
-          // set ではなく append を使うことで複数行のヘッダーを出力する
+          console.log(`[Proxy Dev] Modified cookie:`, newSetCookie);
+          responseHeaders.append("set-cookie", newSetCookie);
+        });
+      }
+    } else {
+      // 本番環境: SameSite=None; Secure
+      if (cookies.length > 0) {
+        cookies.forEach((cookieValue) => {
+          console.log(`[Proxy Prod] Original cookie:`, cookieValue);
+          const newSetCookie =
+            cookieValue
+              .replace(/; Path=[^;]+/gi, "")
+              .replace(/; SameSite=[^;]+/gi, "")
+              .replace(/; Secure/gi, "") + 
+            "; Path=/; SameSite=None; Secure";
+
+          console.log(`[Proxy Prod] Modified cookie:`, newSetCookie);
           responseHeaders.append("set-cookie", newSetCookie);
         });
       }
     }
     // -------------------------
 
-    return new NextResponse(response.body, {
+    // レスポンスボディを新しいResponseとして返す
+    return new NextResponse(responseText, {
       status: response.status,
       statusText: response.statusText,
       headers: responseHeaders,
     });
   } catch (error) {
-    console.error("Proxy Error:", error);
+    console.error("[Proxy] Error:", error);
+    console.error("[Proxy] URL:", url);
+    console.error("[Proxy] Method:", request.method);
+    
+    if (error instanceof Error) {
+      console.error("[Proxy] Error message:", error.message);
+      console.error("[Proxy] Error stack:", error.stack);
+    }
+    
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

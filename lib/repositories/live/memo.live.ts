@@ -9,7 +9,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const memoLiveRepository: IMemoRepository = {
   getAll: async (userId: string) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/memos/list/${userId}`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}memos/list/${userId}`, {
       credentials: "include",
     });
     if (!res.ok) {
@@ -24,7 +24,7 @@ export const memoLiveRepository: IMemoRepository = {
   },
 
   getById: async (id: string) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/memos/${id}`);
+    const res = await fetch(`${PROXY_API_BASE_URL}memos/${id}`);
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
@@ -52,7 +52,7 @@ export const memoLiveRepository: IMemoRepository = {
 
     try {
       const memoPromises = ids.map(async (id) => {
-        const res = await fetch(`${baseUrl}/memos/${id}`, {
+        const res = await fetch(`${baseUrl}memos/${id}`, {
           headers,
           credentials: "include",
         });
@@ -78,7 +78,7 @@ export const memoLiveRepository: IMemoRepository = {
   },
 
   create: async (data: CreateMemoDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/memos`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}memos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -97,7 +97,7 @@ export const memoLiveRepository: IMemoRepository = {
   },
 
   update: async (data: UpdateMemoDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/memos/${data.memo_id}`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}memos/${data.memo_id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -117,7 +117,7 @@ export const memoLiveRepository: IMemoRepository = {
 
   deleteMany: async (ids: string[]) => {
     ids.forEach(async (id) => {
-      const res = await fetch(`${PROXY_API_BASE_URL}/memos/${id}`, {
+      const res = await fetch(`${PROXY_API_BASE_URL}memos/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -133,7 +133,7 @@ export const memoLiveRepository: IMemoRepository = {
 
   exportData: async (ids: string[]) => {
     // 1. タグ一覧の取得
-    const tagsPromise = fetch(`${API_BASE_URL}/tags`).then(async (res) => {
+    const tagsPromise = fetch(`${API_BASE_URL}tags`).then(async (res) => {
       if (!res.ok) throw new Error("Failed to fetch tags");
       return await res.json();
     });
@@ -141,7 +141,7 @@ export const memoLiveRepository: IMemoRepository = {
     // 2. 選択されたメモ詳細の取得 (並列実行)
     const memosPromise = Promise.all(
       ids.map(async (id) => {
-        const res = await fetch(`${API_BASE_URL}/memos/${id}`);
+        const res = await fetch(`${API_BASE_URL}memos/${id}`);
         if (!res.ok) throw new Error(`Failed to fetch memo ${id}`);
         return await res.json();
       })
@@ -158,7 +158,7 @@ export const memoLiveRepository: IMemoRepository = {
   },
 
   share: async (id: string) => {
-    const res = await fetch(`${API_BASE_URL}/memos/${id}/share`, {
+    const res = await fetch(`${API_BASE_URL}memos/${id}/share`, {
       method: "POST",
     });
     if (!res.ok) throw new Error("Fetch failed");
@@ -166,7 +166,7 @@ export const memoLiveRepository: IMemoRepository = {
   },
 
   unshare: async (id: string) => {
-    await fetch(`${API_BASE_URL}/memos/${id}/share`, {
+    await fetch(`${API_BASE_URL}memos/${id}/share`, {
       method: "DELETE",
     });
   },
