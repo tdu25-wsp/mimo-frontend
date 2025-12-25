@@ -76,7 +76,7 @@ const mapToUser = (data: any): User => ({
 export const authLiveRepository: IAuthRepository = {
   // --- 登録フロー ---
   registerStart: async (data: RegisterStartDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/register/start`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/register/start`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -85,7 +85,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   registerVerify: async (data: RegisterVerifyDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/register/verify`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/register/verify`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -94,7 +94,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   registerComplete: async (data: RegisterCompleteDTO): Promise<User> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/register/complete`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/register/complete`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -105,7 +105,7 @@ export const authLiveRepository: IAuthRepository = {
 
   // --- ログイン・ログアウト ---
   login: async (data: LoginDTO): Promise<User> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/login`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/login`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -115,7 +115,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   logout: async () => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/logout`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/logout`, {
       ...fetchConfig,
       method: "POST",
     });
@@ -124,7 +124,7 @@ export const authLiveRepository: IAuthRepository = {
 
   // --- ユーザー情報 ---
   getCurrentUser: async (): Promise<User> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/me`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/me`, {
       ...fetchConfig,
       method: "GET",
     });
@@ -133,7 +133,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   refreshToken: async () => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/refresh`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/refresh`, {
       ...fetchConfig,
       method: "POST",
     });
@@ -142,7 +142,7 @@ export const authLiveRepository: IAuthRepository = {
 
   // --- パスワードリセット ---
   forgotPassword: async (data: ForgotPasswordDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/password/forgot`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/password/forgot`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -151,7 +151,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   verifyResetCode: async (data: VerifyResetCodeDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/password/verify`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/password/verify`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -160,7 +160,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   resetPassword: async (data: ResetPasswordDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/password/reset`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/password/reset`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
@@ -169,7 +169,7 @@ export const authLiveRepository: IAuthRepository = {
   },
 
   changePassword: async (data: ChangePasswordDTO) => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/auth/reset-password`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}auth/reset-password`, {
       ...fetchConfig,
       method: "POST",
       body: JSON.stringify(data),
