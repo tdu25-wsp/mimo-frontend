@@ -13,7 +13,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const summaryLiveRepository: ISummaryRepository = {
   generate: async (data: SummarizeRequestDTO): Promise<SummaryEntry> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/summarize`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}sum/summarize`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -32,8 +32,7 @@ export const summaryLiveRepository: ISummaryRepository = {
   },
 
   getSummaries: async (userId: string): Promise<SummaryEntry[]> => {
-    // GET /api/sum/list/:userId へのリクエスト
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/list/${userId}`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}sum/list/${userId}`, {
       method: "GET",
       credentials: "include",
     });
@@ -52,7 +51,7 @@ export const summaryLiveRepository: ISummaryRepository = {
 
   getById: async (id: string): Promise<SummaryEntry> => {
     let headers: HeadersInit = {};
-    let url = `${PROXY_API_BASE_URL}/sum/${id}`;
+    let url = `${PROXY_API_BASE_URL}sum/${id}`;
 
     if (typeof window === "undefined") {
       const { cookies } = await import("next/headers");
@@ -77,7 +76,7 @@ export const summaryLiveRepository: ISummaryRepository = {
   },
 
   delete: async (id: string): Promise<void> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/${id}`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}sum/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -92,7 +91,7 @@ export const summaryLiveRepository: ISummaryRepository = {
   },
 
   getJournalingSummarySetting: async (): Promise<JournalingSettings> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/journaling/settings`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}sum/journaling/settings`, {
       credentials: "include",
     });
     if (!res.ok) {
@@ -109,7 +108,7 @@ export const summaryLiveRepository: ISummaryRepository = {
   updateJournalingSummarySetting: async (
     data: JournalingSettings
   ): Promise<JournalingSettings> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/journaling/settings`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}sum/journaling/settings`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -131,7 +130,7 @@ export const summaryLiveRepository: ISummaryRepository = {
   updateJournalingSettings: async (
     settings: Partial<JournalingSettings>
   ): Promise<void> => {
-    const res = await fetch(`${PROXY_API_BASE_URL}/sum/journaling/settings`, {
+    const res = await fetch(`${PROXY_API_BASE_URL}sum/journaling/settings`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),
