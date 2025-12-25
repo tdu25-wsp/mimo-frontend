@@ -70,9 +70,7 @@ export const EntryEditSheet = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center bg-black/20 backdrop-blur-xs">
-
-      <div className="relative w-full md:w-[600px] h-[95vh] md:h-auto md:min-h-[500px] bg-background rounded-t-2xl md:rounded-2xl p-4 flex flex-col shadow-2xl animate-in slide-in-from-bottom-10 fade-in duration-200">
-
+      <div className="relative w-full md:w-[600px] h-[85vh] md:h-auto md:min-h-[500px] bg-background rounded-t-2xl md:rounded-2xl p-4 flex flex-col shadow-2xl animate-in slide-in-from-bottom-10 fade-in duration-200">
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={closeEntrySheet}
