@@ -52,7 +52,8 @@ export const memoLiveRepository: IMemoRepository = {
 
     try {
       const memoPromises = ids.map(async (id) => {
-        const res = await fetch(`${baseUrl}memos/${id}`, {
+        const url = `${baseUrl.replace(/\/$/, '')}/memos/${id}`;
+        const res = await fetch(url, {
           headers,
           credentials: "include",
         });
