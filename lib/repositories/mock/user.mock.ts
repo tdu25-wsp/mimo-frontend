@@ -1,6 +1,6 @@
 export const userMockRepository = {
   /**
-   * アカウント削除 (DELETE /api/account)
+   * アカウント削除
    */
   deleteAccount: async (): Promise<void> => {
     return;
