@@ -19,12 +19,19 @@ import { useRouter } from "next/navigation";
 export default function AccountPage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const deleteAccount = useMainStore((state) => state.deleteAccount);
   const logout = useMainStore((state) => state.logout);
   const router = useRouter();
 
-  const handleDeleteAccount = () => {
-    //console.log("アカウントを削除しました");
-    setShowDeleteDialog(false);
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteAccount();
+      setShowDeleteDialog(false);
+      router.push("/login");
+    } catch (error) {
+      // user.slice.ts でトーストは既に表示されているので、何もしない
+      // ダイアログは開いたままにして再試行可能にする
+    }
   };
 
   const handleLogout = async () => {
@@ -106,7 +113,7 @@ export default function AccountPage() {
                   キャンセル
                 </Button>
               </DialogClose>
-              <Button 
+              <Button
                 onClick={handleLogout}
                 className="bg-primary hover:bg-primary-hover text-white font-bold"
               >
