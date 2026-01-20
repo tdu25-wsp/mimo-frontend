@@ -6,7 +6,6 @@ import { EntryList } from "@/components/features/EntryList";
 import { Entry } from "@/types/entry";
 import { Download, Trash2, Wand } from "lucide-react";
 import { useMainStore } from "@/lib/stores/mainStore";
-import { memoMockRepository as memoRepository } from "@/lib/repositories/mock/memo.mock";
 
 interface EntryListPageProps {
   // データ
@@ -44,8 +43,7 @@ export const EntryListPage = ({
 }: EntryListPageProps) => {
   const openDeleteDialog = useMainStore((state) => state.openDeleteDialog);
   const generateSummary = useMainStore((state) => state.generateSummary);
-
-  const [isSummarizeMode, setIsSummarizeMode] = useState(false);
+  const exportEntries = useMainStore((state) => state.exportEntries);
 
   const [isMode, setIsMode] = useState<EntryListPageMode>("normal");
 
@@ -77,11 +75,9 @@ export const EntryListPage = ({
         }
       }
       setIsMode("normal");
-      setIsSummarizeMode(false);
       setSelectedIds([]);
     } else {
       setIsMode("summarize");
-      setIsSummarizeMode(true);
       setSelectedIds([]);
     }
   }
@@ -109,34 +105,10 @@ export const EntryListPage = ({
     if (selectedIds.length === 0) return;
 
     try {
-      // 1. リポジトリからJSONデータ(配列)を取得
-      const data = await memoRepository.exportData(selectedIds);
-      
-      // 2. JSON文字列に変換
-      const jsonString = JSON.stringify(data, null, 2);
-      
-      // 3. Blobを作成
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      
-      // 4. ダウンロードリンクを生成してクリック（これでエクスプローラー/保存ダイアログが開く）
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      // ファイル名: memo_export_YYYY-MM-DD.json
-      a.download = `memo_export_${new Date().toISOString().slice(0, 10)}.json`; 
-      document.body.appendChild(a);
-      a.click();
-      
-      // 5. 後片付け
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      // 完了後に選択モードを解除するなら以下を実行
+      await exportEntries(selectedIds);
       toggleMode();
-      
     } catch (error) {
       console.error("Export failed:", error);
-      alert("エクスポートに失敗しました");
     }
   };
 
