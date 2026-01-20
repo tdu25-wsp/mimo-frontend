@@ -4,6 +4,7 @@ import { CreateMemoDTO } from "@/types/server/create-memo-dto";
 import { UpdateMemoDTO } from "@/types/server/update-memo-dto";
 import { PROXY_API_BASE_URL } from "@/lib/constants";
 import { MemoDTO } from "@/types/server/memo-dto";
+import { authRepository } from "@/lib/repositories";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -15,7 +16,7 @@ export const memoLiveRepository: IMemoRepository = {
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `メモの取得に失敗しました (${res.status})`
+        errorData.message || `メモの取得に失敗しました (${res.status})`,
       );
     }
     const dto = await res.json();
@@ -29,7 +30,7 @@ export const memoLiveRepository: IMemoRepository = {
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `メモの取得に失敗しました (${res.status})`
+        errorData.message || `メモの取得に失敗しました (${res.status})`,
       );
     }
 
@@ -89,7 +90,7 @@ export const memoLiveRepository: IMemoRepository = {
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `メモの作成に失敗しました (${res.status})`
+        errorData.message || `メモの作成に失敗しました (${res.status})`,
       );
     }
 
@@ -108,7 +109,7 @@ export const memoLiveRepository: IMemoRepository = {
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `メモの更新に失敗しました (${res.status})`
+        errorData.message || `メモの更新に失敗しました (${res.status})`,
       );
     }
 
@@ -126,15 +127,18 @@ export const memoLiveRepository: IMemoRepository = {
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(
-          errorData.message || `メモの削除に失敗しました (${res.status})`
+          errorData.message || `メモの削除に失敗しました (${res.status})`,
         );
       }
     });
   },
 
   exportData: async (ids: string[]) => {
+    // 0. ユーザーIDを取得
+    const user = await authRepository.getCurrentUser();
+    
     // 1. タグ一覧の取得
-    const tagsPromise = fetch(`${PROXY_API_BASE_URL}tags`, {
+    const tagsPromise = fetch(`${PROXY_API_BASE_URL}tags/${user.id}`, {
       credentials: "include",
     }).then(async (res) => {
       if (!res.ok) throw new Error("Failed to fetch tags");
@@ -149,7 +153,7 @@ export const memoLiveRepository: IMemoRepository = {
         });
         if (!res.ok) throw new Error(`Failed to fetch memo ${id}`);
         return await res.json();
-      })
+      }),
     );
 
     // 3. 両方の完了を待つ
