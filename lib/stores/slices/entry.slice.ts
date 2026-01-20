@@ -22,6 +22,7 @@ export interface EntrySlice {
   updateMemo: (memoId: string, content: string, manualTagIds: string[]) => Promise<void>;
   deleteEntries: (ids: string[]) => Promise<void>;
   generateSummary: (memoIds: string[]) => Promise<void>;
+  exportEntries: (ids: string[]) => Promise<void>;
   toggleEntrySelection: (id: string) => void;
   clearEntrySelection: () => void;
   setLoading: (loading: boolean) => void;
@@ -211,6 +212,33 @@ export const createEntrySlice = (set: any, get: any): EntrySlice => ({
       toast.error("要約の生成に失敗しました。もう一度お試しください。");
       set({
         error: error instanceof Error ? error.message : "要約の生成に失敗しました",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  exportEntries: async (ids) => {
+    try {
+      set({ isLoading: true, error: null });
+      const data = await memoRepository.exportData(ids);
+      
+      const jsonString = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `memo_export_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      set({ isLoading: false });
+    } catch (error) {
+      toast.error("エクスポートに失敗しました。もう一度お試しください。");
+      set({
+        error: error instanceof Error ? error.message : "エクスポートに失敗しました",
         isLoading: false,
       });
       throw error;

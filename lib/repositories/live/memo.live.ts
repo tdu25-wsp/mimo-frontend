@@ -134,7 +134,9 @@ export const memoLiveRepository: IMemoRepository = {
 
   exportData: async (ids: string[]) => {
     // 1. タグ一覧の取得
-    const tagsPromise = fetch(`${API_BASE_URL}tags`).then(async (res) => {
+    const tagsPromise = fetch(`${PROXY_API_BASE_URL}tags`, {
+      credentials: "include",
+    }).then(async (res) => {
       if (!res.ok) throw new Error("Failed to fetch tags");
       return await res.json();
     });
@@ -142,7 +144,9 @@ export const memoLiveRepository: IMemoRepository = {
     // 2. 選択されたメモ詳細の取得 (並列実行)
     const memosPromise = Promise.all(
       ids.map(async (id) => {
-        const res = await fetch(`${API_BASE_URL}memos/${id}`);
+        const res = await fetch(`${PROXY_API_BASE_URL}memos/${id}`, {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error(`Failed to fetch memo ${id}`);
         return await res.json();
       })
